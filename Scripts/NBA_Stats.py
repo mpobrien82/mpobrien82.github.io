@@ -6,8 +6,9 @@ from flask import Flask, render_template_string
 app = Flask(__name__)
 
 def fetch_data(sheet_name):
-    # Your existing code for fetching data from Google Sheets
-    # ...
+    # Implement your code to fetch data from Google Sheets here
+    # This function should return a pandas DataFrame
+    pass
 
 @app.route('/')
 def display_data():
@@ -41,4 +42,5 @@ def display_data():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
