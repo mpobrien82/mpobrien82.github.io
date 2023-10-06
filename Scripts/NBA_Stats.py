@@ -1,72 +1,38 @@
 import gspread
 from google.oauth2 import service_account
 import pandas as pd
-from flask import Flask, render_template_string
-import os
-import json
-
-app = Flask(__name__)
 
 def fetch_data(sheet_name):
-    try:
-        # Authenticate with Google Sheets using service account credentials
-        creds_json = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON")
-        creds_dict = json.loads(creds_json)
-        creds = service_account.Credentials.from_service_account_info(creds_dict)
-        client = gspread.authorize(creds)
+    # Set up Google Sheets API credentials
+    credentials = service_account.Credentials.from_service_account_file(
+        'C:/Users/mpobr/Downloads/nba-player-prop-model-fcab08224af6.json',
+        scopes=["https://www.googleapis.com/auth/spreadsheets"]
+    )
 
-        # Open the Google Sheets document by name
-        spreadsheet = client.open('2023 NBA Player Prop model')
+    # Authenticate with the Google Sheets API using the credentials
+    gc = gspread.Client(auth=credentials)
 
-        # Open the specific sheet named "Dashboard"
-        sheet = spreadsheet.worksheet(sheet_name)
+    # URL of your Google Sheets document
+    url = 'https://docs.google.com/spreadsheets/d/1SwQJeR8mxvJS31wgYs4gY7h6OUuP7Ogk2Mi9c-gb2v4/edit#gid=700047262'
 
-        # Get all values from the sheet and convert to a DataFrame
-        data = sheet.get_all_values()
-        headers = data[0]
-        rows = data[1:]
-        df = pd.DataFrame(rows, columns=headers)
+    # Open the specific sheet by URL
+    doc = gc.open_by_url(url)
 
-        return df
-    except Exception as e:
-        print(f"Error fetching data: {str(e)}")
-        return None
+    # Select the specific worksheet by title (using the specified sheet_name)
+    worksheet = doc.worksheet(sheet_name)
 
-@app.route('/')
-def display_data():
-    sheet1_name = 'Dashboard'
-    data_frame1 = fetch_data(sheet1_name)
+    # Retrieve data from the worksheet
+    data = worksheet.get_all_values()
 
-    if data_frame1 is not None:
-        # Convert the DataFrame to an HTML table
-        table_html = data_frame1.to_html(classes='table table-bordered table-hover', index=False)
-    else:
-        # Handle the case where data couldn't be fetched
-        table_html = "<p>Error fetching data</p>"
+    # Convert the data to a Pandas DataFrame
+    sheet_df = pd.DataFrame(data[1:], columns=data[0])
 
-    # HTML template for your static website
-    html_template = """
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>My Static Website</title>
-        <style>
-            /* Add any CSS styling here */
-        </style>
-    </head>
-    <body>
-        <h1>Data from Google Sheets</h1>
-        {{ table_html | safe }}
-    </body>
-    </html>
-    """
+    # Now 'sheet_df' contains the data as a DataFrame
+    return sheet_df
 
-    # Render the template with the data
-    rendered_template = render_template_string(html_template, table_html=table_html)
+# Specify the names of the sheets you want to fetch
+sheet1_name = 'Dashboard'
 
-    return rendered_template
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
+# Call the fetch_data function with the specified sheet names to fetch the data as DataFrames
+data_frame1 = fetch_data(sheet1_name)
 
