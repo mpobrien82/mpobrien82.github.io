@@ -1,14 +1,11 @@
-from flask import Flask, render_template
 import gspread
 from google.oauth2 import service_account
 import pandas as pd
 
-app = Flask(__name__)
-
 def fetch_data(sheet_name):
     # Set up Google Sheets API credentials
     credentials = service_account.Credentials.from_service_account_file(
-        'path/to/your/credentials.json',  # Replace with your credentials file path
+        'C:/Users/mpobr/Downloads/nba-player-prop-model-fcab08224af6.json',
         scopes=["https://www.googleapis.com/auth/spreadsheets"]
     )
 
@@ -33,29 +30,13 @@ def fetch_data(sheet_name):
     # Now 'sheet_df' contains the data as a DataFrame
     return sheet_df
 
-@app.route('/')
-def index():
-    # Specify the names of the sheets you want to fetch
-    sheet1_name = 'Dashboard'
+# Specify the names of the sheets you want to fetch
+sheet1_name = 'Dashboard'
 
-    # Call the fetch_data function with the specified sheet names to fetch the data as DataFrames
-    data_frame1 = fetch_data(sheet1_name)
+# Call the fetch_data function with the specified sheet names to fetch the data as DataFrames
+data_frame1 = fetch_data(sheet1_name)
 
-    # Convert the DataFrame to an HTML table (you can customize this as needed)
-    html_table = data_frame1.to_html(classes="table table-bordered table-striped")
 
-    # Render the HTML table as the web page
-    return f'''
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Your Data</title>
-    </head>
-    <body>
-        {html_table}
-    </body>
-    </html>
-    '''
-
-if __name__ == '__main__':
-    app.run()
+# Print the first few rows of the DataFrames to verify the data
+print("Data from Sheet 1:")
+print(data_frame1.head())
