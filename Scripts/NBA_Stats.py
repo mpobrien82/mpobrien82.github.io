@@ -44,9 +44,18 @@ def index():
     # Convert the DataFrame to an HTML table (you can customize this as needed)
     html_table = data_frame1.to_html(classes="table table-bordered table-striped")
 
-    # Render the HTML table as the web page using a template
-    return render_template('index.html', table=html_table)
+    # Render the HTML table as the web page
+    return f'''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Your Data</title>
+    </head>
+    <body>
+        {html_table}
+    </body>
+    </html>
+    '''
 
 if __name__ == '__main__':
     app.run()
-
