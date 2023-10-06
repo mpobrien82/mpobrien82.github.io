@@ -2,17 +2,17 @@ import gspread
 from google.oauth2 import service_account
 import pandas as pd
 from flask import Flask, render_template_string
+import os
+import json
 
 app = Flask(__name__)
-
-# Define the path to your Google Sheets API credentials JSON file
-# Replace 'your-credentials.json' with the actual path to your JSON file
-credentials_path = 'file:///C:/Users/mpobr/Downloads/nba-player-prop-model-fcab08224af6.json'
 
 def fetch_data(sheet_name):
     try:
         # Authenticate with Google Sheets using service account credentials
-        creds = service_account.Credentials.from_service_account_file(credentials_path)
+        creds_json = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON")
+        creds_dict = json.loads(creds_json)
+        creds = service_account.Credentials.from_service_account_info(creds_dict)
         client = gspread.authorize(creds)
 
         # Open the Google Sheets document by name
@@ -68,6 +68,5 @@ def display_data():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
 
 
