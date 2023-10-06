@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 import gspread
 from google.oauth2 import service_account
 import pandas as pd
@@ -8,7 +8,7 @@ app = Flask(__name__)
 def fetch_data(sheet_name):
     # Set up Google Sheets API credentials
     credentials = service_account.Credentials.from_service_account_file(
-        'C:/Users/mpobr/Downloads/nba-player-prop-model-fcab08224af6.json',
+        'path/to/your/credentials.json',  # Replace with your credentials file path
         scopes=["https://www.googleapis.com/auth/spreadsheets"]
     )
 
@@ -44,8 +44,8 @@ def index():
     # Convert the DataFrame to an HTML table (you can customize this as needed)
     html_table = data_frame1.to_html(classes="table table-bordered table-striped")
 
-    # Render the HTML table as the web page
-    return f"<html><body>{html_table}</body></html>"
+    # Render the HTML table as the web page using a template
+    return render_template('index.html', table=html_table)
 
 if __name__ == '__main__':
     app.run()
