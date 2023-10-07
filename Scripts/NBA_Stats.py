@@ -36,3 +36,7 @@ sheet1_name = 'Dashboard'
 # Call the fetch_data function with the specified sheet names to fetch the data as DataFrames
 data_frame1 = fetch_data(sheet1_name)
 
+
+# Print the first few rows of the DataFrames to verify the data
+print("Data from Sheet 1:")
+print(data_frame1.head())
