@@ -1,3 +1,4 @@
+import os
 import gspread
 from google.oauth2 import service_account
 import pandas as pd
@@ -5,10 +6,18 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
+# Check if the environment variable GOOGLE_APPLICATION_CREDENTIALS is set
+if 'GOOGLE_APPLICATION_CREDENTIALS' in os.environ:
+    # Use the environment variable as the path to the service account key file
+    key_path = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+else:
+    # Fallback to a default path (replace with your actual key file path)
+    key_path = 'default/path/to/your/keyfile.json'
+
 def fetch_data(sheet_name):
     # Set up Google Sheets API credentials
     credentials = service_account.Credentials.from_service_account_file(
-        'C:/Users/mpobr/Downloads/nba-player-prop-model-fcab08224af6.json',
+        key_path,
         scopes=["https://www.googleapis.com/auth/spreadsheets"]
     )
 
