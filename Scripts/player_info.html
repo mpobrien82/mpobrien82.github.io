@@ -7,24 +7,7 @@
 <body>
     <div class="container">
         <h1>Player Information</h1>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    {% for column in table.columns %}
-                    <th>{{ column }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for index, row in table.iterrows() %}
-                <tr>
-                    {% for column in table.columns %}
-                    <td>{{ row[column] }}</td>
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        {{ table|safe }}
     </div>
 </body>
 </html>
