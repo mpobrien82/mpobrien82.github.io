@@ -38,8 +38,8 @@ def index():
     sheet1_name = 'Dashboard'
     data_frame1 = fetch_data(sheet1_name)
 
-    # Convert the DataFrame to an HTML table
-    table_html = data_frame1.to_html(classes='table table-bordered', index=False)
+    # Convert the DataFrame to an HTML table without escaping HTML entities
+    table_html = data_frame1.to_html(classes='table table-bordered', index=False, escape=False)
 
     return render_template('player_info.html', table=table_html)
 
