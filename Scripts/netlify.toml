@@ -1,11 +1,4 @@
-[build]
-  command = "python Scripts/GDoc_Scrape.py"
-  publish = "/opt/build/repo"
-  functions = "lambda"
-
-[build.environment]
-  PYTHON_VERSION = "3.9"  # Specify your Python version here
-
-[[plugins]]
-  package = "@netlify/plugin-functions-core"
-
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
