@@ -1,4 +1,3 @@
 [build]
-  command = "bash ./scripts/build.sh"
-  publish = "public"
-  functions = "lambda"
+  command = "./build.sh"
+  publish = "/opt/build/repo"
