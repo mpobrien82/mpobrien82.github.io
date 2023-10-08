@@ -9,30 +9,24 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            overflow: hidden; /* Hide body overflow to prevent unnecessary scrolling */
-        
         }
-
-        #player-list {
-            list-style: none;
-            padding: 0;
+        #player-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #player-table th, #player-table td {
+            border: 1px solid #ccc;
+            padding: 8px;
             text-align: center;
-        }
-
-        #player-list li {
-            margin-bottom: 10px;
-            font-size: 22px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Player Information</h1>
-        <div class="scroll-container">
-            <ul id="player-list">
-                <!-- Data will be inserted here dynamically -->
-            </ul>
-        </div>
+        <table id="player-table">
+            <!-- Data will be inserted here dynamically -->
+        </table>
     </div>
 
     <script>
@@ -49,15 +43,16 @@
 
                 const data = await response.text();
                 const lines = data.split('\n');
-                const playerList = document.querySelector('#player-list');
+                const playerTable = document.querySelector('#player-table');
 
-                for (let i = 4; i < lines.length; i++) {
+                for (let i = 0; i < lines.length; i++) {
                     const values = lines[i].split(',');
-                    const listItem = document.createElement('li');
+                    const row = playerTable.insertRow();
 
-                    // Remove quotes from the value and replace '|' with spaces
-                    listItem.textContent = values.join('    ').replace(/"/g, '');
-                    playerList.appendChild(listItem);
+                    for (let j = 0; j < values.length; j++) {
+                        const cell = row.insertCell();
+                        cell.textContent = values[j].replace(/"/g, '');
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
