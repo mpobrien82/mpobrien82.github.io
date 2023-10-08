@@ -9,16 +9,21 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden; /* Hide body overflow to prevent unnecessary scrolling */
         }
 
         .container {
             text-align: center;
-            margin: 0 auto;
-            max-width: 600px; /* Adjust the maximum width as needed */
+            margin: 0;
+            height: 100vh; /* Fill the entire viewport height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .scroll-container {
-            max-height: 300px; /* Adjust the height as needed */
+            flex: 1; /* Make the scroll-container expand to fill the available space */
+            max-height: 80vh; /* Limit the maximum height to 80% of the viewport height (adjust as needed) */
             overflow-y: auto;
         }
 
@@ -78,6 +83,4 @@
     </script>
 </body>
 </html>
-
-
 
