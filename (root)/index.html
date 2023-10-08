@@ -73,8 +73,8 @@
                     for (let j = 0; j < values.length; j++) {
                         const cell = row.insertCell();
 
-                        // Check if the value is "Score" and add an input box
-                        if (values[j].trim() === 'Score') {
+                        // Check if the cell contains the word "Score" (case-insensitive)
+                        if (/score/i.test(values[j].trim())) {
                             const input = document.createElement('input');
                             input.setAttribute('class', 'input-box');
                             cell.appendChild(input);
