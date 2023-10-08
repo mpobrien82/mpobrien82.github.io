@@ -73,16 +73,16 @@
                     for (let j = 0; j < values.length; j++) {
                         const cell = row.insertCell();
 
-                        // Check if the cell contains the word "Score" (case-insensitive)
-                        if (/score/i.test(values[j].trim())) {
+                        // Check if the cell contains the word "Score," "Time," or "Quarter" (case-insensitive)
+                        if (/score|time|quarter/i.test(values[j].trim())) {
                             const input = document.createElement('input');
                             input.setAttribute('class', 'input-box');
-                            input.setAttribute('placeholder', 'Score');
+                            input.setAttribute('placeholder', values[j].trim());
                             input.addEventListener('input', function () {
                                 if (input.value !== '') {
                                     input.placeholder = '';
                                 } else {
-                                    input.placeholder = 'Score';
+                                    input.placeholder = values[j].trim();
                                 }
                             });
                             cell.appendChild(input);
