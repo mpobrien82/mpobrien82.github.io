@@ -2,6 +2,24 @@
 <html>
 <head>
     <title>Player Information</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #player-list {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+        #player-list li {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -31,8 +49,8 @@
                     const values = lines[i].split(',');
                     const listItem = document.createElement('li');
 
-                    // Remove quotes from the value
-                    listItem.textContent = values.join(' | ').replace(/"/g, '');
+                    // Remove quotes from the value and replace '|' with spaces
+                    listItem.textContent = values.join('    ').replace(/"/g, '');
                     playerList.appendChild(listItem);
                 }
             } catch (error) {
@@ -45,6 +63,4 @@
     </script>
 </body>
 </html>
-
-
 
