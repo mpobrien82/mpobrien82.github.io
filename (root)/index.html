@@ -10,9 +10,24 @@
             height: 100vh;
             margin: 0;
         }
+        .container {
+            text-align: center;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .scroll-container {
+            flex: 1;
+            max-height: 80vh; /* Limit the maximum height to 80% of the viewport height */
+            max-width: 95%; /* Limit the maximum width to 95% of the viewport width */
+            overflow-y: auto;
+            overflow-x: auto; /* Enable horizontal scrolling if needed */
+        }
         #player-table {
-            width: 100%;
             border-collapse: collapse;
+            width: 100%; /* Make the table take up the entire width of its container */
         }
         #player-table th, #player-table td {
             border: 1px solid #ccc;
@@ -24,9 +39,11 @@
 <body>
     <div class="container">
         <h1>Player Information</h1>
-        <table id="player-table">
-            <!-- Data will be inserted here dynamically -->
-        </table>
+        <div class="scroll-container">
+            <table id="player-table">
+                <!-- Data will be inserted here dynamically -->
+            </table>
+        </div>
     </div>
 
     <script>
@@ -64,4 +81,5 @@
     </script>
 </body>
 </html>
+
 
