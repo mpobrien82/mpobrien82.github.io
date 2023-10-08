@@ -35,12 +35,6 @@
             border: none; /* Remove borders */
             font-size: 18px; /* Increase font size to 18 pixels (adjust as needed) */
         }
-        .score-box {
-            width: 40px;
-            height: 20px;
-            border: 1px solid #000;
-            margin: 0 auto;
-        }
     </style>
 </head>
 <body>
@@ -68,7 +62,6 @@
                 const data = await response.text();
                 const lines = data.split('\n');
                 const playerTable = document.querySelector('#player-table');
-                let teamNameCell = null;
 
                 for (let i = 0; i < lines.length; i++) {
                     const values = lines[i].split(',');
@@ -76,20 +69,7 @@
 
                     for (let j = 0; j < values.length; j++) {
                         const cell = row.insertCell();
-
-                        if (j === 0 || j === 1) {
-                            if (teamNameCell === null) {
-                                // Add a box with the title "Score" under team name/opponent name
-                                const scoreBox = document.createElement('div');
-                                scoreBox.className = 'score-box';
-                                scoreBox.textContent = 'Score';
-                                cell.appendChild(scoreBox);
-                                teamNameCell = cell;
-                            }
-                        } else if (j !== 8 && j !== 11 && j !== 12 && j !== 13) {
-                            // Exclude the columns with player info from the table
-                            cell.textContent = values[j].replace(/"/g, '');
-                        }
+                        cell.textContent = values[j].replace(/"/g, '');
                     }
                 }
             } catch (error) {
@@ -102,5 +82,4 @@
     </script>
 </body>
 </html>
-
 
