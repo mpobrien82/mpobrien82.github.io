@@ -44,7 +44,7 @@
         .input-box {
             width: 100%;
             height: 40px; /* Adjust the height as needed */
-            font-size: 16px; /* Adjust the font size as needed */
+            font-size: 18px; /* Increase font size for input boxes to 18 pixels (adjust as needed) */
         }
     </style>
 </head>
@@ -105,6 +105,7 @@
                             const input = document.createElement('input');
                             input.setAttribute('class', 'input-box');
                             input.setAttribute('placeholder', value);
+                            input.style.fontSize = '18px'; // Set font size for the input boxes
                             input.addEventListener('input', function () {
                                 if (input.value !== '') {
                                     input.placeholder = '';
@@ -128,5 +129,6 @@
     </script>
 </body>
 </html>
+
 
 
