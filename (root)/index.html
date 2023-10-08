@@ -35,9 +35,6 @@
             border: none; /* Remove borders */
             font-size: 18px; /* Increase font size to 18 pixels (adjust as needed) */
         }
-        .score-input {
-            width: 40px; /* Adjust the width as needed */
-        }
         .score-box {
             width: 40px;
             height: 20px;
@@ -87,13 +84,8 @@
                             scoreBox.className = 'score-box';
                             scoreBox.textContent = 'Score';
                             cell.appendChild(scoreBox);
-                        } else if (j === 8) {
-                            // Add an input element for the "Score" column (index 8)
-                            const input = document.createElement('input');
-                            input.type = 'text';
-                            input.className = 'score-input';
-                            cell.appendChild(input);
-                        } else {
+                        } else if (j !== 8) {
+                            // Only add data for columns other than the "Score" column (index 8)
                             cell.textContent = values[j].replace(/"/g, '');
                         }
                     }
