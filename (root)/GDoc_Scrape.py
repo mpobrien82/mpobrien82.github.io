@@ -5,7 +5,7 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
-def fetch_data(sheet_name):
+def fetch_and_process_data(sheet_name):
     # Set up Google Sheets API credentials
     credentials = service_account.Credentials.from_service_account_file(
         'C:/Users/mpobr/Downloads/nba-player-prop-model-fcab08224af6.json',
@@ -30,13 +30,18 @@ def fetch_data(sheet_name):
     # Convert the data to a Pandas DataFrame
     sheet_df = pd.DataFrame(data[1:], columns=data[0])
 
-    # Now 'sheet_df' contains the data as a DataFrame
+    # Add input boxes above the word "Score"
+    for col in sheet_df.columns:
+        if col.lower() == "score":
+            sheet_df.insert(0, "Score Input", "")  # Insert a new column for input boxes
+
+    # Now 'sheet_df' contains the data with an extra column for input boxes
     return sheet_df
 
 @app.route('/')
 def index():
     sheet1_name = 'Dashboard'
-    data_frame1 = fetch_data(sheet1_name)
+    data_frame1 = fetch_and_process_data(sheet1_name)
 
     # Convert the DataFrame to an HTML table without escaping HTML entities
     table_html = data_frame1.to_html(classes='table table-bordered', index=False, escape=False)
