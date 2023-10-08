@@ -36,7 +36,7 @@
             font-size: 18px; /* Increase font size to 18 pixels (adjust as needed) */
         }
         .input-box {
-            width: 100%;
+            width: 50px; /* Adjust the width as needed */
         }
     </style>
 </head>
@@ -77,6 +77,14 @@
                         if (/score/i.test(values[j].trim())) {
                             const input = document.createElement('input');
                             input.setAttribute('class', 'input-box');
+                            input.setAttribute('placeholder', 'Score');
+                            input.addEventListener('input', function () {
+                                if (input.value !== '') {
+                                    input.placeholder = '';
+                                } else {
+                                    input.placeholder = 'Score';
+                                }
+                            });
                             cell.appendChild(input);
                         } else {
                             cell.textContent = values[j].replace(/"/g, '');
