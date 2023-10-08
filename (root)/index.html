@@ -43,7 +43,8 @@
 
                     for (let j = 0; j < values.length; j++) {
                         const cell = document.createElement(i === 1 ? 'th' : 'td');
-                        cell.textContent = values[j];
+                        // Remove quotes from the value
+                        cell.textContent = values[j].replace(/"/g, '');
                         row.appendChild(cell);
                     }
 
@@ -59,4 +60,5 @@
     </script>
 </body>
 </html>
+
 
