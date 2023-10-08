@@ -35,6 +35,11 @@
             border: none; /* Remove borders */
             font-size: 18px; /* Increase font size to 18 pixels (adjust as needed) */
         }
+        #player-table thead th {
+            position: sticky;
+            top: 0;
+            background-color: white;
+        }
         .input-box {
             width: 100%;
             height: 40px; /* Adjust the height as needed */
@@ -47,6 +52,24 @@
         <h1>Player Information</h1>
         <div class="scroll-container">
             <table id="player-table">
+                <thead>
+                    <tr>
+                        <th>Team</th>
+                        <th>Opponent</th>
+                        <th>Pace</th>
+                        <th>RW/WW</th>
+                        <th>Mins (o/v)</th>
+                        <th>Eff (+/-)</th>
+                        <th>Player</th>
+                        <th>Minutes</th>
+                        <th>Points</th>
+                        <th>Assists</th>
+                        <th>Rebounds</th>
+                        <th>Threes</th>
+                        <th>Steals</th>
+                        <th>Blocks</th>
+                    </tr>
+                </thead>
                 <!-- Data will be inserted here dynamically -->
             </table>
         </div>
@@ -104,4 +127,5 @@
     </script>
 </body>
 </html>
+
 
