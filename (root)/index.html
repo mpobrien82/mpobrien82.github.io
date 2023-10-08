@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>NBA</title>
+    <title>Player Information</title>
     <style>
         body {
             display: flex;
@@ -30,16 +30,19 @@
             width: 100%; /* Make the table take up the entire width of its container */
         }
         #player-table th, #player-table td {
-            padding: 15px;
+            padding: 8px;
             text-align: center;
             border: none; /* Remove borders */
             font-size: 18px; /* Increase font size to 18 pixels (adjust as needed) */
+        }
+        .score-input {
+            width: 40px; /* Adjust the width as needed */
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>NBA</h1>
+        <h1>Player Information</h1>
         <div class="scroll-container">
             <table id="player-table">
                 <!-- Data will be inserted here dynamically -->
@@ -69,7 +72,15 @@
 
                     for (let j = 0; j < values.length; j++) {
                         const cell = row.insertCell();
-                        cell.textContent = values[j].replace(/"/g, '');
+                        if (j === 8) {
+                            // Add an input element for the "Score" column (index 8)
+                            const input = document.createElement('input');
+                            input.type = 'text';
+                            input.className = 'score-input';
+                            cell.appendChild(input);
+                        } else {
+                            cell.textContent = values[j].replace(/"/g, '');
+                        }
                     }
                 }
             } catch (error) {
@@ -82,5 +93,6 @@
     </script>
 </body>
 </html>
+
 
 
