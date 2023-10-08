@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>NBA</title>
+    <title>Player Information</title>
     <style>
         body {
             display: flex;
@@ -71,6 +71,7 @@
                 const data = await response.text();
                 const lines = data.split('\n');
                 const playerTable = document.querySelector('#player-table');
+                let teamNameCell = null;
 
                 for (let i = 0; i < lines.length; i++) {
                     const values = lines[i].split(',');
@@ -78,12 +79,16 @@
 
                     for (let j = 0; j < values.length; j++) {
                         const cell = row.insertCell();
+
                         if (j === 0 || j === 1) {
-                            // Add a box with the title "Score" under team name/opponent name
-                            const scoreBox = document.createElement('div');
-                            scoreBox.className = 'score-box';
-                            scoreBox.textContent = 'Score';
-                            cell.appendChild(scoreBox);
+                            if (teamNameCell === null) {
+                                // Add a box with the title "Score" under team name/opponent name
+                                const scoreBox = document.createElement('div');
+                                scoreBox.className = 'score-box';
+                                scoreBox.textContent = 'Score';
+                                cell.appendChild(scoreBox);
+                                teamNameCell = cell;
+                            }
                         } else if (j !== 8) {
                             // Only add data for columns other than the "Score" column (index 8)
                             cell.textContent = values[j].replace(/"/g, '');
