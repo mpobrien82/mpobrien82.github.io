@@ -76,20 +76,21 @@
                         const cell = row.insertCell();
 
                         // Check if the cell contains the word "Score," "Time," or "Quarter" (case-insensitive)
-                        if (/score|time|quarter/i.test(values[j].trim())) {
+                        const value = values[j].trim().replace(/"/g, ''); // Remove quotation marks
+                        if (/score|time|quarter/i.test(value)) {
                             const input = document.createElement('input');
                             input.setAttribute('class', 'input-box');
-                            input.setAttribute('placeholder', values[j].trim());
+                            input.setAttribute('placeholder', value);
                             input.addEventListener('input', function () {
                                 if (input.value !== '') {
                                     input.placeholder = '';
                                 } else {
-                                    input.placeholder = values[j].trim();
+                                    input.placeholder = value;
                                 }
                             });
                             cell.appendChild(input);
                         } else {
-                            cell.textContent = values[j].replace(/"/g, '');
+                            cell.textContent = value;
                         }
                     }
                 }
