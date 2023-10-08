@@ -9,3 +9,5 @@ pip install -r requirements.txt
 
 # Run your Python script
 python Scripts/GDoc_Scrape.py
+
+source venv/Scripts/activate  # On Windows
