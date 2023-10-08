@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>NBA</title>
+    <title>Player Information</title>
     <style>
         body {
             display: flex;
@@ -73,14 +73,14 @@
                     for (let j = 0; j < values.length; j++) {
                         const cell = row.insertCell();
 
-                        if (values[j].toLowerCase() === 'score') {
-                            // Create an input box above the word "Score"
+                        // Check if the value is "Score" and add an input box
+                        if (values[j].trim() === 'Score') {
                             const input = document.createElement('input');
                             input.setAttribute('class', 'input-box');
                             cell.appendChild(input);
+                        } else {
+                            cell.textContent = values[j].replace(/"/g, '');
                         }
-
-                        cell.textContent = values[j].replace(/"/g, '');
                     }
                 }
             } catch (error) {
