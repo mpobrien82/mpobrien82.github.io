@@ -35,6 +35,9 @@
             border: none; /* Remove borders */
             font-size: 18px; /* Increase font size to 18 pixels (adjust as needed) */
         }
+        .input-box {
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -69,6 +72,14 @@
 
                     for (let j = 0; j < values.length; j++) {
                         const cell = row.insertCell();
+
+                        if (values[j].toLowerCase() === 'score') {
+                            // Create an input box above the word "Score"
+                            const input = document.createElement('input');
+                            input.setAttribute('class', 'input-box');
+                            cell.appendChild(input);
+                        }
+
                         cell.textContent = values[j].replace(/"/g, '');
                     }
                 }
