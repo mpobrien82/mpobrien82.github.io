@@ -10,10 +10,14 @@
             height: 100vh;
             margin: 0;
         }
+        .scrollable-container {
+            max-height: 80vh; /* Adjust the maximum height as needed */
+            overflow-y: auto;
+            text-align: center;
+        }
         #player-list {
             list-style: none;
             padding: 0;
-            text-align: center;
         }
         #player-list li {
             margin-bottom: 10px;
@@ -24,9 +28,11 @@
 <body>
     <div class="container">
         <h1>Player Information</h1>
-        <ul id="player-list">
-            <!-- Data will be inserted here dynamically -->
-        </ul>
+        <div class="scrollable-container">
+            <ul id="player-list">
+                <!-- Data will be inserted here dynamically -->
+            </ul>
+        </div>
     </div>
 
     <script>
