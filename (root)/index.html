@@ -10,9 +10,20 @@
         <table class="table table-bordered" id="player-table">
             <thead>
                 <tr>
-                    <th>Column 1</th>
-                    <th>Column 2</th>
-                    <!-- Add more columns as needed -->
+                    <th>Team</th>
+                    <th>Opponent</th>
+                    <th>Pace</th>
+                    <th>RW/WW</th>
+                    <th>Mins (o/v)</th>
+                    <th>Eff (+/-)</th>
+                    <th>Player</th>
+                    <th>Minutes</th>
+                    <th>Points</th>
+                    <th>Assists</th>
+                    <th>Rebounds</th>
+                    <th>3 Pointers</th>
+                    <th>Steals</th>
+                    <th>Blocks</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,28 +48,7 @@
                 const lines = data.split('\n');
                 const tableBody = document.querySelector('#player-table tbody');
 
-                for (let i = 1; i < lines.length; i++) {
-                    const values = lines[i].split(',');
-                    const row = document.createElement('tr');
+                for (let i = 
 
-                    for (let j = 0; j < values.length; j++) {
-                        const cell = document.createElement(i === 1 ? 'th' : 'td');
-                        // Remove quotes from the value
-                        cell.textContent = values[j].replace(/"/g, '');
-                        row.appendChild(cell);
-                    }
-
-                    tableBody.appendChild(row);
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
-
-        // Call the fetchData function when the page loads
-        fetchData();
-    </script>
-</body>
-</html>
 
 
