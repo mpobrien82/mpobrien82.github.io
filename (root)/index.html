@@ -18,13 +18,14 @@
             height: 100vh; /* Fill the entire viewport height */
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            align-items: center; /* Center horizontally */
         }
 
         .scroll-container {
             flex: 1; /* Make the scroll-container expand to fill the available space */
             max-height: 80vh; /* Limit the maximum height to 80% of the viewport height (adjust as needed) */
             overflow-y: auto;
+            width: 100%; /* Fill the entire width of the container */
         }
 
         #player-list {
@@ -83,4 +84,5 @@
     </script>
 </body>
 </html>
+
 
