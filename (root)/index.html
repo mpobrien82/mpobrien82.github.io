@@ -92,6 +92,11 @@
                 const lines = data.split('\n');
                 const playerTable = document.querySelector('#player-table');
 
+                // Variables to store the current game's Score, Time, and Quarter
+                let currentScore = '';
+                let currentTime = '';
+                let currentQuarter = '';
+
                 for (let i = 0; i < lines.length; i++) {
                     const values = lines[i].split(',');
                     const row = playerTable.insertRow();
@@ -101,21 +106,42 @@
 
                         // Check if the cell contains the word "Score," "Time," or "Quarter" (case-insensitive)
                         const value = values[j].trim().replace(/"/g, ''); // Remove quotation marks
-                        if (/score|time|quarter/i.test(value)) {
+                        if (/score/i.test(value)) {
                             const input = document.createElement('input');
                             input.setAttribute('class', 'input-box');
                             input.setAttribute('placeholder', value);
                             input.style.fontSize = '18px'; // Set font size for the input boxes
                             input.addEventListener('input', function () {
-                                if (input.value !== '') {
-                                    input.placeholder = '';
-                                } else {
-                                    input.placeholder = value;
-                                }
+                                currentScore = input.value;
+                            });
+                            cell.appendChild(input);
+                        } else if (/time/i.test(value)) {
+                            const input = document.createElement('input');
+                            input.setAttribute('class', 'input-box');
+                            input.setAttribute('placeholder', value);
+                            input.style.fontSize = '18px'; // Set font size for the input boxes
+                            input.addEventListener('input', function () {
+                                currentTime = input.value;
+                            });
+                            cell.appendChild(input);
+                        } else if (/quarter/i.test(value)) {
+                            const input = document.createElement('input');
+                            input.setAttribute('class', 'input-box');
+                            input.setAttribute('placeholder', value);
+                            input.style.fontSize = '18px'; // Set font size for the input boxes
+                            input.addEventListener('input', function () {
+                                currentQuarter = input.value;
                             });
                             cell.appendChild(input);
                         } else {
                             cell.textContent = value;
+                            if (value.toLowerCase() === 'score') {
+                                cell.textContent = currentScore;
+                            } else if (value.toLowerCase() === 'time') {
+                                cell.textContent = currentTime;
+                            } else if (value.toLowerCase() === 'quarter') {
+                                cell.textContent = currentQuarter;
+                            }
                         }
                     }
                 }
@@ -129,6 +155,7 @@
     </script>
 </body>
 </html>
+
 
 
 
