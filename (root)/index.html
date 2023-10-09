@@ -101,7 +101,7 @@
                 const data = await response.text();
                 const lines = data.split('\n');
                 const playerTable = document.querySelector('#player-table');
-                const scoreboardRow = document.querySelector('#scoreboard');
+                let isScoreboardRow = false;
 
                 for (let i = 0; i < lines.length; i++) {
                     const values = lines[i].split(',');
@@ -110,9 +110,11 @@
                     for (let j = 0; j < values.length; j++) {
                         const cell = row.insertCell();
 
-                        // Check if the cell contains the word "Score," "Time," or "Quarter" (case-insensitive)
+                        // Check if the cell contains the word "Scoreboard" (case-insensitive)
                         const value = values[j].trim().replace(/"/g, ''); // Remove quotation marks
-                        if (/score|time|quarter/i.test(value)) {
+                        if (/scoreboard/i.test(value)) {
+                            isScoreboardRow = true;
+                        } else if (isScoreboardRow) {
                             const input = document.createElement('input');
                             input.setAttribute('class', 'input-box');
                             input.setAttribute('placeholder', value);
@@ -129,20 +131,8 @@
                             cell.textContent = value;
                         }
                     }
-
-                    // Check if it's the "Score" row and add a "Scoreboard" row above it
-                    if (values[0].toLowerCase() === 'score') {
-                        const scoreboardCells = scoreboardRow.querySelectorAll('.input-box');
-                        const newScoreboardRow = playerTable.insertRow();
-                        for (let k = 0; k < scoreboardCells.length; k++) {
-                            const cell = newScoreboardRow.insertCell();
-                            const input = document.createElement('input');
-                            input.setAttribute('class', 'input-box');
-                            input.setAttribute('placeholder', scoreboardCells[k].placeholder);
-                            input.style.fontSize = '18px'; // Set font size for the input boxes
-                            cell.appendChild(input);
-                        }
-                    }
+                    // Reset the scoreboard flag when encountering a new row
+                    isScoreboardRow = false;
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -154,9 +144,5 @@
     </script>
 </body>
 </html>
-
-
-
-
 
 
