@@ -46,11 +46,42 @@
             height: 40px; /* Adjust the height as needed */
             font-size: 18px; /* Increase font size for input boxes to 18 pixels (adjust as needed) */
         }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #1e1e1e; /* Dark background color */
+            color: #fff; /* Light text color */
+        }
+
+        /* Light Mode Styles (default) */
+        body.light-mode {
+            background-color: #fff; /* Light background color */
+            color: #333; /* Dark text color */
+        }
+
+        /* Style the mode toggle switch */
+        .mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            color: #fff;
+        }
+
+        /* Style the toggle label */
+        .mode-toggle label {
+            margin-left: 8px;
+        }
     </style>
 </head>
-<body>
+<body class="light-mode">
     <div class="container">
         <h1>Player Information</h1>
+        <div class="mode-toggle">
+            <input type="checkbox" id="dark-mode-toggle">
+            <label for="dark-mode-toggle">Dark Mode</label>
+        </div>
         <div class="scroll-container">
             <table id="player-table">
                 <thead>
@@ -77,6 +108,17 @@
     </div>
 
     <script>
+        // Function to toggle dark mode
+        function toggleDarkMode() {
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+            body.classList.toggle('light-mode');
+        }
+
+        // Add an event listener to the toggle switch
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        darkModeToggle.addEventListener('change', toggleDarkMode);
+
         // Function to fetch data from Google Sheets
         async function fetchData() {
             try {
@@ -133,5 +175,6 @@
     </script>
 </body>
 </html>
+
 
 
