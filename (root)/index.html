@@ -98,9 +98,8 @@
 
                     for (let j = 0; j < values.length; j++) {
                         const cell = row.insertCell();
-
-                        // Check if the cell contains the word "Score," "Time," or "Quarter" (case-insensitive)
                         const value = values[j].trim().replace(/"/g, ''); // Remove quotation marks
+
                         if (/score|time|quarter/i.test(value)) {
                             const input = document.createElement('input');
                             input.setAttribute('class', 'input-box');
@@ -113,6 +112,11 @@
                                     input.placeholder = value;
                                 }
                             });
+                            cell.appendChild(input);
+                        } else if (value === 'GS') { // Check for "GS" and create an input box
+                            const input = document.createElement('input');
+                            input.setAttribute('class', 'input-box');
+                            input.style.fontSize = '18px'; // Set font size for the input boxes
                             cell.appendChild(input);
                         } else {
                             cell.textContent = value;
@@ -129,6 +133,5 @@
     </script>
 </body>
 </html>
-
 
 
