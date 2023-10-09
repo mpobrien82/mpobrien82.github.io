@@ -33,7 +33,7 @@
             padding: 8px;
             text-align: center;
             border: none; /* Remove borders */
-            font-size: 18px; /* Increase font size to 18 pixels (adjust as needed) */
+            font-size: 24px; /* Increase font size to 24 pixels (adjust as needed) */
         }
         #player-table thead th {
             position: sticky;
@@ -53,6 +53,24 @@
         <h1>Player Information</h1>
         <div class="scroll-container">
             <table id="player-table">
+                <thead>
+                    <tr>
+                        <th>Team</th>
+                        <th>Opponent</th>
+                        <th>Pace</th>
+                        <th>RW/WW</th>
+                        <th>Mins (o/v)</th>
+                        <th>Eff (+/-)</th>
+                        <th>Player</th>
+                        <th>Minutes</th>
+                        <th>Points</th>
+                        <th>Assists</th>
+                        <th>Rebounds</th>
+                        <th>Threes</th>
+                        <th>Steals</th>
+                        <th>Blocks</th>
+                    </tr>
+                </thead>
                 <!-- Data will be inserted here dynamically -->
             </table>
         </div>
@@ -80,8 +98,25 @@
 
                     for (let j = 0; j < values.length; j++) {
                         const cell = row.insertCell();
+
+                        // Check if the cell contains the word "Score," "Time," or "Quarter" (case-insensitive)
                         const value = values[j].trim().replace(/"/g, ''); // Remove quotation marks
-                        cell.textContent = value;
+                        if (/score|time|quarter/i.test(value)) {
+                            const input = document.createElement('input');
+                            input.setAttribute('class', 'input-box');
+                            input.setAttribute('placeholder', value);
+                            input.style.fontSize = '18px'; // Set font size for the input boxes
+                            input.addEventListener('input', function () {
+                                if (input.value !== '') {
+                                    input.placeholder = '';
+                                } else {
+                                    input.placeholder = value;
+                                }
+                            });
+                            cell.appendChild(input);
+                        } else {
+                            cell.textContent = value;
+                        }
                     }
                 }
             } catch (error) {
@@ -94,7 +129,6 @@
     </script>
 </body>
 </html>
-
 
 
 
