@@ -33,7 +33,7 @@
             padding: 8px;
             text-align: center;
             border: none; /* Remove borders */
-            font-size: 24px; /* Increase font size to 24 pixels (adjust as needed) */
+            font-size: 18px; /* Increase font size to 18 pixels (adjust as needed) */
         }
         #player-table thead th {
             position: sticky;
@@ -45,6 +45,9 @@
             width: 100%;
             height: 40px; /* Adjust the height as needed */
             font-size: 18px; /* Increase font size for input boxes to 18 pixels (adjust as needed) */
+        }
+        .large-text {
+            font-size: 24px; /* Increase font size for the large text (adjust as needed) */
         }
     </style>
 </head>
@@ -92,11 +95,6 @@
                 const lines = data.split('\n');
                 const playerTable = document.querySelector('#player-table');
 
-                // Variables to store the current game's Score, Time, and Quarter
-                let currentScore = '';
-                let currentTime = '';
-                let currentQuarter = '';
-
                 for (let i = 0; i < lines.length; i++) {
                     const values = lines[i].split(',');
                     const row = playerTable.insertRow();
@@ -104,44 +102,15 @@
                     for (let j = 0; j < values.length; j++) {
                         const cell = row.insertCell();
 
-                        // Check if the cell contains the word "Score," "Time," or "Quarter" (case-insensitive)
+                        // Check if the cell contains "SB" and apply a CSS class for larger text
                         const value = values[j].trim().replace(/"/g, ''); // Remove quotation marks
-                        if (/score/i.test(value)) {
-                            const input = document.createElement('input');
-                            input.setAttribute('class', 'input-box');
-                            input.setAttribute('placeholder', value);
-                            input.style.fontSize = '18px'; // Set font size for the input boxes
-                            input.addEventListener('input', function () {
-                                currentScore = input.value;
-                            });
-                            cell.appendChild(input);
-                        } else if (/time/i.test(value)) {
-                            const input = document.createElement('input');
-                            input.setAttribute('class', 'input-box');
-                            input.setAttribute('placeholder', value);
-                            input.style.fontSize = '18px'; // Set font size for the input boxes
-                            input.addEventListener('input', function () {
-                                currentTime = input.value;
-                            });
-                            cell.appendChild(input);
-                        } else if (/quarter/i.test(value)) {
-                            const input = document.createElement('input');
-                            input.setAttribute('class', 'input-box');
-                            input.setAttribute('placeholder', value);
-                            input.style.fontSize = '18px'; // Set font size for the input boxes
-                            input.addEventListener('input', function () {
-                                currentQuarter = input.value;
-                            });
-                            cell.appendChild(input);
+                        if (/sb/i.test(value)) {
+                            const span = document.createElement('span');
+                            span.setAttribute('class', 'large-text');
+                            span.textContent = value;
+                            cell.appendChild(span);
                         } else {
                             cell.textContent = value;
-                            if (value.toLowerCase() === 'score') {
-                                cell.textContent = currentScore;
-                            } else if (value.toLowerCase() === 'time') {
-                                cell.textContent = currentTime;
-                            } else if (value.toLowerCase() === 'quarter') {
-                                cell.textContent = currentQuarter;
-                            }
                         }
                     }
                 }
@@ -155,6 +124,7 @@
     </script>
 </body>
 </html>
+
 
 
 
