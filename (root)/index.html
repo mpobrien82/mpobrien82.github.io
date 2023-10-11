@@ -119,31 +119,35 @@
                 const values = lines[i].split(',');
                 const row = playerTable.insertRow();
 
-                // Add data to the table cells based on your CSV structure
-                const team = values[0].trim();
-                const opponent = values[1].trim();
-                const pace = values[3].trim();
-                const player = values[5].trim();
-                const minutes = values[6].trim();
-                const points = values[7].trim();
-                const assists = values[8].trim();
-                const rebounds = values[9].trim();
-                const threes = values[10].trim();
+                // Check for rows with player data
+                if (values.length > 2) {
+                    // Add data to the table cells based on your CSV structure
+                    const team = values[0].trim();
+                    const opponent = values[1].trim();
+                    const pace = values[2].trim();
+                    const player = values[5].trim();
+                    const minutes = values[6].trim();
+                    const points = values[7].trim();
+                    const assists = values[8].trim();
+                    const rebounds = values[9].trim();
+                    const threes = values[10].trim();
 
-                // Add data to the table cells
-                const cells = [
-                    team, opponent, pace, player, minutes, points, assists, rebounds, threes
-                ];
+                    // Add data to the table cells
+                    const cells = [
+                        team, opponent, pace, player, minutes, points, assists, rebounds, threes
+                    ];
 
-                for (let j = 0; j < cells.length; j++) {
-                    const cell = row.insertCell();
-                    cell.textContent = cells[j];
+                    for (let j = 0; j < cells.length; j++) {
+                        const cell = row.insertCell();
+                        cell.textContent = cells[j];
+                    }
                 }
             }
         }
     </script>
 </body>
 </html>
+
 
 
 
