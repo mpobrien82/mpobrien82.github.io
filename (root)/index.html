@@ -96,36 +96,21 @@
                 const parser = new DOMParser();
                 const xmlDoc = parser.parseFromString(data, 'text/xml');
                 const rows = xmlDoc.querySelectorAll('row');
-                
+
                 rows.forEach(row => {
                     const values = row.querySelectorAll('c');
                     const tableRow = playerTable.insertRow();
-                    
+
                     values.forEach(value => {
                         const cell = tableRow.insertCell();
                         const cellValue = value.querySelector('v').textContent;
 
-                        // Check if the cell contains the word "Score," "Time," or "Quarter" (case-insensitive)
-                        if (/score|time|quarter/i.test(cellValue)) {
+                        if (/gm/i.test(cellValue)) {
                             const input = document.createElement('input');
                             input.setAttribute('class', 'input-box');
-                            input.setAttribute('placeholder', cellValue);
+                            input.setAttribute('placeholder', 'Game Mins');
                             input.style.fontSize = '18px';
-                            input.addEventListener('input', function () {
-                                if (input.value !== '') {
-                                    input.placeholder = '';
-                                } else {
-                                    input.placeholder = cellValue;
-                                }
-                            });
                             cell.appendChild(input);
-                        } else if (cellValue.toLowerCase() === 'gm') {
-                            // Insert an input box for "GM"
-                            const gmInput = document.createElement('input');
-                            gmInput.setAttribute('class', 'input-box');
-                            gmInput.setAttribute('placeholder', 'Game Mins');
-                            gmInput.style.fontSize = '18px';
-                            cell.appendChild(gmInput);
                         } else {
                             cell.textContent = cellValue;
                         }
@@ -141,6 +126,7 @@
     </script>
 </body>
 </html>
+
 
 
 
