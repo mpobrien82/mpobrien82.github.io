@@ -3,30 +3,79 @@
 <head>
     <title>NBA Live Model</title>
     <style>
-        /* ... Your existing CSS styles ... */
-        .team-section {
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #333; /* Dark background color */
+            color: #fff; /* Text color */
+        }
+        .container {
+            text-align: center;
+            margin: 0;
+            height: 100vh;
             display: flex;
             flex-direction: column;
+            align-items: center;
+        }
+        .scroll-container {
+            flex: 1;
+            max-height: 80vh;
+            max-width: 95%;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+        .team-section {
             padding: 20px;
             border: 1px solid #ccc;
             background-color: #222;
             margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .team-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            width: 100%;
+        }
+        .team-name {
+            font-size: 24px;
+            color: #FFD700; /* Gold color for team names */
         }
         .team-buttons {
             display: flex;
         }
         .team-button {
-            margin-right: 10px;
             padding: 5px 10px;
             cursor: pointer;
         }
         .team-button.active {
             background-color: #FFD700; /* Highlight color for active button */
+        }
+        #player-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        #player-table th, #player-table td {
+            padding: 8px;
+            text-align: center;
+            border: none;
+            font-size: 24px;
+        }
+        #player-table thead th {
+            position: sticky;
+            top: 0;
+            background-color: #333; /* Dark background color */
+            z-index: 1;
+        }
+        .input-box {
+            width: 100%;
+            height: 40px;
+            font-size: 18px;
         }
     </style>
 </head>
@@ -148,13 +197,14 @@
         // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton) {
             if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList.add('active);
-                otherButton.classList.remove('active);
+                clickedButton.classList.add('active');
+                otherButton.classList.remove('active');
             }
         }
     </script>
 </body>
 </html>
+
 
 
 
