@@ -33,8 +33,13 @@
             background-color: #222;
             margin-bottom: 20px;
             display: flex;
+            flex-direction: column; /* Added to fix the layout issue */
+        }
+        .team-info {
+            display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 10px;
         }
         .team-name {
             font-size: 24px;
@@ -126,11 +131,15 @@
                         teamSection = document.createElement('div');
                         teamSection.classList.add('team-section');
                         
+                        // Create a team info div to hold the team name and button group
+                        const teamInfo = document.createElement('div');
+                        teamInfo.classList.add('team-info');
+
                         // Add the team name to the section
                         const teamNameElement = document.createElement('div');
                         teamNameElement.classList.add('team-name');
                         teamNameElement.textContent = teamName;
-                        teamSection.appendChild(teamNameElement);
+                        teamInfo.appendChild(teamNameElement);
 
                         // Create a button group for selecting RW/WW
                         const buttonGroup = document.createElement('div');
@@ -139,7 +148,9 @@
                         const wwButton = createSelectButton('WW', teamName);
                         buttonGroup.appendChild(rwButton);
                         buttonGroup.appendChild(wwButton);
-                        teamSection.appendChild(buttonGroup);
+                        teamInfo.appendChild(buttonGroup);
+
+                        teamSection.appendChild(teamInfo);
 
                         // Create a table for the team
                         playerTable = document.createElement('table');
@@ -200,7 +211,6 @@
     </script>
 </body>
 </html>
-
 
 
 
