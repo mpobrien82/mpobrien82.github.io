@@ -16,19 +16,25 @@ function calculateStats() {
         const threesCell = cells[15];
 
         // Get the values
-        const minutes = parseFloat(minutesCell.querySelector('input').value);
-        const points = parseFloat(pointsCell.querySelector('input').value);
-        const assists = parseFloat(assistsCell.querySelector('input').value);
-        const rebounds = parseFloat(reboundsCell.querySelector('input').value);
-        const threes = parseFloat(threesCell.querySelector('input').value);
+        const minutes = parseFloat(minutesCell.textContent);
+        let points = parseFloat(pointsCell.textContent);
+        let assists = parseFloat(assistsCell.textContent);
+        let rebounds = parseFloat(reboundsCell.textContent);
+        let threes = parseFloat(threesCell.textContent);
 
         // Check if all values are valid numbers
         if (!isNaN(minutes) && !isNaN(points) && !isNaN(assists) && !isNaN(rebounds) && !isNaN(threes)) {
             // Calculate the new stats
-            pointsCell.textContent = (points * minutes).toFixed(2);
-            assistsCell.textContent = (assists * minutes).toFixed(2);
-            reboundsCell.textContent = (rebounds * minutes).toFixed(2);
-            threesCell.textContent = (threes * minutes).toFixed(2);
+            points = (points * minutes).toFixed(2);
+            assists = (assists * minutes).toFixed(2);
+            rebounds = (rebounds * minutes).toFixed(2);
+            threes = (threes * minutes).toFixed(2);
+
+            // Update the cell values
+            pointsCell.textContent = points;
+            assistsCell.textContent = assists;
+            reboundsCell.textContent = rebounds;
+            threesCell.textContent = threes;
         }
     }
 }
