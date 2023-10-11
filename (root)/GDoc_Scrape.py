@@ -30,12 +30,14 @@ def fetch_and_process_data(sheet_name):
     # Convert the data to a Pandas DataFrame
     sheet_df = pd.DataFrame(data[1:], columns=data[0])
 
-    # Add input boxes above the word "Score"
-    for col in sheet_df.columns:
-        if col.lower() == "score":
-            sheet_df.insert(0, "Score Input", "")  # Insert a new column for input boxes
+    # Calculate the stats based on minutes
+    minutes_column = pd.to_numeric(sheet_df['Minutes'], errors='coerce')
+    sheet_df['Points'] = pd.to_numeric(sheet_df['Points'], errors='coerce') * minutes_column
+    sheet_df['Assists'] = pd.to_numeric(sheet_df['Assists'], errors='coerce') * minutes_column
+    sheet_df['Rebounds'] = pd.to_numeric(sheet_df['Rebounds'], errors='coerce') * minutes_column
+    sheet_df['Threes'] = pd.to_numeric(sheet_df['Threes'], errors='coerce') * minutes_column
 
-    # Now 'sheet_df' contains the data with an extra column for input boxes
+    # Now 'sheet_df' contains the data with calculated stats
     return sheet_df
 
 @app.route('/')
