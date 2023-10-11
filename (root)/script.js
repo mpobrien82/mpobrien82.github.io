@@ -31,18 +31,19 @@ function clearTable() {
 // Function to process data from the uploaded CSV
 function processDataFromCSV(csvData) {
     // Parse and process the CSV data, then update the table
-    const lines = csvData.split('\n').map(line => line.split('\t'));
-    const playerTable = document.querySelector('#player-table');
+    const lines = csvData.split('\n');
 
     for (let i = 1; i < lines.length; i++) {
-        const values = lines[i];
+        const values = lines[i].trim().split(/\s+/); // Split by one or more spaces
 
-        // Add player data to the table cells
-        const row = playerTable.insertRow();
+        if (values.length >= 10) { // Ensure there are enough columns
+            // Add player data to the table cells
+            const row = playerTable.insertRow();
 
-        for (let j = 0; j < values.length; j++) {
-            const cell = row.insertCell();
-            cell.textContent = values[j];
+            for (let j = 0; j < values.length; j++) {
+                const cell = row.insertCell();
+                cell.textContent = values[j];
+            }
         }
     }
 }
