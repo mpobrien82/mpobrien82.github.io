@@ -3,60 +3,30 @@
 <head>
     <title>NBA Live Model</title>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #333; /* Dark background color */
-            color: #fff; /* Text color */
-        }
-        .container {
-            text-align: center;
-            margin: 0;
-            height: 100vh;
+        /* ... Your existing CSS styles ... */
+        .team-section {
             display: flex;
             flex-direction: column;
-            align-items: center;
-        }
-        .scroll-container {
-            flex: 1;
-            max-height: 80vh;
-            max-width: 95%;
-            overflow-y: auto;
-            overflow-x: auto;
-        }
-        .team-section {
             padding: 20px;
             border: 1px solid #ccc;
             background-color: #222;
             margin-bottom: 20px;
         }
-        .team-name {
-            font-size: 24px;
-            color: #FFD700; /* Gold color for team names */
+        .team-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        #player-table {
-            border-collapse: collapse;
-            width: 100%;
+        .team-buttons {
+            display: flex;
         }
-        #player-table th, #player-table td {
-            padding: 8px;
-            text-align: center;
-            border: none;
-            font-size: 24px;
+        .team-button {
+            margin-right: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
         }
-        #player-table thead th {
-            position: sticky;
-            top: 0;
-            background-color: dark;
-            z-index: 1;
-        }
-        .input-box {
-            width: 100%;
-            height: 40px;
-            font-size: 18px;
+        .team-button.active {
+            background-color: #FFD700; /* Highlight color for active button */
         }
     </style>
 </head>
@@ -109,11 +79,37 @@
                         teamSection = document.createElement('div');
                         teamSection.classList.add('team-section');
                         
-                        // Add the team name to the section
+                        // Create a header for the team section
+                        const teamHeader = document.createElement('div');
+                        teamHeader.classList.add('team-header');
+                        teamSection.appendChild(teamHeader);
+
+                        // Add the team name to the header
                         const teamNameElement = document.createElement('div');
                         teamNameElement.classList.add('team-name');
                         teamNameElement.textContent = teamName;
-                        teamSection.appendChild(teamNameElement);
+                        teamHeader.appendChild(teamNameElement);
+
+                        // Create a div for the buttons
+                        const teamButtons = document.createElement('div');
+                        teamButtons.classList.add('team-buttons');
+                        teamHeader.appendChild(teamButtons);
+
+                        // Create the WW button
+                        const wwButton = document.createElement('div');
+                        wwButton.classList.add('team-button');
+                        wwButton.textContent = 'WW';
+                        teamButtons.appendChild(wwButton);
+
+                        // Create the RW button
+                        const rwButton = document.createElement('div');
+                        rwButton.classList.add('team-button');
+                        rwButton.textContent = 'RW';
+                        teamButtons.appendChild(rwButton);
+
+                        // Add click event listeners to the buttons
+                        wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton));
+                        rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton));
 
                         // Create a table for the team
                         playerTable = document.createElement('table');
@@ -148,10 +144,17 @@
                 }
             }
         }
+
+        // Function to handle button clicks
+        function handleButtonClick(clickedButton, otherButton) {
+            if (!clickedButton.classList.contains('active')) {
+                clickedButton.classList.add('active);
+                otherButton.classList.remove('active);
+            }
+        }
     </script>
 </body>
 </html>
-
 
 
 
