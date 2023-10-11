@@ -65,6 +65,7 @@
                         <th>Team</th>
                         <th>Opponent</th>
                         <th>Pace</th>
+                        <th>RW/WW</th>
                         <th>Player</th>
                         <th>Minutes</th>
                         <th>Points</th>
@@ -117,21 +118,23 @@
             let team = '';
             let opponent = '';
             let pace = '';
+            let rw = '';
 
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
 
-                // Check for rows with team, opponent, and pace data
+                // Check for rows with team, opponent, pace, and rw/ww data
                 if (line.includes('PACE')) {
                     const data = line.split('\t');
                     team = data[0];
                     opponent = data[1];
                     pace = data[2];
+                    rw = data[3];
                 } else if (line) {
-                    // Add player data to the table cells
+                    // Add player data to the table cells, matching the players with their respective team
                     const values = line.split('\t');
                     const row = playerTable.insertRow();
-                    const cells = [team, opponent, pace, ...values];
+                    const cells = [team, opponent, pace, rw, ...values];
 
                     for (let j = 0; j < cells.length; j++) {
                         const cell = row.insertCell();
