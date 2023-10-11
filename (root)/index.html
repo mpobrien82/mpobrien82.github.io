@@ -96,6 +96,7 @@
             const teamContainer = document.querySelector('#team-container');
             let currentTeamName = null;
             let teamSection = null;
+            let playerTable = null;
 
             for (let i = 1; i < lines.length; i++) {
                 const values = lines[i].trim().split(',');
@@ -115,7 +116,7 @@
                         teamSection.appendChild(teamNameElement);
 
                         // Create a table for the team
-                        const playerTable = document.createElement('table');
+                        playerTable = document.createElement('table');
                         playerTable.id = 'player-table';
                         playerTable.innerHTML = `
                             <thead>
@@ -150,7 +151,6 @@
     </script>
 </body>
 </html>
-
 
 
 
