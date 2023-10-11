@@ -3,67 +3,26 @@
 <head>
     <title>NBA Live Model</title>
     <style>
-        body {
+        /* ... Your existing CSS ... */
+        .team-section {
+            /* ... Your existing styles ... */
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #333; /* Dark background color */
-            color: #fff; /* Text color */
-        }
-        .container {
-            text-align: center;
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
         }
-        .team-container {
-            max-width: 90%;
-            text-align: left;
-        }
-        .team {
-            border: 1px solid #ccc;
-            background-color: #222;
-            padding: 20px;
-            margin-bottom: 20px;
+        .team-controls {
             display: flex;
-            justify-content: space-between; /* Add space between team name and buttons */
         }
-        .team-name {
-            font-size: 24px;
-            color: #FFD700; /* Gold color for team names */
-        }
-        .button-group {
-            display: flex;
-            gap: 10px;
-        }
-        .select-button {
-            padding: 5px 10px;
-            background-color: #444;
+        .team-controls button {
+            margin: 5px;
+            font-size: 18px;
+            background-color: #333; /* Dark background color for unselected buttons */
             color: #fff;
             border: none;
             cursor: pointer;
         }
-        .select-button.active {
-            background-color: #007bff;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        table th, table td {
-            padding: 8px;
-            text-align: center;
-            border: none;
-            font-size: 24px;
-        }
-        th {
-            background-color: dark;
-            color: white;
+        .team-controls button.active {
+            background-color: #FFD700; /* Gold color for selected buttons */
         }
     </style>
 </head>
@@ -71,7 +30,7 @@
     <div class="container">
         <h1>NBA Live Model</h1>
         <input type="file" id="file-input">
-        <div class="team-container" id="team-container">
+        <div class="scroll-container" id="team-container">
             <!-- Teams and player tables will be added here dynamically -->
         </div>
     </div>
@@ -84,9 +43,6 @@
             const file = event.target.files[0];
 
             if (file) {
-                // Clear existing team containers
-                clearTeamContainers();
-
                 // Handle the uploaded file, e.g., read and process the CSV data
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -99,102 +55,64 @@
             }
         }
 
-        // Function to clear existing team containers
-        function clearTeamContainers() {
-            const teamContainer = document.querySelector('#team-container');
-            teamContainer.innerHTML = ''; // Clear the contents
-        }
-
         // Function to process data from the uploaded CSV
         function processDataFromCSV(csvData) {
-            // Parse and process the CSV data, then create team sections
-            const lines = csvData.split('\n');
-            let currentTeamName = null;
-            let currentTeamContainer = null;
+            // ... Your existing code ...
 
             for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].trim().split('\t');
+                const values = lines[i].trim().split(',');
 
-                if (values.length >= 7) { // Ensure there are enough columns
+                if (values.length >= 10) { // Ensure there are enough columns
                     const teamName = values[0];
 
                     if (teamName !== currentTeamName) {
                         // Create a new team section
-                        currentTeamContainer = createTeamContainer(teamName);
-                        currentTeamName = teamName;
+                        teamSection = document.createElement('div');
+                        teamSection.classList.add('team-section');
+
+                        // Add the team name to the section
+                        const teamNameElement = document.createElement('div');
+                        teamNameElement.classList.add('team-name');
+                        teamNameElement.textContent = teamName;
+                        teamSection.appendChild(teamNameElement);
+
+                        // Create buttons for RW and WW
+                        const teamControls = document.createElement('div');
+                        teamControls.classList.add('team-controls');
+                        const rwButton = createControlButton('RW');
+                        const wwButton = createControlButton('WW');
+                        teamControls.appendChild(rwButton);
+                        teamControls.appendChild(wwButton);
+                        teamSection.appendChild(teamControls);
+
+                        // ... Your existing code ...
                     }
 
-                    // Add player data to the team's table
-                    addPlayerToTeam(currentTeamContainer, values);
+                    // ... Your existing code ...
                 }
             }
         }
 
-        // Function to create a team container
-        function createTeamContainer(teamName) {
-            const teamContainer = document.querySelector('#team-container');
-            const teamDiv = document.createElement('div');
-            teamDiv.classList.add('team');
-            const teamNameElement = document.createElement('div');
-            teamNameElement.classList.add('team-name');
-            teamNameElement.textContent = teamName;
-            teamDiv.appendChild(teamNameElement);
-            const buttonGroup = document.createElement('div');
-            buttonGroup.classList.add('button-group');
-            const rwButton = createSelectButton("RW");
-            const wwButton = createSelectButton("WW");
-            buttonGroup.appendChild(rwButton);
-            buttonGroup.appendChild(wwButton);
-            teamDiv.appendChild(buttonGroup);
-            const table = document.createElement('table');
-            table.innerHTML = `
-                <thead>
-                    <tr>
-                        <th>Players</th>
-                        <th>Minutes</th>
-                        <th>Points</th>
-                        <th>Assists</th>
-                        <th>Rebounds</th>
-                        <th>Threes</th>
-                    </tr>
-                </thead>
-            `;
-            teamDiv.appendChild(table);
-            teamContainer.appendChild(teamDiv);
-
-            // Handle button clicks to ensure only one button is active
-            rwButton.addEventListener('click', () => {
-                rwButton.classList.add('active');
-                wwButton.classList.remove('active');
-            });
-            wwButton.addEventListener('click', () => {
-                wwButton.classList.add('active');
-                rwButton.classList.remove('active');
-            });
-
-            return teamDiv;
-        }
-
-        // Function to create a select button
-        function createSelectButton(label) {
+        function createControlButton(label) {
             const button = document.createElement('button');
-            button.classList.add('select-button');
             button.textContent = label;
+            button.addEventListener('click', handleControlButtonClick);
             return button;
         }
 
-        // Function to add player data to a team's table
-        function addPlayerToTeam(teamContainer, values) {
-            const table = teamContainer.querySelector('table');
-            const row = table.insertRow();
-            for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
-                const cell = row.insertCell();
-                cell.textContent = values[j];
-            }
+        function handleControlButtonClick(event) {
+            // Deselect all buttons in the same team section
+            const teamSection = event.target.closest('.team-section');
+            const buttons = teamSection.querySelectorAll('.team-controls button');
+            buttons.forEach((button) => button.classList.remove('active'));
+
+            // Select the clicked button
+            event.target.classList.add('active');
         }
     </script>
 </body>
 </html>
+
 
 
 
