@@ -113,33 +113,30 @@
         // Function to process data from the uploaded CSV
         function processDataFromCSV(csvData) {
             // Parse and process the CSV data, then update the table
-            const lines = csvData.split('\n');
+            const lines = csvData.split('\n').map(line => line.split('\t'));
             const playerTable = document.querySelector('#player-table');
-            let team = '';
-            let opponent = '';
-            let pace = '';
-            let rw = '';
 
-            // Extract team, opponent, pace, and rw/ww values from the table header
-            const header = lines[0].split('\t');
-            team = header[0];
-            opponent = header[1];
-            pace = header[2];
-            rw = header[3];
+            // Check if the header matches
+            if (lines.length > 0) {
+                const header = lines[0].map(cell => cell.trim());
+                const expectedHeader = ["Team", "Opponent", "Pace", "ww/rw", "Player", "Minutes", "Points", "Assists", "Rebounds", "Threes"];
+                const headerMatch = header.every((cell, index) => cell === expectedHeader[index]);
+
+                if (!headerMatch) {
+                    alert("CSV header does not match the expected format.");
+                    return;
+                }
+            }
 
             for (let i = 1; i < lines.length; i++) {
-                const line = lines[i].trim();
+                const values = lines[i];
 
-                if (line) {
-                    // Add player data to the table cells, matching the players with their respective team
-                    const values = line.split('\t');
-                    const row = playerTable.insertRow();
-                    const cells = [team, opponent, pace, rw, ...values];
+                // Add player data to the table cells
+                const row = playerTable.insertRow();
 
-                    for (let j = 0; j < cells.length; j++) {
-                        const cell = row.insertCell();
-                        cell.textContent = cells[j];
-                    }
+                for (let j = 0; j < values.length; j++) {
+                    const cell = row.insertCell();
+                    cell.textContent = values[j];
                 }
             }
         }
