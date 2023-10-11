@@ -46,7 +46,7 @@ def index():
     # Convert the DataFrame to an HTML table without escaping HTML entities
     table_html = data_frame1.to_html(classes='table table-bordered', index=False, escape=False)
 
-    return render_template('player_info.html', table=table_html)
+    return render_template('index.html', table=table_html)
 
 if __name__ == '__main__':
     app.run(debug=True)
