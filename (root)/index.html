@@ -32,9 +32,6 @@
             border: 1px solid #ccc;
             background-color: #222;
             margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
         .team-name {
             font-size: 24px;
@@ -60,10 +57,6 @@
             width: 100%;
             height: 40px;
             font-size: 18px;
-        }
-        button.highlighted {
-            background-color: #FFD700; /* Gold color for highlighted button */
-            color: #333; /* Dark background color for text */
         }
     </style>
 </head>
@@ -96,26 +89,68 @@
             }
         }
 
-        // Function to handle RW/WW button clicks
-        function handleButton(teamName, buttonType) {
-            // Remove the highlight from all buttons
-            const buttons = document.querySelectorAll(`button[data-team="${teamName}"]`);
-            buttons.forEach(button => {
-                button.classList.remove('highlighted');
-            });
-
-            // Add highlight to the clicked button
-            const button = document.querySelector(`button[data-team="${teamName}"][data-type="${buttonType}"]`);
-            button.classList.add('highlighted');
-        }
-        
+        // Function to process data from the uploaded CSV
         function processDataFromCSV(csvData) {
-            // ... (existing code) ...
+            // Parse and process the CSV data, then create team sections
+            const lines = csvData.split('\n');
+            const teamContainer = document.querySelector('#team-container');
+            let currentTeamName = null;
+            let teamSection = null;
+            let playerTable = null;
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].trim().split(',');
+
+                if (values.length >= 10) { // Ensure there are enough columns
+                    const teamName = values[0];
+
+                    if (teamName !== currentTeamName) {
+                        // Create a new team section
+                        teamSection = document.createElement('div');
+                        teamSection.classList.add('team-section');
+                        
+                        // Add the team name to the section
+                        const teamNameElement = document.createElement('div');
+                        teamNameElement.classList.add('team-name');
+                        teamNameElement.textContent = teamName;
+                        teamSection.appendChild(teamNameElement);
+
+                        // Create a table for the team
+                        playerTable = document.createElement('table');
+                        playerTable.id = 'player-table';
+                        playerTable.innerHTML = `
+                            <thead>
+                                <tr>
+                                    <th>RW/WW</th>
+                                    <th>Players</th>
+                                    <th>Minutes</th>
+                                    <th>Points</th>
+                                    <th>Assists</th>
+                                    <th>Rebounds</th>
+                                    <th>Threes</th>
+                                </tr>
+                            </thead>
+                        `;
+                        teamSection.appendChild(playerTable);
+
+                        // Add the team section to the container
+                        teamContainer.appendChild(teamSection);
+
+                        currentTeamName = teamName;
+                    }
+
+                    // Add player data to the team's table
+                    const row = playerTable.insertRow();
+                    for (let j = 3; j < values.length; j++) { // Start from index 3 to exclude Team and Opponent
+                        const cell = row.insertCell();
+                        cell.textContent = values[j];
+                    }
+                }
+            }
         }
     </script>
 </body>
 </html>
-
 
 
 
