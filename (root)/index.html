@@ -120,7 +120,7 @@
             let teamSection = null;
             let playerTable = null;
 
-            for (let i = 1; i < lines.length; i++) {
+            for (let i = 0; i < lines.length; i++) {
                 const values = lines[i].trim().split('\t');
 
                 if (values.length >= 7) { // Ensure there are enough columns
@@ -211,6 +211,7 @@
     </script>
 </body>
 </html>
+
 
 
 
