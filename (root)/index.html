@@ -98,16 +98,27 @@
                     // Process the CSV data (parse and update the table)
                     const lines = csvData.split('\n');
                     const playerTable = document.querySelector('#player-table');
+                    let headerAdded = false;
 
-                    for (let i = 1; i < lines.length; i++) {
+                    for (let i = 0; i < lines.length; i++) {
                         const values = lines[i].trim().split(',');
 
                         if (values.length === 10) {
-                            const row = playerTable.insertRow();
-
-                            for (let j = 0; j < values.length; j++) {
-                                const cell = row.insertCell();
-                                cell.textContent = values[j];
+                            if (!headerAdded) {
+                                // Add the header row only once
+                                const headerRow = playerTable.insertRow();
+                                for (let j = 0; j < values.length; j++) {
+                                    const cell = headerRow.insertCell();
+                                    cell.textContent = values[j];
+                                }
+                                headerAdded = true;
+                            } else {
+                                // Add player data to the table cells
+                                const row = playerTable.insertRow();
+                                for (let j = 0; j < values.length; j++) {
+                                    const cell = row.insertCell();
+                                    cell.textContent = values[j];
+                                }
                             }
                         }
                     }
@@ -118,6 +129,7 @@
     </script>
 </body>
 </html>
+
 
 
 
