@@ -1,9 +1,56 @@
-<!DOCTYPE html>
 <html>
 <head>
     <title>Player Information</title>
     <style>
-        /* Your CSS styles here (same as in your previous HTML file) */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #333; /* Dark background color */
+            color: #fff; /* Text color */
+        }
+        .container {
+            text-align: center;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .scroll-container {
+            flex: 1;
+            max-height: 80vh;
+            max-width: 95%;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+        #player-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        #player-table th, #player-table td {
+            padding: 8px;
+            text-align: center;
+            border: none;
+            font-size: 24px;
+        }
+        #player-table thead th {
+            position: sticky;
+            top: 0;
+            background-color: dark;
+            z-index: 1;
+        }
+        .input-box {
+            width: 100%;
+            height: 40px;
+            font-size: 18px;
+        }
+        /* Set a different color for the header text */
+        .container h1 {
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -12,11 +59,26 @@
         <div class="scroll-container">
             <table id="player-table">
                 <thead>
-                    <!-- Your table header remains the same -->
+                    <tr>
+                        <th>Team</th>
+                        <th>Opponent</th>
+                         <th>Pace</th>
+                         <th>RW/WW</th>
+                         <th></th>
+                         <th></th>
+                         <th></th>
+                         <th></th>
+                         <th></th>
+                         <th></th>
+                        <th>Player</th>
+                        <th>Minutes</th>
+                        <th>Points</th>
+                        <th>Assists</th>
+                        <th>Rebounds</th>
+                        <th>Threes</th>
+                    </tr>
                 </thead>
-                <tbody>
-                    <!-- Data will be inserted here dynamically -->
-                </tbody>
+                <!-- Data will be inserted here dynamically -->
             </table>
         </div>
     </div>
@@ -25,34 +87,44 @@
         // Function to fetch data from Google Sheets
         async function fetchData() {
             try {
-                // Your existing code for fetching data
-                // ...
+                const response = await fetch(
+                    'https://docs.google.com/spreadsheets/d/1SwQJeR8mxvJS31wgYs4gY7h6OUuP7Ogk2Mi9c-gb2v4/gviz/tq?tqx=out:csv&sheet=Dashboard'
+                );
 
-                // Add event listeners for input boxes to calculate player statistics
-                const inputFields = document.querySelectorAll('.input-box');
-                inputFields.forEach(input => {
-                    input.addEventListener('input', updatePlayerStatistics);
-                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
 
-                // Function to calculate and update player statistics
-                function updatePlayerStatistics() {
-                    const playerRows = document.querySelectorAll('#player-table tbody tr');
-                    playerRows.forEach(playerRow => {
-                        const inputs = playerRow.querySelectorAll('.input-box');
-                        const minutesInput = inputs[0];
-                        const scoreInput = inputs[1];
-                        const quarterInput = inputs[2];
+                const data = await response.text();
+                const lines = data.split('\n');
+                const playerTable = document.querySelector('#player-table');
 
-                        const minutes = parseFloat(minutesInput.value) || 0;
-                        const score = parseFloat(scoreInput.value) || 0;
-                        const quarter = parseFloat(quarterInput.value) || 0;
+                for (let i = 0; i < lines.length; i++) {
+                    const values = lines[i].split(',');
+                    const row = playerTable.insertRow();
 
-                        // Update the player statistics
-                        const statsCell = playerRow.querySelector('td:nth-last-child(5)'); // Adjust this selector as needed
-                        statsCell.textContent = (minutes + score + quarter).toFixed(1); // Update with your calculation logic
+                    for (let j = 0; j < values.length; j++) {
+                        const cell = row.insertCell();
 
-                        // You can similarly update other statistics cells (Points, Assists, Rebounds, Threes)
-                    });
+                        // Check if the cell contains the word "Score," "Time," or "Quarter" (case-insensitive)
+                        const value = values[j].trim().replace(/"/g, ''); // Remove quotation marks
+                        if (/score|time|quarter|G mins|G pts|G ast|G reb|G three/i.test(value)) {
+                            const input = document.createElement('input');
+                            input.setAttribute('class', 'input-box');
+                            input.setAttribute('placeholder', value);
+                            input.style.fontSize = '20px'; // Set font size for the input boxes
+                            input.addEventListener('input', function () {
+                                if (input.value !== '') {
+                                    input.placeholder = '';
+                                } else {
+                                    input.placeholder = value;
+                                }
+                            });
+                            cell.appendChild(input);
+                        } else {
+                            cell.textContent = value;
+                        }
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -64,8 +136,5 @@
     </script>
 </body>
 </html>
-
-
-
 
 
