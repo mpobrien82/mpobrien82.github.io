@@ -29,6 +29,8 @@
             background-color: #222;
             padding: 20px;
             margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between; /* Add space between team name and buttons */
         }
         .team-name {
             font-size: 24px;
@@ -137,6 +139,13 @@
             teamNameElement.classList.add('team-name');
             teamNameElement.textContent = teamName;
             teamDiv.appendChild(teamNameElement);
+            const buttonGroup = document.createElement('div');
+            buttonGroup.classList.add('button-group');
+            const rwButton = createSelectButton("RW");
+            const wwButton = createSelectButton("WW");
+            buttonGroup.appendChild(rwButton);
+            buttonGroup.appendChild(wwButton);
+            teamDiv.appendChild(buttonGroup);
             const table = document.createElement('table');
             table.innerHTML = `
                 <thead>
@@ -152,7 +161,26 @@
             `;
             teamDiv.appendChild(table);
             teamContainer.appendChild(teamDiv);
+
+            // Handle button clicks to ensure only one button is active
+            rwButton.addEventListener('click', () => {
+                rwButton.classList.add('active');
+                wwButton.classList.remove('active');
+            });
+            wwButton.addEventListener('click', () => {
+                wwButton.classList.add('active');
+                rwButton.classList.remove('active');
+            });
+
             return teamDiv;
+        }
+
+        // Function to create a select button
+        function createSelectButton(label) {
+            const button = document.createElement('button');
+            button.classList.add('select-button');
+            button.textContent = label;
+            return button;
         }
 
         // Function to add player data to a team's table
@@ -167,6 +195,7 @@
     </script>
 </body>
 </html>
+
 
 
 
