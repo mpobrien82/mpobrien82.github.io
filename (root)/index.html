@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>Player Information</title>
@@ -84,7 +85,7 @@
     </div>
 
     <script>
-        // Function to fetch data from Google Sheets
+        // Function to fetch data from Google Sheets and calculate stats
         async function fetchData() {
             try {
                 const response = await fetch(
@@ -105,9 +106,8 @@
 
                     for (let j = 0; j < values.length; j++) {
                         const cell = row.insertCell();
-
-                        // Check if the cell contains the word "Score," "Time," or "Quarter" (case-insensitive)
                         const value = values[j].trim().replace(/"/g, ''); // Remove quotation marks
+
                         if (/score|time|quarter|G mins|G pts|G ast|G reb|G three/i.test(value)) {
                             const input = document.createElement('input');
                             input.setAttribute('class', 'input-box');
@@ -118,6 +118,18 @@
                                     input.placeholder = '';
                                 } else {
                                     input.placeholder = value;
+                                }
+
+                                // Check if the placeholder contains "Points," "Assists," "Rebounds," or "Threes"
+                                if (value.toLowerCase().includes("points") || 
+                                    value.toLowerCase().includes("assists") || 
+                                    value.toLowerCase().includes("rebounds") || 
+                                    value.toLowerCase().includes("threes")) {
+                                    const minutesInput = parseFloat(row.querySelector('[placeholder*="G mins"]').value);
+                                    const inputValue = parseFloat(input.value);
+                                    if (!isNaN(inputValue) && !isNaN(minutesInput)) {
+                                        cell.textContent = (inputValue * minutesInput).toFixed(2);
+                                    }
                                 }
                             });
                             cell.appendChild(input);
