@@ -85,7 +85,49 @@
     </div>
 
     <script>
-        // Function to fetch data from Google Sheets and calculate stats
+        // Function to calculate and update player stats based on minutes
+        function calculateStats() {
+            const playerTable = document.querySelector('#player-table');
+            const rows = playerTable.querySelectorAll('tr');
+
+            // Iterate through each row in the table (skip the header row)
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const cells = row.querySelectorAll('td');
+
+                // Find the cell containing the player's minutes and the cells for Points, Assists, Rebounds, and Threes
+                const playerNameCell = cells[0]; // Adjust the index based on your table structure
+                const minutesCell = cells[10]; // Adjust the index based on your table structure
+                const pointsCell = cells[11]; // Adjust the index based on your table structure
+                const assistsCell = cells[12]; // Adjust the index based on your table structure
+                const reboundsCell = cells[13]; // Adjust the index based on your table structure
+                const threesCell = cells[14]; // Adjust the index based on your table structure
+
+                // Get the values
+                const minutes = parseFloat(minutesCell.textContent);
+                let points = parseFloat(pointsCell.textContent);
+                let assists = parseFloat(assistsCell.textContent);
+                let rebounds = parseFloat(reboundsCell.textContent);
+                let threes = parseFloat(threesCell.textContent);
+
+                // Check if all values are valid numbers
+                if (!isNaN(minutes) && !isNaN(points) && !isNaN(assists) && !isNaN(rebounds) && !isNaN(threes)) {
+                    // Calculate the new stats
+                    points = (points * minutes).toFixed(2);
+                    assists = (assists * minutes).toFixed(2);
+                    rebounds = (rebounds * minutes).toFixed(2);
+                    threes = (threes * minutes).toFixed(2);
+
+                    // Update the cell values
+                    pointsCell.textContent = points;
+                    assistsCell.textContent = assists;
+                    reboundsCell.textContent = rebounds;
+                    threesCell.textContent = threes;
+                }
+            }
+        }
+
+        // Function to fetch data from Google Sheets
         async function fetchData() {
             try {
                 const response = await fetch(
@@ -93,7 +135,7 @@
                 );
 
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw an Error('Network response was not ok');
                 }
 
                 const data = await response.text();
@@ -121,10 +163,8 @@
                                 }
 
                                 // Check if the placeholder contains "Points," "Assists," "Rebounds," or "Threes"
-                                if (value.toLowerCase().includes("points") || 
-                                    value.toLowerCase().includes("assists") || 
-                                    value.toLowerCase().includes("rebounds") || 
-                                    value.toLowerCase().includes("threes")) {
+                                if (value.toLowerCase().includes('points') || value.toLowerCase().includes('assists') ||
+                                    value.toLowerCase().includes('rebounds') || value.toLowerCase().includes('threes')) {
                                     const minutesInput = parseFloat(row.querySelector('[placeholder*="G mins"]').value);
                                     const inputValue = parseFloat(input.value);
                                     if (!isNaN(inputValue) && !isNaN(minutesInput)) {
@@ -145,6 +185,9 @@
 
         // Call the fetchData function when the page loads
         fetchData();
+        
+        // Call the calculateStats function when the page loads to calculate stats based on minutes
+        window.onload = calculateStats;
     </script>
 </body>
 </html>
