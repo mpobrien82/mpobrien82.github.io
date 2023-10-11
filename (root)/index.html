@@ -41,6 +41,7 @@
                     <tr>
                         <th>Team</th>
                         <th>Opponent</th>
+                        <th>Pace</th>
                         <th>Player</th>
                         <th>Minutes</th>
                         <th>Points</th>
@@ -80,11 +81,36 @@
             const lines = csvData.split('\n');
             const playerTable = document.querySelector('#player-table');
 
-            // Your code to process and update the table based on CSV data here
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',');
+                const row = playerTable.insertRow();
+
+                // Add data to the table cells based on your CSV structure
+                const team = values[0].trim();
+                const opponent = values[1].trim();
+                const pace = values[3].trim();
+                const player = values[5].trim();
+                const minutes = values[6].trim();
+                const points = values[7].trim();
+                const assists = values[8].trim();
+                const rebounds = values[9].trim();
+                const threes = values[10].trim();
+
+                // Add data to the table cells
+                const cells = [
+                    team, opponent, pace, player, minutes, points, assists, rebounds, threes
+                ];
+
+                for (let j = 0; j < cells.length; j++) {
+                    const cell = row.insertCell();
+                    cell.textContent = cells[j];
+                }
+            }
         }
     </script>
 </body>
 </html>
+
 
 
 
