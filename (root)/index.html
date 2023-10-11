@@ -120,9 +120,6 @@
                         playerTable.innerHTML = `
                             <thead>
                                 <tr>
-                                    <th>Team</th>
-                                    <th>Opponent</th>
-                                    <th>Pace</th>
                                     <th>RW/WW</th>
                                     <th>Players</th>
                                     <th>Minutes</th>
@@ -143,7 +140,7 @@
 
                     // Add player data to the team's table
                     const row = playerTable.insertRow();
-                    for (let j = 0; j < values.length; j++) {
+                    for (let j = 3; j < values.length; j++) { // Start from index 3 to exclude Team and Opponent
                         const cell = row.insertCell();
                         cell.textContent = values[j];
                     }
@@ -153,6 +150,7 @@
     </script>
 </body>
 </html>
+
 
 
 
