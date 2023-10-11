@@ -33,11 +33,13 @@ function processDataFromCSV(csvData) {
     for (let i = 1; i < lines.length; i++) {
         const values = lines[i].trim().split(',');
 
-        const row = playerTable.insertRow();
+        if (values.length === 10) {
+            const row = playerTable.insertRow();
 
-        for (let j = 0; j < values.length; j++) {
-            const cell = row.insertCell();
-            cell.textContent = values[j];
+            for (let j = 0; j < values.length; j++) {
+                const cell = row.insertCell();
+                cell.textContent = values[j];
+            }
         }
     }
 }
