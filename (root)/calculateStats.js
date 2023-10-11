@@ -9,11 +9,12 @@ function calculateStats() {
         const cells = row.querySelectorAll('td');
 
         // Find the cell containing the player's minutes and the cells for Points, Assists, Rebounds, and Threes
-        const minutesCell = cells[11]; // Adjust the index based on your table structure
-        const pointsCell = cells[12];
-        const assistsCell = cells[13];
-        const reboundsCell = cells[14];
-        const threesCell = cells[15];
+        const playerNameCell = cells[0]; // Adjust the index based on your table structure
+        const minutesCell = cells[1]; // Adjust the index based on your table structure
+        const pointsCell = cells[2]; // Adjust the index based on your table structure
+        const assistsCell = cells[3]; // Adjust the index based on your table structure
+        const reboundsCell = cells[4]; // Adjust the index based on your table structure
+        const threesCell = cells[5]; // Adjust the index based on your table structure
 
         // Get the values
         const minutes = parseFloat(minutesCell.textContent);
