@@ -1,38 +1,63 @@
-// Wait for the DOM to be ready
-$(document).ready(function() {
-    $("#csvFileInput").change(handleFileSelect);
-});
+// Function to handle file input change
+document.querySelector('#file-input').addEventListener('change', handleFileUpload);
 
-function handleFileSelect(event) {
+function handleFileUpload(event) {
     const file = event.target.files[0];
+
     if (file) {
+        // Clear the existing table
+        clearTable();
+
+        // Handle the uploaded file, e.g., read and process the CSV data
         const reader = new FileReader();
         reader.onload = function(e) {
-            const contents = e.target.result;
-            displayData(contents);
+            const csvData = e.target.result;
+
+            // Process the CSV data (parse and update the table)
+            processDataFromCSV(csvData);
         };
         reader.readAsText(file);
     }
 }
 
-function displayData(csvData) {
-    const table = $("#projectionsTable");
-    table.empty(); // Clear previous data
+// Function to clear the existing table
+function clearTable() {
+    const playerTable = document.querySelector('#player-table');
+    while (playerTable.rows.length > 1) {
+        playerTable.deleteRow(1);
+    }
+}
 
-    const lines = csvData.split("\n");
-    const headers = lines[0].split("\t");
-    let currentTeam = "";
+// Function to process data from the uploaded CSV
+function processDataFromCSV(csvData) {
+    // Parse and process the CSV data, then update the table
+    const lines = csvData.split('\n');
+    const playerTable = document.querySelector('#player-table');
+    let team = '';
+    let opponent = '';
+    let pace = '';
+    let rw = '';
 
     for (let i = 1; i < lines.length; i++) {
-        const data = lines[i].split("\t");
-        if (data.length === headers.length) {
-            const team = data[0];
-            if (team !== currentTeam) {
-                currentTeam = team;
-                table.append(`<tr><th>Team: ${team}</th></tr>`);
-                table.append(`<tr><th>Opponent</th><th>Pace</th><th>RW/WW</th><th>Player</th><th>Minutes</th><th>Points</th><th>Assists</th><th>Rebounds</th><th>Threes</th></tr>`);
+        const line = lines[i].trim();
+
+        // Check for rows with team, opponent, pace, and rw/ww data
+        if (line.includes('PACE')) {
+            const data = line.split('\t');
+            team = data[0];
+            opponent = data[1];
+            pace = data[2];
+            rw = data[3];
+        } else if (line) {
+            // Add player data to the table cells, matching the players with their respective team
+            const values = line.split('\t');
+            const row = playerTable.insertRow();
+            const cells = [team, opponent, pace, rw, ...values];
+
+            for (let j = 0; j < cells.length; j++) {
+                const cell = row.insertCell();
+                cell.textContent = cells[j];
             }
-            table.append(`<tr><td>${data[1]}</td><td>${data[2]}</td><td>${data[3]}</td><td>${data[4]}</td><td>${data[5]}</td><td>${data[6]}</td><td>${data[7]}</td><td>${data[8]}</td><td>${data[9]}</td></tr>`);
         }
     }
 }
