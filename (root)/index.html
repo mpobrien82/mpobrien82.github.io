@@ -105,11 +105,11 @@
 
                         // Check if the cell contains the word "Score," "Time," or "Quarter" (case-insensitive)
                         const value = values[j].trim().replace(/"/g, ''); // Remove quotation marks
-                        if (/score|time|quarter|G Mins/i.test(value)) {
+                        if (/score|time|quarter|G mins|G pts|G ast|G reb|G three/i.test(value)) {
                             const input = document.createElement('input');
                             input.setAttribute('class', 'input-box');
                             input.setAttribute('placeholder', value);
-                            input.style.fontSize = '10px'; // Set font size for the input boxes
+                            input.style.fontSize = '20px'; // Set font size for the input boxes
                             input.addEventListener('input', function () {
                                 if (input.value !== '') {
                                     input.placeholder = '';
