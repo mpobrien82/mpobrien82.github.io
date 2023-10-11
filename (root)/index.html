@@ -74,12 +74,12 @@
                         <th>Threes</th>
                     </tr>
                 </thead>
-                <!-- Manually add team names here -->
+                <!-- Manually add all team names here -->
                 <tr>
                     <td>ATL</td>
-                    <td>Opponent</td>
-                    <td>Pace</td>
-                    <td>RW/WW</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -89,9 +89,9 @@
                 </tr>
                 <tr>
                     <td>BOS</td>
-                    <td>Opponent</td>
-                    <td>Pace</td>
-                    <td>RW/WW</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -141,29 +141,31 @@
             // Parse and process the CSV data, then update the table
             const lines = csvData.split('\n');
             const playerTable = document.querySelector('#player-table');
-            let currentTeamRow = null; // Track the current team's row
+
+            // Create an object to hold data for each team
+            const teamData = {};
 
             for (let i = 1; i < lines.length; i++) {
                 const values = lines[i].trim().split(',');
 
                 if (values.length >= 10) { // Ensure there are enough columns
                     // Check if the team name in the CSV matches any team in the table
-                    const teamName = values[0]; // Adjust the index if needed
-                    for (let j = 1; j < playerTable.rows.length; j++) {
-                        const teamRow = playerTable.rows[j];
-                        if (teamRow.cells[0].textContent === teamName) {
-                            currentTeamRow = teamRow;
-                            break;
+                    const teamName = values[0];
+                    
+                    // Create a new row for the team if it doesn't exist
+                    if (!teamData[teamName]) {
+                        const teamRow = playerTable.insertRow();
+                        teamRow.insertCell().textContent = teamName;
+                        for (let j = 1; j < 10; j++) {
+                            teamRow.insertCell();
                         }
+                        teamData[teamName] = teamRow;
                     }
-                }
 
-                if (currentTeamRow) {
-                    // Add player data to the current team's row
-                    const row = playerTable.insertRow();
+                    // Add player data to the team's row
+                    const row = teamData[teamName];
                     for (let j = 0; j < values.length; j++) {
-                        const cell = row.insertCell();
-                        cell.textContent = values[j];
+                        row.cells[j + 1].textContent = values[j];
                     }
                 }
             }
@@ -171,6 +173,7 @@
     </script>
 </body>
 </html>
+
 
 
 
