@@ -98,6 +98,7 @@
                     // Process the CSV data (parse and update the table)
                     const lines = csvData.split('\n');
                     const playerTable = document.querySelector('#player-table');
+
                     let headerAdded = false;
 
                     for (let i = 0; i < lines.length; i++) {
@@ -105,20 +106,19 @@
 
                         if (values.length === 10) {
                             if (!headerAdded) {
-                                // Add the header row only once
+                                // Add the header rows only once
                                 const headerRow = playerTable.insertRow();
-                                for (let j = 0; j < values.length; j++) {
+                                for (let j = 0; j < 4; j++) {
                                     const cell = headerRow.insertCell();
                                     cell.textContent = values[j];
                                 }
                                 headerAdded = true;
-                            } else {
-                                // Add player data to the table cells
-                                const row = playerTable.insertRow();
-                                for (let j = 0; j < values.length; j++) {
-                                    const cell = row.insertCell();
-                                    cell.textContent = values[j];
-                                }
+                            }
+                            // Add player data to the table cells
+                            const row = playerTable.insertRow();
+                            for (let j = 4; j < 10; j++) {
+                                const cell = row.insertCell();
+                                cell.textContent = values[j];
                             }
                         }
                     }
