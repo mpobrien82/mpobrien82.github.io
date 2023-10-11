@@ -120,17 +120,17 @@
             let pace = '';
             let rw = '';
 
+            // Extract team, opponent, pace, and rw/ww values from the table header
+            const header = lines[0].split('\t');
+            team = header[0];
+            opponent = header[1];
+            pace = header[2];
+            rw = header[3];
+
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
 
-                // Check for rows with team, opponent, pace, and rw/ww data
-                if (line.includes('PACE')) {
-                    const data = line.split('\t');
-                    team = data[0];
-                    opponent = data[1];
-                    pace = data[2];
-                    rw = data[3];
-                } else if (line) {
+                if (line) {
                     // Add player data to the table cells, matching the players with their respective team
                     const values = line.split('\t');
                     const row = playerTable.insertRow();
@@ -146,8 +146,6 @@
     </script>
 </body>
 </html>
-
-
 
 
 
