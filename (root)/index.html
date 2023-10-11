@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Player Information</title>
+    <title>NBA Live Model</title>
     <style>
         body {
             display: flex;
@@ -27,6 +27,16 @@
             overflow-y: auto;
             overflow-x: auto;
         }
+        .team-section {
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #222;
+            margin-bottom: 20px;
+        }
+        .team-name {
+            font-size: 24px;
+            color: #FFD700; /* Gold color for team names */
+        }
         #player-table {
             border-collapse: collapse;
             width: 100%;
@@ -48,59 +58,14 @@
             height: 40px;
             font-size: 18px;
         }
-        /* Set a different color for the header text */
-        .container h1 {
-            color: #fff;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Player Information</h1>
+        <h1>NBA Live Model</h1>
         <input type="file" id="file-input">
-        <div class="scroll-container">
-            <table id="player-table">
-                <thead>
-                    <tr>
-                        <th>Team</th>
-                        <th>Opponent</th>
-                        <th>Pace</th>
-                        <th>RW/WW</th>
-                        <th>Players</th>
-                        <th>Minutes</th>
-                        <th>Points</th>
-                        <th>Assists</th>
-                        <th>Rebounds</th>
-                        <th>Threes</th>
-                    </tr>
-                </thead>
-                <!-- Manually add all team names here -->
-                <tr>
-                    <td>ATL</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>BOS</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <!-- Add rows for other teams -->
-            </table>
+        <div class="scroll-container" id="team-container">
+            <!-- Teams and player tables will be added here dynamically -->
         </div>
     </div>
 
@@ -112,60 +77,75 @@
             const file = event.target.files[0];
 
             if (file) {
-                // Clear the existing table
-                clearTable();
-
                 // Handle the uploaded file, e.g., read and process the CSV data
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const csvData = e.target.result;
 
-                    // Process the CSV data (parse and update the table)
+                    // Process the CSV data (parse and create team sections)
                     processDataFromCSV(csvData);
                 };
                 reader.readAsText(file);
             }
         }
 
-        // Function to clear the existing table
-        function clearTable() {
-            const playerTable = document.querySelector('#player-table');
-            // Remove rows, excluding the header rows
-            for (let i = playerTable.rows.length - 1; i > 0; i--) {
-                playerTable.deleteRow(i);
-            }
-        }
-
         // Function to process data from the uploaded CSV
         function processDataFromCSV(csvData) {
-            // Parse and process the CSV data, then update the table
+            // Parse and process the CSV data, then create team sections
             const lines = csvData.split('\n');
-            const playerTable = document.querySelector('#player-table');
-
-            // Create an object to hold data for each team
-            const teamData = {};
+            const teamContainer = document.querySelector('#team-container');
+            let currentTeamName = null;
+            let teamSection = null;
 
             for (let i = 1; i < lines.length; i++) {
                 const values = lines[i].trim().split(',');
 
                 if (values.length >= 10) { // Ensure there are enough columns
-                    // Check if the team name in the CSV matches any team in the table
                     const teamName = values[0];
-                    
-                    // Create a new row for the team if it doesn't exist
-                    if (!teamData[teamName]) {
-                        const teamRow = playerTable.insertRow();
-                        teamRow.insertCell().textContent = teamName;
-                        for (let j = 1; j < 10; j++) {
-                            teamRow.insertCell();
-                        }
-                        teamData[teamName] = teamRow;
+
+                    if (teamName !== currentTeamName) {
+                        // Create a new team section
+                        teamSection = document.createElement('div');
+                        teamSection.classList.add('team-section');
+                        
+                        // Add the team name to the section
+                        const teamNameElement = document.createElement('div');
+                        teamNameElement.classList.add('team-name');
+                        teamNameElement.textContent = teamName;
+                        teamSection.appendChild(teamNameElement);
+
+                        // Create a table for the team
+                        const playerTable = document.createElement('table');
+                        playerTable.id = 'player-table';
+                        playerTable.innerHTML = `
+                            <thead>
+                                <tr>
+                                    <th>Team</th>
+                                    <th>Opponent</th>
+                                    <th>Pace</th>
+                                    <th>RW/WW</th>
+                                    <th>Players</th>
+                                    <th>Minutes</th>
+                                    <th>Points</th>
+                                    <th>Assists</th>
+                                    <th>Rebounds</th>
+                                    <th>Threes</th>
+                                </tr>
+                            </thead>
+                        `;
+                        teamSection.appendChild(playerTable);
+
+                        // Add the team section to the container
+                        teamContainer.appendChild(teamSection);
+
+                        currentTeamName = teamName;
                     }
 
-                    // Add player data to the team's row
-                    const row = teamData[teamName];
+                    // Add player data to the team's table
+                    const row = playerTable.insertRow();
                     for (let j = 0; j < values.length; j++) {
-                        row.cells[j + 1].textContent = values[j];
+                        const cell = row.insertCell();
+                        cell.textContent = values[j];
                     }
                 }
             }
@@ -173,6 +153,7 @@
     </script>
 </body>
 </html>
+
 
 
 
