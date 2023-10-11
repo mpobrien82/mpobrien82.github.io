@@ -58,6 +58,7 @@
     <div class="container">
         <h1>Player Information</h1>
         <input type="file" id="file-input">
+        <button onclick="addTeamData()">Add Team Data</button>
         <div class="scroll-container">
             <table id="player-table">
                 <thead>
@@ -80,56 +81,35 @@
     </div>
 
     <script>
-        document.querySelector('#file-input').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-
-            if (file) {
-                // Clear the existing table
+        function addTeamData() {
+            const teamName = prompt('Enter Team Name:');
+            if (teamName) {
+                const opponent = prompt('Enter Opponent:');
+                const pace = prompt('Enter Pace:');
+                const rwOrWw = prompt('Enter RW/WW:');
                 const playerTable = document.querySelector('#player-table');
-                while (playerTable.rows.length > 1) {
-                    playerTable.deleteRow(1);
+                // Add the header for the team
+                const headerRow = playerTable.insertRow();
+                const headerCells = [teamName, opponent, pace, rwOrWw];
+                for (let j = 0; j < headerCells.length; j++) {
+                    const cell = headerRow.insertCell();
+                    cell.textContent = headerCells[j];
                 }
-
-                // Handle the uploaded file, e.g., read and process the CSV data
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const csvData = e.target.result;
-
-                    // Process the CSV data (parse and update the table)
-                    const lines = csvData.split('\n');
-                    const playerTable = document.querySelector('#player-table');
-
-                    let headerAdded = false;
-
-                    for (let i = 0; i < lines.length; i++) {
-                        const values = lines[i].trim().split(',');
-
-                        if (values.length === 10) {
-                            if (!headerAdded) {
-                                // Add the header rows only once
-                                const headerRow = playerTable.insertRow();
-                                for (let j = 0; j < 4; j++) {
-                                    const cell = headerRow.insertCell();
-                                    cell.textContent = values[j];
-                                }
-                                headerAdded = true;
-                            }
-                            // Add player data to the table cells
-                            const row = playerTable.insertRow();
-                            for (let j = 4; j < 10; j++) {
-                                const cell = row.insertCell();
-                                cell.textContent = values[j];
-                            }
-                        }
+                // Loop to add player data or fill with N/A
+                for (let i = 0; i < 7; i++) {
+                    const playerData = prompt('Enter Player Data for row ' + (i + 1) + ':');
+                    const rowData = playerData ? playerData.split(',').map(item => item.trim()) : Array(6).fill('#N/A');
+                    const row = playerTable.insertRow();
+                    for (let j = 0; j < rowData.length; j++) {
+                        const cell = row.insertCell();
+                        cell.textContent = rowData[j];
                     }
-                };
-                reader.readAsText(file);
+                }
             }
-        });
+        }
     </script>
 </body>
 </html>
-
 
 
 
