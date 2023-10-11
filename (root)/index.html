@@ -81,11 +81,10 @@
     </div>
 
     <script>
-        // Function to fetch data from Google Sheets
         async function fetchData() {
             try {
                 const response = await fetch(
-                    'https://docs.google.com/spreadsheets/d/1SwQJeR8mxvJS31wgYs4gY7h6OUuP7Ogk2Mi9c-gb2v4/gviz/tq?tqx=out:csv&sheet=Dashboard'
+                    'https://docs.google.com/spreadsheets/d/1SwQJeR8mxvJS31wgYs4gY7h6OUuP7Ogk2Mi9c-gb2v4/gviz/tq?tqx=out:json&sheet=Dashboard'
                 );
 
                 if (!response.ok) {
@@ -93,36 +92,38 @@
                 }
 
                 const data = await response.text();
-                const lines = data.split('\n');
                 const playerTable = document.querySelector('#player-table');
-
-                for (let i = 0; i < lines.length; i++) {
-                    const values = lines[i].split(',');
-                    const row = playerTable.insertRow();
-
-                    for (let j = 0; j < values.length; j++) {
-                        const cell = row.insertCell();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(data, 'text/xml');
+                const rows = xmlDoc.querySelectorAll('row');
+                
+                rows.forEach(row => {
+                    const values = row.querySelectorAll('c');
+                    const tableRow = playerTable.insertRow();
+                    
+                    values.forEach(value => {
+                        const cell = tableRow.insertCell();
+                        const cellValue = value.querySelector('v').textContent;
 
                         // Check if the cell contains the word "Score," "Time," or "Quarter" (case-insensitive)
-                        const value = values[j].trim().replace(/"/g, ''); // Remove quotation marks
-                        if (/score|time|quarter/i.test(value)) {
+                        if (/score|time|quarter/i.test(cellValue)) {
                             const input = document.createElement('input');
                             input.setAttribute('class', 'input-box');
-                            input.setAttribute('placeholder', value);
-                            input.style.fontSize = '18px'; // Set font size for the input boxes
+                            input.setAttribute('placeholder', cellValue);
+                            input.style.fontSize = '18px';
                             input.addEventListener('input', function () {
                                 if (input.value !== '') {
                                     input.placeholder = '';
                                 } else {
-                                    input.placeholder = value;
+                                    input.placeholder = cellValue;
                                 }
                             });
                             cell.appendChild(input);
                         } else {
-                            cell.textContent = value;
+                            cell.textContent = cellValue;
                         }
-                    }
-                }
+                    });
+                });
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -133,6 +134,7 @@
     </script>
 </body>
 </html>
+
 
 
 
