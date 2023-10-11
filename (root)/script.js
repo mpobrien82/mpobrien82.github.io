@@ -32,19 +32,17 @@ function clearTable() {
 function processDataFromCSV(csvData) {
     // Parse and process the CSV data, then update the table
     const lines = csvData.split('\n');
+    const playerTable = document.querySelector('#player-table');
 
     for (let i = 1; i < lines.length; i++) {
-        const values = lines[i].trim().split(/\s+/); // Split by one or more spaces
+        const values = lines[i].trim().split(',');
 
-        if (values.length >= 10) { // Ensure there are enough columns
-            // Add player data to the table cells
-            const playerTable = document.querySelector('#player-table');
-            const row = playerTable.insertRow();
+        // Add player data to the table cells
+        const row = playerTable.insertRow();
 
-            for (let j = 0; j < values.length; j++) {
-                const cell = row.insertCell();
-                cell.textContent = values[j];
-            }
+        for (let j = 0; j < values.length; j++) {
+            const cell = row.insertCell();
+            cell.textContent = values[j];
         }
     }
 }
