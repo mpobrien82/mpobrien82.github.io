@@ -32,10 +32,27 @@
             border: 1px solid #ccc;
             background-color: #222;
             margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .team-name {
             font-size: 24px;
             color: #FFD700; /* Gold color for team names */
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+        .select-button {
+            padding: 5px 10px;
+            background-color: #444;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .select-button.active {
+            background-color: #007bff;
         }
         #player-table {
             border-collapse: collapse;
@@ -115,13 +132,21 @@
                         teamNameElement.textContent = teamName;
                         teamSection.appendChild(teamNameElement);
 
+                        // Create a button group for selecting RW/WW
+                        const buttonGroup = document.createElement('div');
+                        buttonGroup.classList.add('button-group');
+                        const rwButton = createSelectButton('RW', teamName);
+                        const wwButton = createSelectButton('WW', teamName);
+                        buttonGroup.appendChild(rwButton);
+                        buttonGroup.appendChild(wwButton);
+                        teamSection.appendChild(buttonGroup);
+
                         // Create a table for the team
                         playerTable = document.createElement('table');
                         playerTable.id = 'player-table';
                         playerTable.innerHTML = `
                             <thead>
                                 <tr>
-                                    <th>RW/WW</th>
                                     <th>Players</th>
                                     <th>Minutes</th>
                                     <th>Points</th>
@@ -141,16 +166,41 @@
 
                     // Add player data to the team's table
                     const row = playerTable.insertRow();
-                    for (let j = 3; j < values.length; j++) { // Start from index 3 to exclude Team and Opponent
+                    for (let j = 2; j < values.length; j++) { // Start from index 2 to exclude Team
                         const cell = row.insertCell();
                         cell.textContent = values[j];
                     }
                 }
             }
         }
+
+        // Function to create a select button
+        function createSelectButton(text, team) {
+            const button = document.createElement('button');
+            button.classList.add('select-button');
+            button.textContent = text;
+            button.dataset.team = team;
+            button.addEventListener('click', handleSelectButtonClick);
+            return button;
+        }
+
+        // Function to handle select button click
+        function handleSelectButtonClick(event) {
+            const team = event.target.dataset.team;
+            const selectedButtons = document.querySelectorAll('.select-button.active[data-team="' + team + '"]');
+            
+            selectedButtons.forEach((button) => {
+                if (button !== event.target) {
+                    button.classList.remove('active');
+                }
+            });
+
+            event.target.classList.toggle('active');
+        }
     </script>
 </body>
 </html>
+
 
 
 
