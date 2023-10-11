@@ -119,6 +119,13 @@
                                 }
                             });
                             cell.appendChild(input);
+                        } else if (cellValue.toLowerCase() === 'gm') {
+                            // Insert an input box for "GM"
+                            const gmInput = document.createElement('input');
+                            gmInput.setAttribute('class', 'input-box');
+                            gmInput.setAttribute('placeholder', 'Game Mins');
+                            gmInput.style.fontSize = '18px';
+                            cell.appendChild(gmInput);
                         } else {
                             cell.textContent = cellValue;
                         }
@@ -134,6 +141,7 @@
     </script>
 </body>
 </html>
+
 
 
 
