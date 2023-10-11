@@ -10,7 +10,7 @@ function handleFileUpload(event) {
 
         // Handle the uploaded file, e.g., read and process the CSV data
         const reader = new FileReader();
-        reader.onload = function (e) {
+        reader.onload = function(e) {
             const csvData = e.target.result;
 
             // Process the CSV data (parse and update the table)
@@ -34,10 +34,11 @@ function processDataFromCSV(csvData) {
     const lines = csvData.split('\n');
 
     for (let i = 1; i < lines.length; i++) {
-        const values = lines[i].trim().split('\t'); // Split by tabs
+        const values = lines[i].trim().split(/\s+/); // Split by one or more spaces
 
         if (values.length >= 10) { // Ensure there are enough columns
             // Add player data to the table cells
+            const playerTable = document.querySelector('#player-table');
             const row = playerTable.insertRow();
 
             for (let j = 0; j < values.length; j++) {
