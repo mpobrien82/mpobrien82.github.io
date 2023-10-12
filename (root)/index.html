@@ -187,6 +187,24 @@
             opponentScoreInput.placeholder = 'Opponent Score';
             teamHeader.appendChild(opponentScoreInput);
 
+            // Create an input for the pace clicker
+            const paceClicker = document.createElement('input');
+            paceClicker.type = 'number';
+            paceClicker.classList.add('input-box');
+            paceClicker.placeholder = 'Pace';
+            paceClicker.step = 0.01; // Set the step value to 0.01
+            paceClicker.value = defaultPaceValues[teamId] || 1; // Set the default pace to 1
+            paceClicker.addEventListener('input', () => {
+                // Get the current pace value for this team
+                const pace = parseFloat(paceClicker.value);
+                // Update player data for this team only
+                updatePlayerData(pace, teamId);
+                defaultPaceValues[teamId] = pace;
+            });
+            teamHeader
+            // Append the pace clicker input to the header
+            teamHeader.appendChild(paceClicker);
+
             // Create the RW button
             const rwButton = document.createElement('div');
             rwButton.classList.add('team-button');
@@ -195,7 +213,7 @@
 
             // Create the WW button
             const wwButton = document.createElement('div');
-            wwButton.classList.add('team-button');
+            wwButton.classList add('team-button');
             wwButton.textContent = 'WW';
             teamButtons.appendChild(wwButton);
 
