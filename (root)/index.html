@@ -175,9 +175,10 @@
         // Function to handle button clicks for a specific team
         function handleButtonClick(clickedButton, otherButton, paceInput) {
             if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList.add('active);
-                otherButton.classList.remove('active);
+                clickedButton.classList.add('active');
+                otherButton.classList.remove('active');
                 paceInput.value = (parseFloat(paceInput.value) + 0.01).toFixed(2);
+                updatePlayerData(paceInput, paceInput.parentElement.nextElementSibling.querySelector('table'));
             }
         }
 
@@ -187,15 +188,15 @@
             const pace = parseFloat(paceInput.value);
 
             // Get all player data elements for this team
-            const playerDataElements = playerTable.querySelectorAll('.player-data');
+            const playerDataElements = playerTable.querySelectorAll('td');
 
             // Iterate through each player data element and update the calculated values
-            playerDataElements.forEach((element) => {
+            playerDataElements.forEach((element, index) => {
+                if (index === 0) return; // Skip the "Players" column
                 const originalValue = parseFloat(element.getAttribute('data-original-value'));
                 const column = element.getAttribute('data-column');
 
                 // Calculate and update the displayed value based on the pace
-                if (column === 'Points' || column ===
                 if (column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
                     const newValue = (originalValue * pace).toFixed(2);
                     element.textContent = newValue;
@@ -222,4 +223,5 @@
     </script>
 </body>
 </html>
+
 
