@@ -179,10 +179,10 @@
             // Create a score input box for the opponent
             const opponentScoreInput = document.createElement('input');
             opponentScoreInput.type = 'number';
-            opponentScoreInput.classList.add('score-input');
+            opponentScoreInput.classList add('score-input');
             opponentScoreInput.placeholder = 'Opponent Score';
             teamHeader.appendChild(opponentScoreInput);
-            
+
             // Create an input for the pace clicker
             const paceClicker = document.createElement('input');
             paceClicker.type = 'number';
@@ -211,8 +211,8 @@
             teamButtons.appendChild(rwButton);
 
             // Add click event listeners to the buttons
-            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, teamSection));
-            rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, teamSection));
+            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
+            rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
 
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
@@ -277,6 +277,20 @@
                             cell.classList.add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
+
+                            // Create an input box for the player stat
+                            const inputBox = document.createElement('input');
+                            inputBox.type = 'number';
+                            inputBox.classList.add('input-box');
+                            inputBox.value = originalValue; // Set the default value to the player's stat
+                            inputBox.addEventListener('input', () => {
+                                // Update the displayed value based on the input box value
+                                const newValue = parseFloat(inputBox.value).toFixed(2);
+                                cell.textContent = newValue;
+
+                                // You can add code here to update the corresponding data in your application
+                            });
+                            cell.appendChild(inputBox);
                         }
                     }
                 }
@@ -302,11 +316,15 @@
         }
 
         // Function to handle button clicks
-        function handleButtonClick(clickedButton, otherButton, teamSection) {
+        function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
-                updatePlayerData(parseFloat(document.querySelector('.input-box').value), teamSection);
+                // Update the pace clicker's value in the same team header
+                paceClicker.value = clickedButton.textContent === 'WW' ? (parseFloat(paceClicker.value) - 0.01).toFixed(2) : (parseFloat(paceClicker.value) + 0.01).toFixed(2);
+                // Trigger the input event on the pace clicker to update player data for the specific team
+                paceClicker.dispatchEvent(new Event('input'));
+                updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
         }
 
@@ -321,4 +339,5 @@
     </script>
 </body>
 </html>
+
 
