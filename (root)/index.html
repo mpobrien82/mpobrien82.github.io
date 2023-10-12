@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space between;
             align-items: center;
             width: 100%;
         }
@@ -210,7 +210,7 @@
             rwButton.textContent = 'RW';
             teamButtons.appendChild(rwButton);
 
-            // Add click event listeners to the buttons
+                       // Add click event listeners to the buttons
             wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
 
@@ -306,7 +306,10 @@
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
-                updatePlayerData(parseFloat(paceClicker.value), teamSection);
+                // Update the pace clicker's value in the same team header
+                paceClicker.value = clickedButton.textContent === 'WW' ? (parseFloat(paceClicker.value) - 0.01).toFixed(2) : (parseFloat(paceClicker.value) + 0.01).toFixed(2);
+                // Trigger the input event on the pace clicker to update player data for the specific team
+                paceClicker.dispatchEvent(new Event('input'));
             }
         }
 
@@ -321,7 +324,6 @@
     </script>
 </body>
 </html>
-
 
 
 
