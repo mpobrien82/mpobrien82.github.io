@@ -200,7 +200,7 @@
 
             // Create the WW button
             const wwButton = document.createElement('div');
-            wwButton.classList.add('team-button');
+            wwButton.classList add('team-button');
             wwButton.textContent = 'WW';
             teamButtons.appendChild(wwButton);
 
@@ -211,7 +211,7 @@
             teamButtons.appendChild(rwButton);
 
             // Add click event listeners to the buttons
-            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton));
+            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
 
             // Add the team section to the container
@@ -325,6 +325,7 @@
     </script>
 </body>
 </html>
+
 
 
 
