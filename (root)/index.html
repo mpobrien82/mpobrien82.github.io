@@ -127,7 +127,7 @@
                         // Create a new team section
                         teamSection = document.createElement('div');
                         teamSection.classList.add('team-section');
-                        
+
                         // Create a header for the team section
                         const teamHeader = document.createElement('div');
                         teamHeader.classList.add('team-header');
@@ -160,6 +160,12 @@
                         wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton));
                         rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton));
 
+                        // Create an input field for pace
+                        const paceInput = document.createElement('input');
+                        paceInput.classList.add('input-box');
+                        paceInput.placeholder = 'Enter Pace';
+                        teamHeader.appendChild(paceInput);
+
                         // Create a table for the team
                         playerTable = document.createElement('table');
                         playerTable.id = 'player-table';
@@ -188,7 +194,7 @@
                     for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                         const cell = row.insertCell();
 
-                        // Multiply columns by minutes for Points, Assists, Rebounds, and Threes
+                        // Multiply columns by pace for Points, Assists, Rebounds, and Threes
                         if (j === 2) {
                             cell.textContent = values[j];
                         } else if (j >= 3 && j <= 6) {
@@ -211,6 +217,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
