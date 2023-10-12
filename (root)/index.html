@@ -65,11 +65,15 @@
             text-align: center;
             border: none;
             font-size: 24px;
+            position: relative;
         }
         .input-box {
             width: 70px; /* Adjust the width for the input boxes */
             height: 30px; /* Adjust the height for the input boxes */
             font-size: 18px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
         }
         .quarter-box {
             width: 50px;
@@ -145,11 +149,8 @@
 
             // Create input boxes for player stats (Minutes, Points, Assists, Rebounds, Threes) for every player
             const playersData = [
-                ['Player 1', '', '', '', '', ''],
-                ['Player 2', '', '', '', '', ''],
-                ['Player 3', '', '', '', '', ''],
-                ['Player 4', '', '', '', '', ''],
-                ['Player 5', '', '', '', '', '']
+                ['Trae Young', '33.8', '26.03', '9.80', '3.04', '2.03'],
+                // Add more players here
             ];
 
             for (const playerData of playersData) {
@@ -162,10 +163,15 @@
                 // Create cells for player stats
                 for (let i = 1; i < playerData.length; i++) {
                     const cell = row.insertCell();
+                    const statValue = parseFloat(playerData[i]);
+                    cell.textContent = statValue;
+
+                    // Create input boxes for player stats
                     const statInput = document.createElement('input');
                     statInput.type = 'number';
                     statInput.classList.add('input-box');
                     statInput.placeholder = '';
+                    statInput.addEventListener('input', () => updateStatValue(cell, statInput));
                     cell.appendChild(statInput);
                 }
             }
@@ -280,53 +286,54 @@
                     // Add player data to the team's table
                     const playerTable = teamSection.querySelector('#player-table');
                     const row = playerTable.insertRow();
-                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
+
+                    // Create a cell for the player's name
+                    const playerNameCell = row.insertCell();
+                    playerNameCell.textContent = values[1];
+
+                    // Create cells for player stats
+                    for (let j = 2; j <= 6; j++) {
                         const cell = row.insertCell();
+                        const statValue = parseFloat(values[j]).toFixed(2);
+                        cell.textContent = statValue;
 
-                        // Set the data-original-value and data-column attributes for player data elements
-                        let originalValue = values[j];
-                        let column = '';
-
-                        if (j >= 3 && j <= 6) {
-                            column = ['Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
-                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
-                        }
-
-                        cell.textContent = originalValue;
-
-                        if (column) {
-                            cell.classList.add('player-data');
-                            cell.setAttribute('data-original-value', originalValue);
-                            cell.setAttribute('data-column', column);
-                        }
+                        // Create input boxes for player stats
+                        const statInput = document.createElement('input');
+                        statInput.type = 'number';
+                        statInput.classList.add('input-box');
+                        statInput.placeholder = '';
+                        statInput.value = statValue;
+                        statInput.addEventListener('input', () => updateStatValue(cell, statInput));
+                        cell.appendChild(statInput);
                     }
                 }
             }
         }
 
+        // Function to update player stat value based on the input box value
+        function updateStatValue(statCell, statInput) {
+            const inputValue = parseFloat(statInput.value);
+            statCell.textContent = inputValue.toFixed(2);
+        }
+
         // Function to update player data based on the current pace
         function updatePlayerData(pace, teamSection) {
-            // Get all player data elements within the specified team section
-            const playerDataElements = teamSection.querySelectorAll('.player-data');
+            // Get all input boxes for player stats within the specified team section
+            const statInputs = teamSection.querySelectorAll('.input-box');
 
-            // Iterate through each player data element and update the calculated values
-            playerDataElements.forEach((element) => {
-                const originalValue = parseFloat(element.getAttribute('data-original-value'));
-                const column = element.getAttribute('data-column');
-
-                // Calculate and update the displayed value based on the pace
-                if (column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
-                    const newValue = (originalValue * pace).toFixed(2);
-                    element.textContent = newValue;
-                }
+            // Iterate through each input box and update the displayed values based on the pace
+            statInputs.forEach((input) => {
+                const originalValue = parseFloat(input.getAttribute('data-original-value'));
+                const newValue = (originalValue * pace).toFixed(2);
+                input.value = newValue;
             });
         }
 
         // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList.add('active');
-                otherButton.classList.remove('active');
+                clickedButton.classList.add('active);
+                otherButton.classList.remove('active);
                 updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
         }
