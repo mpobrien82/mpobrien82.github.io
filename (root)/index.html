@@ -201,8 +201,6 @@
                 updatePlayerData(pace, teamId);
                 defaultPaceValues[teamId] = pace;
             });
-            teamHeader
-            // Append the pace clicker input to the header
             teamHeader.appendChild(paceClicker);
 
             // Create the RW button
@@ -213,7 +211,8 @@
 
             // Create the WW button
             const wwButton = document.createElement('div');
-            wwButton.classList add('team-button');
+            wwButton.classList
+            add('team-button');
             wwButton.textContent = 'WW';
             teamButtons.appendChild(wwButton);
 
@@ -327,6 +326,7 @@
     </script>
 </body>
 </html>
+
 
 
 
