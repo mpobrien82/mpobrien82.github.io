@@ -182,7 +182,7 @@
             opponentScoreInput.classList.add('score-input');
             opponentScoreInput.placeholder = 'Opponent Score';
             teamHeader.appendChild(opponentScoreInput);
-
+            
             // Create an input for the pace clicker
             const paceClicker = document.createElement('input');
             paceClicker.type = 'number';
@@ -190,6 +190,12 @@
             paceClicker.placeholder = 'Pace';
             paceClicker.step = 0.01; // Set the step value to 0.01
             paceClicker.value = defaultPace; // Set the default pace to 1
+            paceClicker.addEventListener('input', () => {
+                // Get the current pace value for this team
+                const pace = parseFloat(paceClicker.value);
+                // Update player data for this team only
+                updatePlayerData(pace, teamSection);
+            });
             teamHeader.appendChild(paceClicker);
 
             // Create the WW button
@@ -205,10 +211,10 @@
             teamButtons.appendChild(rwButton);
 
             // Add click event listeners to the buttons
-            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
-            rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
+            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, teamSection));
+            rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, teamSection));
 
-               // Add the team section to the container
+            // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
 
             return teamSection;
@@ -296,11 +302,11 @@
         }
 
         // Function to handle button clicks
-        function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
+        function handleButtonClick(clickedButton, otherButton, teamSection) {
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
-                updatePlayerData(parseFloat(paceClicker.value), teamSection);
+                updatePlayerData(parseFloat(document.querySelector('.input-box').value), teamSection);
             }
         }
 
@@ -315,13 +321,4 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
 
