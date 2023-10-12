@@ -111,9 +111,13 @@
 
         // Function to create a team section
         function createTeamSection(teamName) {
+            // Create a unique identifier for this team
+            const teamId = `team-${teamName}`;
+
             // Create a new team section
             const teamSection = document.createElement('div');
             teamSection.classList.add('team-section');
+            teamSection.id = teamId;
 
             // Create a header for the team section
             const teamHeader = document.createElement('div');
@@ -194,7 +198,7 @@
                 // Get the current pace value for this team
                 const pace = parseFloat(paceClicker.value);
                 // Update player data for this team only
-                updatePlayerData(pace, teamSection);
+                updatePlayerData(pace, teamId);
             });
             teamHeader.appendChild(paceClicker);
 
@@ -211,8 +215,8 @@
             teamButtons.appendChild(rwButton);
 
             // Add click event listeners to the buttons
-            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
-            rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
+            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamId));
+            rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamId));
 
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
@@ -284,9 +288,9 @@
         }
 
         // Function to update player data based on the current pace
-        function updatePlayerData(pace, teamSection) {
+        function updatePlayerData(pace, teamId) {
             // Get all player data elements within the specified team section
-            const playerDataElements = teamSection.querySelectorAll('.player-data');
+            const playerDataElements = document.getElementById(teamId).querySelectorAll('.player-data');
 
             // Iterate through each player data element and update the calculated values
             playerDataElements.forEach((element) => {
@@ -302,7 +306,7 @@
         }
 
         // Function to handle button clicks
-        function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
+        function handleButtonClick(clickedButton, otherButton, paceClicker, teamId) {
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
@@ -310,7 +314,7 @@
                 paceClicker.value = clickedButton.textContent === 'WW' ? (parseFloat(paceClicker.value) - 0.01).toFixed(2) : (parseFloat(paceClicker.value) + 0.01).toFixed(2);
                 // Trigger the input event on the pace clicker to update player data for the specific team
                 paceClicker.dispatchEvent(new Event('input'));
-                updatePlayerData(parseFloat(paceClicker.value), teamSection);
+                updatePlayerData(parseFloat(paceClicker.value), teamId);
             }
         }
 
