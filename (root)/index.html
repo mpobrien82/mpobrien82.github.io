@@ -3,11 +3,78 @@
 <head>
     <title>NBA Live Model</title>
     <style>
-        /* Your existing CSS styles here... */
-
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #333; /* Dark background color */
+            color: #fff; /* Text color */
+        }
+        .container {
+            text-align: center;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .scroll-container {
+            flex: 1;
+            max-height: 80vh;
+            max-width: 95%;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+        .team-section {
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #222;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .team-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .team-name {
+            font-size: 24px;
+            color: #FFD700; /* Gold color for team names */
+        }
+        .team-buttons {
+            display: flex;
+        }
+        .team-button {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .team-button.active {
+            background-color: #FFD700; /* Highlight color for active button */
+        }
+        #player-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        #player-table th, #player-table td {
+            padding: 8px;
+            text-align: center;
+            border: none;
+            font-size: 24px;
+        }
+        #player-table thead th {
+            position: sticky;
+            top: 0;
+            background-color: #333; /* Dark background color */
+            z-index: 1;
+        }
         .input-box {
-            width: 70px;
-            height: 30px;
+            width: 70px; /* Adjust the width for the pace input */
+            height: 30px; /* Adjust the height for the pace input */
             font-size: 18px;
         }
     </style>
@@ -43,48 +110,110 @@
 
         // Function to process data from the uploaded CSV
         function processDataFromCSV(csvData) {
-            // Your existing code here...
+            // Parse and process the CSV data, then create team sections
+            const lines = csvData.split('\n');
+            const teamContainer = document.querySelector('#team-container');
+            let currentTeamName = null;
+            let teamSection = null;
+            let playerTable = null;
 
             for (let i = 1; i < lines.length; i++) {
                 const values = lines[i].trim().split(',');
 
-                if (values.length >= 7) {
-                    // Your existing code here...
+                if (values.length >= 7) { // Ensure there are enough columns (removed RW/WW column)
+                    const teamName = values[0];
 
-                    // Create an input field for pace
-                    const paceInput = document.createElement('input');
-                    paceInput.classList.add('input-box');
-                    paceInput.placeholder = 'Pace';
-                    paceInput.addEventListener('input', function() {
-                        updateStatsBasedOnPace(paceInput, playerTable);
-                    });
-                    teamHeader.appendChild(paceInput);
+                    if (teamName !== currentTeamName) {
+                        // Create a new team section
+                        teamSection = document.createElement('div');
+                        teamSection.classList.add('team-section');
 
-                    // Your existing code here...
+                        // Create a header for the team section
+                        const teamHeader = document.createElement('div');
+                        teamHeader.classList.add('team-header');
+                        teamSection.appendChild(teamHeader);
+
+                        // Add the team name to the header
+                        const teamNameElement = document.createElement('div');
+                        teamNameElement.classList.add('team-name');
+                        teamNameElement.textContent = teamName;
+                        teamHeader.appendChild(teamNameElement);
+
+                        // Create a div for the buttons
+                        const teamButtons = document.createElement('div');
+                        teamButtons.classList.add('team-buttons');
+                        teamHeader.appendChild(teamButtons);
+
+                        // Create the WW button
+                        const wwButton = document.createElement('div');
+                        wwButton.classList.add('team-button');
+                        wwButton.textContent = 'WW';
+                        teamButtons.appendChild(wwButton);
+
+                        // Create the RW button
+                        const rwButton = document.createElement('div');
+                        rwButton.classList.add('team-button');
+                        rwButton.textContent = 'RW';
+                        teamButtons.appendChild(rwButton);
+
+                        // Add click event listeners to the buttons
+                        wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton));
+                        rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton));
+
+                        // Create an input field for pace
+                        const paceInput = document.createElement('input');
+                        paceInput.classList.add('input-box');
+                        paceInput.placeholder = 'Pace';
+                        teamHeader.appendChild(paceInput);
+
+                        // Create a table for the team
+                        playerTable = document.createElement('table');
+                        playerTable.id = 'player-table';
+                        playerTable.innerHTML = `
+                            <thead>
+                                <tr>
+                                    <th>Players</th>
+                                    <th>Minutes</th>
+                                    <th>Points</th>
+                                    <th>Assists</th>
+                                    <th>Rebounds</th>
+                                    <th>Threes</th>
+                                </tr>
+                            </thead>
+                        `;
+                        teamSection.appendChild(playerTable);
+
+                        // Add the team section to the container
+                        teamContainer.appendChild(teamSection);
+
+                        currentTeamName = teamName;
+                    }
+
+                    // Add player data to the team's table
+                    const row = playerTable.insertRow();
+                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
+                        const cell = row.insertCell();
+
+                        // Multiply columns by pace for Points, Assists, Rebounds, and Threes
+                        if (j === 2) {
+                            cell.textContent = values[j];
+                        } else if (j >= 3 && j <= 6) {
+                            cell.textContent = (parseFloat(values[j]) * parseFloat(values[2])).toFixed(2);
+                        } else {
+                            cell.textContent = values[j];
+                        }
+                    }
                 }
             }
         }
 
-        // Function to update player stats based on the entered pace value
-        function updateStatsBasedOnPace(paceInput, playerTable) {
-            const pace = parseFloat(paceInput.value);
-
-            if (!isNaN(pace)) {
-                // Iterate through the player table and update stats
-                const rows = playerTable.querySelectorAll('tbody tr');
-                rows.forEach(function(row) {
-                    const cells = row.cells;
-                    // Start from the 2nd cell (index 1) to update Points, Assists, Rebounds, and Threes
-                    for (let j = 2; j <= 5; j++) {
-                        cells[j].textContent = (parseFloat(cells[j].getAttribute('data-original')) * pace).toFixed(2);
-                    }
-                });
+        // Function to handle button clicks
+        function handleButtonClick(clickedButton, otherButton) {
+            if (!clickedButton.classList.contains('active')) {
+                clickedButton.classList.add('active');
+                otherButton.classList.remove('active');
             }
         }
     </script>
 </body>
 </html>
-
-
-
-
