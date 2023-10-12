@@ -183,6 +183,15 @@
             opponentScoreInput.placeholder = 'Opponent Score';
             teamHeader.appendChild(opponentScoreInput);
 
+            // Create input boxes for player stats (Minutes, Points, Assists, Rebounds, Threes)
+            for (let i = 0; i < 5; i++) {
+                const statInput = document.createElement('input');
+                statInput.type = 'number';
+                statInput.classList.add('input-box');
+                statInput.placeholder = '';
+                teamHeader.appendChild(statInput);
+            }
+
             // Create an input for the pace clicker
             const paceClicker = document.createElement('input');
             paceClicker.type = 'number';
@@ -315,3 +324,4 @@
     </script>
 </body>
 </html>
+
