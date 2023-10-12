@@ -92,22 +92,6 @@
         // Function to handle file input change
         document.querySelector('#file-input').addEventListener('change', handleFileUpload);
 
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-
-            if (file) {
-                // Handle the uploaded file, e.g., read and process the CSV data
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const csvData = e.target.result;
-
-                    // Process the CSV data (parse and create team sections)
-                    processDataFromCSV(csvData);
-                };
-                reader.readAsText(file);
-            }
-        }
-
         // Function to process data from the uploaded CSV
         function processDataFromCSV(csvData) {
             // Parse and process the CSV data, then create team sections
@@ -116,6 +100,7 @@
             let currentTeamName = null;
             let teamSection = null;
             let playerTable = null;
+            const teamPaces = {};
 
             for (let i = 1; i < lines.length; i++) {
                 const values = lines[i].trim().split(',');
@@ -164,6 +149,7 @@
                         const paceInput = document.createElement('input');
                         paceInput.classList.add('input-box');
                         paceInput.placeholder = 'Pace';
+                        paceInput.dataset.team = teamName; // Add team name as a data attribute
                         teamHeader.appendChild(paceInput);
 
                         // Create a table for the team
@@ -198,7 +184,9 @@
                         if (j === 2) {
                             cell.textContent = values[j];
                         } else if (j >= 3 && j <= 6) {
-                            cell.textContent = (parseFloat(values[j]) * parseFloat(values[2])).toFixed(2);
+                            const originalValue = parseFloat(values[j]);
+                            cell.textContent = (originalValue * parseFloat(values[2])).toFixed(2);
+                            cell.dataset.originalValue = originalValue; // Store the original value
                         } else {
                             cell.textContent = values[j];
                         }
@@ -210,10 +198,57 @@
         // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton) {
             if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList.add('active');
-                otherButton.classList.remove('active');
+                clickedButton.classList.add('active);
+                otherButton.classList.remove('active);
             }
         }
+
+        // Function to update player stats when the pace changes
+        function updatePlayerStats(teamName, pace) {
+            const paceInput = document.querySelector(`input[data-team="${teamName}"]`);
+            const playerTable = paceInput.closest('.team-section').querySelector('#player-table');
+            const playerRows = playerTable.querySelectorAll('tbody tr');
+
+            playerRows.forEach((row) => {
+                const cells = row.cells;
+
+                // Update Points, Assists, Rebounds, and Threes based on pace
+                for (let j = 2; j <= 5; j++) {
+                    const originalValue = parseFloat(cells[j].dataset.originalValue);
+                    cells[j].textContent = (originalValue * pace).toFixed(2);
+                }
+            });
+        }
+
+        // ... (previous code)
+
+        // Handle file upload
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const csvData = e.target.result;
+                    processDataFromCSV(csvData);
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // Attach the page load event to handle initial pace data
+        window.addEventListener('load', function () {
+            const paceInputs = document.querySelectorAll('.input-box');
+            paceInputs.forEach((paceInput) => {
+                const teamName = paceInput.dataset.team;
+                const paceValue = teamPaces[teamName];
+
+                if (paceValue !== undefined) {
+                    paceInput.value = paceValue;
+                    updatePlayerStats(teamName, paceValue);
+                }
+            });
+        });
     </script>
 </body>
 </html>
