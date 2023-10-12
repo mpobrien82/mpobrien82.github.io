@@ -56,10 +56,6 @@
         .team-button.active {
             background-color: #FFD700; /* Highlight color for active button */
         }
-        .team-input {
-            width: 80px;
-            margin: 0 10px;
-        }
         #player-table {
             border-collapse: collapse;
             width: 100%;
@@ -120,7 +116,6 @@
             let currentTeamName = null;
             let teamSection = null;
             let playerTable = null;
-            let paceInput = null;
 
             for (let i = 1; i < lines.length; i++) {
                 const values = lines[i].trim().split(',');
@@ -143,13 +138,6 @@
                         teamNameElement.classList.add('team-name');
                         teamNameElement.textContent = teamName;
                         teamHeader.appendChild(teamNameElement);
-
-                        // Create an input for Pace
-                        paceInput = document.createElement('input');
-                        paceInput.classList.add('team-input');
-                        paceInput.placeholder = 'Pace';
-                        paceInput.type = 'number';
-                        teamHeader.appendChild(paceInput);
 
                         // Create a div for the buttons
                         const teamButtons = document.createElement('div');
@@ -200,13 +188,11 @@
                     for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                         const cell = row.insertCell();
 
-                        // Multiply columns by pace for Points, Assists, Rebounds, and Threes
+                        // Multiply columns by minutes for Points, Assists, Rebounds, and Threes
                         if (j === 2) {
                             cell.textContent = values[j];
                         } else if (j >= 3 && j <= 6) {
-                            cell.textContent = '';
-                            // Add a class to mark these cells for later calculation
-                            cell.classList.add('calculate');
+                            cell.textContent = (parseFloat(values[j]) * parseFloat(values[2])).toFixed(2);
                         } else {
                             cell.textContent = values[j];
                         }
@@ -219,52 +205,12 @@
         function handleButtonClick(clickedButton, otherButton) {
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
-                otherButton.classList.remove
-// ...
-
-// Function to handle button clicks
-function handleButtonClick(clickedButton, otherButton) {
-    if (!clickedButton.classList.contains('active')) {
-        clickedButton.classList.add('active');
-        otherButton.classList.remove('active');
-        recalculateStats();
-    }
-}
-
-// Function to recalculate player stats based on pace
-function recalculateStats() {
-    const paceInputs = document.querySelectorAll('.team-input');
-    const calculateCells = document.querySelectorAll('.calculate');
-
-    paceInputs.forEach((paceInput, index) => {
-        const pace = parseFloat(paceInput.value) || 1.0; // Default to 1.0 if input is empty or not a number
-
-        // Loop through the player rows and update the calculated cells
-        const playerRows = document.querySelectorAll(`#player-table tr:not(:first-child)`);
-        playerRows.forEach((row, rowIndex) => {
-            const cells = row.querySelectorAll('td');
-            cells.forEach((cell, cellIndex) => {
-                if (cellIndex >= 2 && cellIndex <= 5) {
-                    const originalValue = parseFloat(cell.textContent);
-                    if (!isNaN(originalValue)) {
-                        const newValue = (originalValue * pace).toFixed(2);
-                        cell.textContent = newValue;
-                    }
-                }
-            });
-        });
-    });
-}
-
-// Attach an event listener to all pace inputs to recalculate stats when they change
-const paceInputs = document.querySelectorAll('.team-input');
-paceInputs.forEach(paceInput => {
-    paceInput.addEventListener('input', recalculateStats);
-});
-</script>
+                otherButton.classList.remove('active');
+            }
+        }
+    </script>
 </body>
 </html>
-
 
 
 
