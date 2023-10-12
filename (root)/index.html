@@ -118,9 +118,9 @@
             let playerTable = null;
 
             for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].trim().split('\t'); // Use '\t' as the delimiter
+                const values = lines[i].trim().split(',');
 
-                if (values.length >= 7) { // Ensure there are enough columns
+                if (values.length >= 7) { // Ensure there are enough columns (removed RW/WW column)
                     const teamName = values[0];
 
                     if (teamName !== currentTeamName) {
@@ -157,8 +157,8 @@
                         teamButtons.appendChild(rwButton);
 
                         // Add click event listeners to the buttons
-                        wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton));
-                        rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton));
+                        wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, teamSection));
+                        rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, teamSection));
 
                         // Create a table for the team
                         playerTable = document.createElement('table');
@@ -172,10 +172,6 @@
                                     <th>Assists</th>
                                     <th>Rebounds</th>
                                     <th>Threes</th>
-                                    <th>Points x Minutes</th>
-                                    <th>Assists x Minutes</th>
-                                    <th>Rebounds x Minutes</th>
-                                    <th>Threes x Minutes</th>
                                 </tr>
                             </thead>
                         `;
@@ -189,29 +185,36 @@
 
                     // Add player data to the team's table
                     const row = playerTable.insertRow();
-
-                    // Initialize variables to hold calculated values
-                    let pointsXMinutes = 0;
-                    let assistsXMinutes = 0;
-                    let reboundsXMinutes = 0;
-                    let threesXMinutes = 0;
-
-                    for (let j = 1; j < values.length; j++) {
+                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                         const cell = row.insertCell();
                         cell.textContent = values[j];
+                        cell.id = `${currentTeamName}-${values[1]}-${j}`;
+                    }
+                }
+            }
+        }
 
-                        if (j === 1) {
-                            cell.classList.add('player-name');
-                        } else if (j === 2) {
-                            cell.classList.add('minutes');
-                        } else if (j === 3) {
-                            pointsXMinutes = (parseFloat(values[j]) * parseFloat(values[2])).toFixed(2);
-                            cell.textContent = pointsXMinutes;
-                        } else if (j === 4) {
-                            assistsXMinutes = (parseFloat(values[j]) * parseFloat(values[2])).toFixed(2);
-                            cell.textContent = assistsXMinutes;
-                        } else if (j === 5) {
-                            reboundsXMinutes = (parseFloat(values[j]) * parseFloat(values[
+        // Function to handle button clicks
+        function handleButtonClick(clickedButton, otherButton, teamSection) {
+            if (!clickedButton.classList.contains('active')) {
+                clickedButton.classList.add('active');
+                otherButton.classList.remove('active');
+
+                // Calculate and update the values based on the selected button
+                const isWW = clickedButton.textContent === 'WW';
+                const pointsIndex = 3;
+                const assistsIndex = 4;
+                const reboundsIndex = 5;
+                const threesIndex = 6;
+                const table = teamSection.querySelector('#player-table');
+                const rows = table.rows;
+
+                for (let i = 1; i < rows.length; i++) {
+                    const minutes = parseFloat(rows[i].cells[1].textContent);
+                    const points = parseFloat(rows[i].cells[pointsIndex].textContent);
+                    const assists = parseFloat(rows[i].cells[assistsIndex].textContent);
+                    const rebounds =
+
 
 
 
