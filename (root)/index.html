@@ -127,7 +127,7 @@
                         // Create a new team section
                         teamSection = document.createElement('div');
                         teamSection.classList.add('team-section');
-
+                        
                         // Create a header for the team section
                         const teamHeader = document.createElement('div');
                         teamHeader.classList.add('team-header');
@@ -157,8 +157,8 @@
                         teamButtons.appendChild(rwButton);
 
                         // Add click event listeners to the buttons
-                        wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, teamSection));
-                        rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, teamSection));
+                        wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton));
+                        rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton));
 
                         // Create a table for the team
                         playerTable = document.createElement('table');
@@ -188,32 +188,21 @@
                     for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                         const cell = row.insertCell();
                         cell.textContent = values[j];
-                        cell.id = `${currentTeamName}-${values[1]}-${j}`;
                     }
                 }
             }
         }
 
         // Function to handle button clicks
-        function handleButtonClick(clickedButton, otherButton, teamSection) {
+        function handleButtonClick(clickedButton, otherButton) {
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
-
-                // Calculate and update the values based on the selected button
-                const isWW = clickedButton.textContent === 'WW';
-                const pointsIndex = 3;
-                const assistsIndex = 4;
-                const reboundsIndex = 5;
-                const threesIndex = 6;
-                const table = teamSection.querySelector('#player-table');
-                const rows = table.rows;
-
-                for (let i = 1; i < rows.length; i++) {
-                    const minutes = parseFloat(rows[i].cells[1].textContent);
-                    const points = parseFloat(rows[i].cells[pointsIndex].textContent);
-                    const assists = parseFloat(rows[i].cells[assistsIndex].textContent);
-                    const rebounds = parseFloat(rows[i].cells
+            }
+        }
+    </script>
+</body>
+</html>
 
 
 
