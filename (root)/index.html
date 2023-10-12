@@ -78,6 +78,9 @@
             text-align: center;
             border: 1px solid #ccc;
         }
+        .quarter-box.active {
+            background-color: #FFD700;
+        }
         .time-input {
             width: 70px;
             height: 30px;
@@ -123,6 +126,59 @@
             teamNameElement.textContent = teamName;
             teamHeader.appendChild(teamNameElement);
 
+            // Create a table for the team
+            const playerTable = document.createElement('table');
+            playerTable.id = 'player-table';
+            playerTable.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Players</th>
+                        <th>Minutes</th>
+                        <th>Points</th>
+                        <th>Assists</th>
+                        <th>Rebounds</th>
+                        <th>Threes</th>
+                    </tr>
+                </thead>
+            `;
+            teamSection.appendChild(playerTable);
+
+            // Create the quarter boxes
+            const quarterBoxes = document.createElement('div');
+            quarterBoxes.classList.add('team-buttons');
+            teamHeader.appendChild(quarterBoxes);
+
+            // Create the quarter buttons
+            for (let i = 1; i <= 4; i++) {
+                const quarterBox = document.createElement('div');
+                quarterBox.classList.add('quarter-box');
+                quarterBox.textContent = `${i}Q`;
+                quarterBox.addEventListener('click', () => handleQuarterClick(quarterBox, quarterBoxes));
+                quarterBoxes.appendChild(quarterBox);
+            }
+
+            // Create a time input box
+            const timeInput = document.createElement('input');
+            timeInput.type = 'text';
+            timeInput.classList.add
+            timeInput.classList.add('time-input');
+            timeInput.placeholder = 'Time';
+            teamHeader.appendChild(timeInput);
+
+            // Create a score input box for the team
+            const teamScoreInput = document.createElement('input');
+            teamScoreInput.type = 'number';
+            teamScoreInput.classList.add('score-input');
+            teamScoreInput.placeholder = `${teamName} Score`;
+            teamHeader.appendChild(teamScoreInput);
+
+            // Create a score input box for the opponent
+            const opponentScoreInput = document.createElement('input');
+            opponentScoreInput.type = 'number';
+            opponentScoreInput.classList.add('score-input');
+            opponentScoreInput.placeholder = 'Opponent Score';
+            teamHeader.appendChild(opponentScoreInput);
+
             // Create an input for the pace clicker
             const paceClicker = document.createElement('input');
             paceClicker.type = 'number';
@@ -158,58 +214,6 @@
             // Add click event listeners to the buttons
             wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker));
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker));
-
-            // Create a table for the team
-            const playerTable = document.createElement('table');
-            playerTable.id = 'player-table';
-            playerTable.innerHTML = `
-                <thead>
-                    <tr>
-                        <th>Players</th>
-                        <th>Minutes</th>
-                        <th>Points</th>
-                        <th>Assists</th>
-                        <th>Rebounds</th>
-                        <th>Threes</th>
-                    </tr>
-                </thead>
-            `;
-            teamSection.appendChild(playerTable);
-
-            // Create the quarter boxes
-            const quarterBoxes = document.createElement('div');
-            quarterBoxes.classList.add('team-buttons');
-            teamHeader.appendChild(quarterBoxes);
-
-            // Create the quarter buttons
-            for (let i = 1; i <= 4; i++) {
-                const quarterBox = document.createElement('div');
-                quarterBox.classList.add('quarter-box');
-                quarterBox.textContent = `${i}Q`;
-                quarterBox.addEventListener('click', () => handleQuarterClick(quarterBox, quarterBoxes));
-                quarterBoxes.appendChild(quarterBox);
-            }
-
-            // Create a time input box
-            const timeInput = document.createElement('input');
-            timeInput.type = 'text';
-            timeInput.classList.add('time-input');
-            timeInput.placeholder = 'Time';
-            teamHeader.appendChild(timeInput);
-
-            // Create a score input box for the team
-            const teamScoreInput = document.createElement('input');
-            teamScoreInput.type = 'number';
-            teamScoreInput.classList.add('score-input');
-            teamScoreInput.placeholder = `${teamName} Score`;
-            teamHeader.appendChild(teamScoreInput);
-
-            // Create a score input box for the opponent
-            const opponentScoreInput = document.createElement('input');
-                       opponentScoreInput.type = 'number';
-            opponentScoreInput.classList.add('score-input');
-            opponentScoreInput.placeholder = 'Opponent Score';
-            teamHeader.appendChild(opponentScoreInput);
 
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
@@ -321,6 +325,5 @@
     </script>
 </body>
 </html>
-
 
 
