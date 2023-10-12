@@ -118,16 +118,16 @@
             let playerTable = null;
 
             for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].trim().split(',');
+                const values = lines[i].trim().split('\t'); // Use '\t' as the delimiter
 
-                if (values.length >= 7) { // Ensure there are enough columns (removed RW/WW column)
+                if (values.length >= 7) { // Ensure there are enough columns
                     const teamName = values[0];
 
                     if (teamName !== currentTeamName) {
                         // Create a new team section
                         teamSection = document.createElement('div');
                         teamSection.classList.add('team-section');
-                        
+
                         // Create a header for the team section
                         const teamHeader = document.createElement('div');
                         teamHeader.classList.add('team-header');
@@ -210,6 +210,8 @@
                         } else if (j === 4) {
                             assistsXMinutes = (parseFloat(values[j]) * parseFloat(values[2])).toFixed(2);
                             cell.textContent = assistsXMinutes;
-                        } else if (j === 5)
+                        } else if (j === 5) {
+                            reboundsXMinutes = (parseFloat(values[j]) * parseFloat(values[
+
 
 
