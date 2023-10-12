@@ -120,7 +120,7 @@
             for (let i = 1; i < lines.length; i++) {
                 const values = lines[i].trim().split(',');
 
-                if (values.length >= 10) { // Ensure there are enough columns
+                if (values.length >= 7) { // Ensure there are enough columns (removed RW/WW column)
                     const teamName = values[0];
 
                     if (teamName !== currentTeamName) {
@@ -166,7 +166,6 @@
                         playerTable.innerHTML = `
                             <thead>
                                 <tr>
-                                    <th>RW/WW</th>
                                     <th>Players</th>
                                     <th>Minutes</th>
                                     <th>Points</th>
@@ -186,7 +185,7 @@
 
                     // Add player data to the team's table
                     const row = playerTable.insertRow();
-                    for (let j = 3; j < values.length; j++) { // Start from index 3 to exclude Team and Opponent
+                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                         const cell = row.insertCell();
                         cell.textContent = values[j];
                     }
@@ -204,7 +203,6 @@
     </script>
 </body>
 </html>
-
 
 
 
