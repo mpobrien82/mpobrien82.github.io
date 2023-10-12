@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="calculations.js"></script>
     <title>NBA Live Model</title>
     <style>
         body {
@@ -173,6 +172,10 @@
                                     <th>Assists</th>
                                     <th>Rebounds</th>
                                     <th>Threes</th>
+                                    <th>Points x Minutes</th>
+                                    <th>Assists x Minutes</th>
+                                    <th>Rebounds x Minutes</th>
+                                    <th>Threes x Minutes</th>
                                 </tr>
                             </thead>
                         `;
@@ -186,24 +189,27 @@
 
                     // Add player data to the team's table
                     const row = playerTable.insertRow();
-                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
+
+                    // Initialize variables to hold calculated values
+                    let pointsXMinutes = 0;
+                    let assistsXMinutes = 0;
+                    let reboundsXMinutes = 0;
+                    let threesXMinutes = 0;
+
+                    for (let j = 1; j < values.length; j++) {
                         const cell = row.insertCell();
                         cell.textContent = values[j];
-                    }
-                }
-            }
-        }
 
-        // Function to handle button clicks
-        function handleButtonClick(clickedButton, otherButton) {
-            if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList.add('active');
-                otherButton.classList.remove('active');
-            }
-        }
-    </script>
-</body>
-</html>
-
+                        if (j === 1) {
+                            cell.classList.add('player-name');
+                        } else if (j === 2) {
+                            cell.classList.add('minutes');
+                        } else if (j === 3) {
+                            pointsXMinutes = (parseFloat(values[j]) * parseFloat(values[2])).toFixed(2);
+                            cell.textContent = pointsXMinutes;
+                        } else if (j === 4) {
+                            assistsXMinutes = (parseFloat(values[j]) * parseFloat(values[2])).toFixed(2);
+                            cell.textContent = assistsXMinutes;
+                        } else if (j === 5)
 
 
