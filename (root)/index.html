@@ -38,6 +38,7 @@
         }
         .team-header {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
             width: 100%;
@@ -282,7 +283,7 @@
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
-                            inputBox.value = originalValue; // Set the default value to the player's stat
+                            inputBox.value = ''; // Set the default value to an empty string
                             inputBox.addEventListener('input', () => {
                                 // Update the displayed value based on the input box value
                                 const newValue = parseFloat(inputBox.value).toFixed(2);
@@ -339,4 +340,5 @@
     </script>
 </body>
 </html>
+
 
