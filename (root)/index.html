@@ -103,8 +103,8 @@
     </div>
 
     <script>
-        // Set the default pace to start at 1
-        const defaultPace = 1;
+        // Set the default pace to start at 1 for each team
+        const defaultPaceValues = {};
 
         // Function to handle file input change
         document.querySelector('#file-input').addEventListener('change', handleFileUpload);
@@ -193,12 +193,13 @@
             paceClicker.classList.add('input-box');
             paceClicker.placeholder = 'Pace';
             paceClicker.step = 0.01; // Set the step value to 0.01
-            paceClicker.value = defaultPace; // Set the default pace to 1
+            paceClicker.value = defaultPaceValues[teamId] || 1; // Set the default pace to 1
             paceClicker.addEventListener('input', () => {
                 // Get the current pace value for this team
                 const pace = parseFloat(paceClicker.value);
                 // Update player data for this team only
                 updatePlayerData(pace, teamId);
+                defaultPaceValues[teamId] = pace;
             });
             teamHeader.appendChild(paceClicker);
 
@@ -206,7 +207,8 @@
             const wwButton = document.createElement('div');
             wwButton.classList.add('team-button');
             wwButton.textContent = 'WW';
-            teamButtons.appendChild(wwButton);
+            teamButtons.appendChild
+(wwButton);
 
             // Create the RW button
             const rwButton = document.createElement('div');
@@ -329,6 +331,7 @@
     </script>
 </body>
 </html>
+
 
 
 
