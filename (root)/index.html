@@ -83,6 +83,9 @@
     </div>
 
     <script>
+        // Set the default pace to start at 1
+        const defaultPace = 1;
+
         // Function to handle file input change
         document.querySelector('#file-input').addEventListener('change', handleFileUpload);
 
@@ -108,8 +111,8 @@
             paceClicker.type = 'number';
             paceClicker.classList.add('input-box');
             paceClicker.placeholder = 'Pace';
-            paceClicker.value = '1'; // Set the initial value to 1
             paceClicker.step = 0.01; // Set the step value to 0.01
+            paceClicker.value = defaultPace; // Set the default pace to 1
             paceClicker.addEventListener('input', () => {
                 // Get the current pace value for this team
                 const pace = parseFloat(paceClicker.value);
@@ -204,11 +207,11 @@
                     for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                         const cell = row.insertCell();
 
-                        // Set the data-original-value and data-column attributes for player data elements
+                                            // Set the data-original-value and data-column attributes for player data elements
                         let originalValue = values[j];
                         let column = '';
 
-                                    if (j >= 3 && j <= 6) {
+                        if (j >= 3 && j <= 6) {
                             column = ['Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
                             originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
                         }
@@ -216,7 +219,7 @@
                         cell.textContent = originalValue;
 
                         if (column) {
-                            cell.classList add('player-data');
+                            cell.classList.add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
                         }
@@ -257,5 +260,7 @@
     </script>
 </body>
 </html>
+
+
 
 
