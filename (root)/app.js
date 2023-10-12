@@ -156,4 +156,3 @@ function handleButtonClick(clickedButton, otherButton) {
         otherButton.classList.remove('active');
     }
 }
-
