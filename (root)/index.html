@@ -220,6 +220,50 @@
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove
+// ...
+
+// Function to handle button clicks
+function handleButtonClick(clickedButton, otherButton) {
+    if (!clickedButton.classList.contains('active')) {
+        clickedButton.classList.add('active');
+        otherButton.classList.remove('active');
+        recalculateStats();
+    }
+}
+
+// Function to recalculate player stats based on pace
+function recalculateStats() {
+    const paceInputs = document.querySelectorAll('.team-input');
+    const calculateCells = document.querySelectorAll('.calculate');
+
+    paceInputs.forEach((paceInput, index) => {
+        const pace = parseFloat(paceInput.value) || 1.0; // Default to 1.0 if input is empty or not a number
+
+        // Loop through the player rows and update the calculated cells
+        const playerRows = document.querySelectorAll(`#player-table tr:not(:first-child)`);
+        playerRows.forEach((row, rowIndex) => {
+            const cells = row.querySelectorAll('td');
+            cells.forEach((cell, cellIndex) => {
+                if (cellIndex >= 2 && cellIndex <= 5) {
+                    const originalValue = parseFloat(cell.textContent);
+                    if (!isNaN(originalValue)) {
+                        const newValue = (originalValue * pace).toFixed(2);
+                        cell.textContent = newValue;
+                    }
+                }
+            });
+        });
+    });
+}
+
+// Attach an event listener to all pace inputs to recalculate stats when they change
+const paceInputs = document.querySelectorAll('.team-input');
+paceInputs.forEach(paceInput => {
+    paceInput.addEventListener('input', recalculateStats);
+});
+</script>
+</body>
+</html>
 
 
 
