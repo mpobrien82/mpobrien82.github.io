@@ -187,7 +187,15 @@
                     const row = playerTable.insertRow();
                     for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                         const cell = row.insertCell();
-                        cell.textContent = values[j];
+
+                        // Multiply columns by minutes for Points, Assists, Rebounds, and Threes
+                        if (j === 2) {
+                            cell.textContent = values[j];
+                        } else if (j >= 3 && j <= 6) {
+                            cell.textContent = (parseFloat(values[j]) * parseFloat(values[2])).toFixed(2);
+                        } else {
+                            cell.textContent = values[j];
+                        }
                     }
                 }
             }
@@ -203,6 +211,7 @@
     </script>
 </body>
 </html>
+
 
 
 
