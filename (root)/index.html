@@ -143,6 +143,11 @@
             `;
             teamSection.appendChild(playerTable);
 
+            // Create a div for the buttons
+            const teamButtons = document.createElement('div');
+            teamButtons.classList.add('team-buttons');
+            teamHeader.appendChild(teamButtons);
+
             // Create the quarter boxes
             const quarterBoxes = document.createElement('div');
             quarterBoxes.classList.add('team-buttons');
@@ -160,7 +165,6 @@
             // Create a time input box
             const timeInput = document.createElement('input');
             timeInput.type = 'text';
-            timeInput.classList.add
             timeInput.classList.add('time-input');
             timeInput.placeholder = 'Time';
             teamHeader.appendChild(timeInput);
@@ -194,11 +198,6 @@
             });
             teamHeader.appendChild(paceClicker);
 
-            // Create a div for the buttons
-            const teamButtons = document.createElement('div');
-            teamButtons.classList.add('team-buttons');
-            teamHeader.appendChild(teamButtons);
-
             // Create the WW button
             const wwButton = document.createElement('div');
             wwButton.classList.add('team-button');
@@ -212,7 +211,8 @@
             teamButtons.appendChild(rwButton);
 
             // Add click event listeners to the buttons
-            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker));
+            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker
+            ));
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker));
 
             // Add the team section to the container
@@ -325,5 +325,6 @@
     </script>
 </body>
 </html>
+
 
 
