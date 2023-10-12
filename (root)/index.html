@@ -67,8 +67,8 @@
             font-size: 24px;
         }
         .input-box {
-            width: 70px; /* Adjust the width for the pace input */
-            height: 30px; /* Adjust the height for the pace input */
+            width: 70px; /* Adjust the width for the input boxes */
+            height: 30px; /* Adjust the height for the input boxes */
             font-size: 18px;
         }
         .quarter-box {
@@ -143,6 +143,33 @@
             `;
             teamSection.appendChild(playerTable);
 
+            // Create input boxes for player stats (Minutes, Points, Assists, Rebounds, Threes) for every player
+            const playersData = [
+                ['Player 1', '', '', '', '', ''],
+                ['Player 2', '', '', '', '', ''],
+                ['Player 3', '', '', '', '', ''],
+                ['Player 4', '', '', '', '', ''],
+                ['Player 5', '', '', '', '', '']
+            ];
+
+            for (const playerData of playersData) {
+                const row = playerTable.insertRow();
+
+                // Create a cell for the player's name
+                const playerNameCell = row.insertCell();
+                playerNameCell.textContent = playerData[0];
+
+                // Create cells for player stats
+                for (let i = 1; i < playerData.length; i++) {
+                    const cell = row.insertCell();
+                    const statInput = document.createElement('input');
+                    statInput.type = 'number';
+                    statInput.classList.add('input-box');
+                    statInput.placeholder = '';
+                    cell.appendChild(statInput);
+                }
+            }
+
             // Create a div for the buttons
             const teamButtons = document.createElement('div');
             teamButtons.classList.add('team-buttons');
@@ -183,15 +210,6 @@
             opponentScoreInput.placeholder = 'Opponent Score';
             teamHeader.appendChild(opponentScoreInput);
 
-            // Create input boxes for player stats (Minutes, Points, Assists, Rebounds, Threes)
-            for (let i = 0; i < 5; i++) {
-                const statInput = document.createElement('input');
-                statInput.type = 'number';
-                statInput.classList.add('input-box');
-                statInput.placeholder = '';
-                teamHeader.appendChild(statInput);
-            }
-
             // Create an input for the pace clicker
             const paceClicker = document.createElement('input');
             paceClicker.type = 'number';
@@ -217,7 +235,7 @@
             wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
 
-               // Add the team section to the container
+            // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
 
             return teamSection;
