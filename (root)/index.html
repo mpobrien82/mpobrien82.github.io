@@ -77,19 +77,13 @@
             height: 30px; /* Adjust the height for the pace input */
             font-size: 18px;
         }
-        /* New style for pace clicker container */
-        .pace-clicker-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>NBA Live Model</h1>
         <input type="file" id="file-input">
+        <input type="number" id="pace-input" class="input-box" placeholder="Pace">
         <div class="scroll-container" id="team-container">
             <!-- Teams and player tables will be added here dynamically -->
         </div>
@@ -99,36 +93,21 @@
         // Function to handle file input change
         document.querySelector('#file-input').addEventListener('change', handleFileUpload);
 
-        function createPaceClicker(teamName) {
-            // Create a pace clicker container for each team
-            const paceClickerContainer = document.createElement('div');
-            paceClickerContainer.classList.add('pace-clicker-container');
+        // Get a reference to the pace input element
+        const paceInput = document.getElementById('pace-input');
 
-            // Create a pace clicker for the team
-            const paceInput = document.createElement('input');
-            paceInput.type = 'number';
-            paceInput.classList.add('input-box');
-            paceInput.placeholder = 'Pace';
-            paceInput.step = 0.01; // Set the step to 0.01
-            paceInput.addEventListener('input', () => {
-                // Get the current pace value
-                const pace = parseFloat(paceInput.value);
+        // Add an event listener for changes to the pace input
+        paceInput.addEventListener('input', () => {
+            // Get the current pace value
+            const pace = parseFloat(paceInput.value);
 
-                // Update player data when pace changes for the team
-                updatePlayerData(pace, teamName);
-            });
-
-            // Append the pace input to the pace clicker container
-            paceClickerContainer.appendChild(paceInput);
-
-            // Append the pace clicker container to the team section
-            const teamSection = document.querySelector(`#${teamName}-section`);
-            teamSection.appendChild(paceClickerContainer);
-        }
-
-        function updatePlayerData(pace, teamName) {
-            // Get all player data elements for the specified team
-            const playerDataElements = document.querySelectorAll(`.${teamName}-player-data`);
+            // Update player data when pace changes
+            updatePlayerData(pace);
+        });
+        // Function to update player data based on the current pace
+        function updatePlayerData(pace) {
+            // Get all player data elements
+            const playerDataElements = document.querySelectorAll('.player-data');
 
             // Iterate through each player data element and update the calculated values
             playerDataElements.forEach((element) => {
@@ -158,7 +137,7 @@
                 reader.readAsText(file);
             }
         }
-
+        // Function to process data from the uploaded CSV
         function processDataFromCSV(csvData) {
             // Parse and process the CSV data, then create team sections
             const lines = csvData.split('\n');
@@ -177,7 +156,6 @@
                         // Create a new team section
                         teamSection = document.createElement('div');
                         teamSection.classList.add('team-section');
-                        teamSection.id = `${teamName}-section`;
 
                         // Create a header for the team section
                         const teamHeader = document.createElement('div');
@@ -207,7 +185,6 @@
                         rwButton.textContent = 'RW';
                         teamButtons.appendChild(rwButton);
 
-                        //
                         // Add click event listeners to the buttons
                         wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton));
                         rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton));
@@ -229,18 +206,16 @@
                         `;
                         teamSection.appendChild(playerTable);
 
-                        // Create the pace clicker for the team
-                        createPaceClicker(teamName);
-
                         // Add the team section to the container
                         teamContainer.appendChild(teamSection);
 
                         currentTeamName = teamName;
                     }
 
+                    // Add player data to the team
                     // Add player data to the team's table
                     const row = playerTable.insertRow();
-                    for (let j = 1; j < values.length; j++) {
+                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                         const cell = row.insertCell();
 
                         // Set the data-original-value and data-column attributes for player data elements
@@ -255,7 +230,7 @@
                         cell.textContent = originalValue;
 
                         if (column) {
-                            cell.classList.add(`player-data ${teamName}-player-data`);
+                            cell.classList.add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
                         }
