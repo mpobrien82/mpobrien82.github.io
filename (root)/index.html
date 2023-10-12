@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space between;
             align-items: center;
             width: 100%;
         }
@@ -82,14 +82,46 @@
 <body>
     <div class="container">
         <h1>NBA Live Model</h1>
+        <!-- Input element for uploading a CSV file -->
         <input type="file" id="file-input">
         <input type="number" id="pace-input" class="input-box" placeholder="Pace">
         <div class="scroll-container" id="team-container">
             <!-- Teams and player tables will be added here dynamically -->
         </div>
     </div>
+
+    <script>
+        // Function to handle file input change
+        document.querySelector('#file-input').addEventListener('change', handleFileUpload);
+
+        // Your other JavaScript code here
+
+        // Function to handle file upload
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                // Handle the uploaded file, e.g., read and process the CSV data
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const csvData = e.target.result;
+
+                    // Process the CSV data (parse and create team sections)
+                    processDataFromCSV(csvData);
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // Function to process data from the uploaded CSV
+        function processDataFromCSV(csvData) {
+            // Parse and process the CSV data to create team sections
+            // Your CSV data processing code goes here
+        }
+    </script>
 </body>
 </html>
+
 
 
 
