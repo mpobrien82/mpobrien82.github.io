@@ -103,21 +103,17 @@
     </div>
 
     <script>
-        // Set the default pace to start at 1 for each team
-        const defaultPaceValues = {};
+        // Set the default pace to start at 1
+        const defaultPace = 1;
 
         // Function to handle file input change
         document.querySelector('#file-input').addEventListener('change', handleFileUpload);
 
         // Function to create a team section
         function createTeamSection(teamName) {
-            // Create a unique identifier for this team
-            const teamId = `team-${teamName}`;
-
             // Create a new team section
             const teamSection = document.createElement('div');
             teamSection.classList.add('team-section');
-            teamSection.id = teamId;
 
             // Create a header for the team section
             const teamHeader = document.createElement('div');
@@ -193,15 +189,20 @@
             paceClicker.classList.add('input-box');
             paceClicker.placeholder = 'Pace';
             paceClicker.step = 0.01; // Set the step value to 0.01
-            paceClicker.value = defaultPaceValues[teamId] || 1; // Set the default pace to 1
+            paceClicker.value = defaultPace; // Set the default pace to 1
             paceClicker.addEventListener('input', () => {
                 // Get the current pace value for this team
                 const pace = parseFloat(paceClicker.value);
                 // Update player data for this team only
-                updatePlayerData(pace, teamId);
-                defaultPaceValues[teamId] = pace;
+                updatePlayerData(pace, teamSection);
             });
             teamHeader.appendChild(paceClicker);
+
+            // Create the WW button
+            const wwButton = document.createElement('div');
+            wwButton.classList.add('team-button');
+            wwButton.textContent = 'WW';
+            teamButtons.appendChild(wwButton);
 
             // Create the RW button
             const rwButton = document.createElement('div');
@@ -209,16 +210,9 @@
             rwButton.textContent = 'RW';
             teamButtons.appendChild(rwButton);
 
-            // Create the WW button
-            const wwButton = document.createElement('div');
-            wwButton.classList
-            add('team-button');
-            wwButton.textContent = 'WW';
-            teamButtons.appendChild(wwButton);
-
             // Add click event listeners to the buttons
-            rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, teamId));
-            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, teamId));
+            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton));
+            rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
 
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
@@ -290,9 +284,9 @@
         }
 
         // Function to update player data based on the current pace
-        function updatePlayerData(pace, teamId) {
+        function updatePlayerData(pace, teamSection) {
             // Get all player data elements within the specified team section
-            const playerDataElements = document.getElementById(teamId).querySelectorAll('.player-data');
+            const playerDataElements = teamSection.querySelectorAll('.player-data');
 
             // Iterate through each player data element and update the calculated values
             playerDataElements.forEach((element) => {
@@ -308,10 +302,15 @@
         }
 
         // Function to handle button clicks
-        function handleButtonClick(clickedButton, otherButton, teamId) {
+        function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
+                // Update the pace clicker's value in the same team header
+                paceClicker.value = clickedButton.textContent === 'WW' ? (parseFloat(paceClicker.value) - 0.01).toFixed(2) : (parseFloat(paceClicker.value) + 0.01).toFixed(2);
+                // Trigger the input event on the pace clicker to update player data for the specific team
+                paceClicker.dispatchEvent(new Event('input'));
+                updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
         }
 
