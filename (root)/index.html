@@ -325,7 +325,7 @@
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
-                otherButton.classList.remove('active');
+                otherButton.classList remove('active');
                 updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
         }
@@ -341,5 +341,6 @@
     </script>
 </body>
 </html>
+
 
 
