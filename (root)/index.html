@@ -67,8 +67,8 @@
             font-size: 24px;
         }
         .input-box {
-            width: 70px; /* Adjust the width for the pace input */
-            height: 30px; /* Adjust the height for the pace input */
+            width: 70px;
+            height: 30px;
             font-size: 18px;
         }
         .quarter-box {
@@ -204,10 +204,6 @@
             rwButton.textContent = 'RW';
             teamButtons.appendChild(rwButton);
 
-            // Add click event listeners to the buttons
-            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
-            rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
-
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
 
@@ -311,8 +307,7 @@
         // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList.add('active');
-                otherButton.classList.remove('active');
+                clickedButton.classList.add('active);
                 updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
         }
