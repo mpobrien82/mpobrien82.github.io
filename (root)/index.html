@@ -113,7 +113,7 @@
         function createTeamSection(teamName) {
             // Create a new team section
             const teamSection = document.createElement('div');
-            teamSection.classList.add('team-section');
+            teamSection.classList add('team-section');
 
             // Create a header for the team section
             const teamHeader = document.createElement('div');
@@ -208,7 +208,7 @@
             wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
 
-               // Add the team section to the container
+            // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
 
             return teamSection;
@@ -299,7 +299,7 @@
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
-                otherButton.classList.remove('active');
+                otherButton.classList remove('active');
                 updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
         }
@@ -315,4 +315,5 @@
     </script>
 </body>
 </html>
+
 
