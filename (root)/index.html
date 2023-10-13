@@ -158,7 +158,7 @@
                 const quarterBox = document.createElement('div');
                 quarterBox.classList.add('quarter-box');
                 quarterBox.textContent = `${i}Q`;
-                quarterBox.addEventListener('click', () => handleQuarterClick(quarterBox, quarterBoxes));
+                quarterBox.addEventListener('click', () => handleQuarterClick(quarterBox, quarterBoxes, teamSection));
                 quarterBoxes.appendChild(quarterBox);
             }
 
@@ -167,7 +167,7 @@
             timeInput.type = 'number'; // Change the input type to "number" to input time
             timeInput.classList.add('time-input');
             timeInput.placeholder = 'Time (minutes left)';
-            timeInput.addEventListener('input', () => handleTimeLeftInput(timeInput, paceClicker, teamSection));
+            timeInput.addEventListener('input', () => handleTimeLeftInput(timeInput, teamSection));
             teamHeader.appendChild(timeInput);
 
             // Create a score input box for the team
@@ -314,7 +314,7 @@
         }
 
         // Function to handle quarter button clicks
-        function handleQuarterClick(clickedButton, quarterBoxes) {
+        function handleQuarterClick(clickedButton, quarterBoxes, teamSection) {
             // Deselect all quarter buttons in the same team header
             quarterBoxes.querySelectorAll('.quarter-box').forEach((button) => button.classList.remove('active'));
 
@@ -323,16 +323,29 @@
         }
 
         // Function to handle the time left input
-        function handleTimeLeftInput(timeInput, paceClicker, teamSection) {
+        function handleTimeLeftInput(timeInput, teamSection) {
             const timeLeft = parseFloat(timeInput.value);
-            const pace = calculatePace(timeLeft);
-            updatePlayerData(pace, teamSection);
+            const remainingTime = 48 - timeLeft; // Calculate remaining time in the game
+            updateProjectedMinutes(remainingTime, teamSection);
         }
 
-        // Function to calculate the pace based on the time left
-        function calculatePace(timeLeft) {
-            const totalTime = 48; // Total time in an NBA game
-            return totalTime / timeLeft;
+        // Function to update the projected minutes based on the remaining time
+        function updateProjectedMinutes(remainingTime, teamSection) {
+            // Get all input boxes for player minutes
+            const minuteInputs = teamSection.querySelectorAll('.input-box');
+
+            // Iterate through each input box and update the projected minutes
+            minuteInputs.forEach((input) => {
+                const originalMinutes = parseFloat(input.getAttribute('data-original-minutes'));
+                const newMinutes = originalMinutes - remainingTime;
+
+                // Ensure the new projected minutes are not negative
+                if (newMinutes >= 0) {
+                    input.value = newMinutes.toFixed(2);
+                } else {
+                    input.value = "0.00";
+                }
+            });
         }
 
         // Function to update player data based on the current pace
