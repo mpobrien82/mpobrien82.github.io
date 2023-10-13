@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space between;
             align-items: center;
             width: 100%;
         }
@@ -129,21 +129,19 @@
             // Create a table for the team
             const playerTable = document.createElement('table');
             playerTable.id = 'player-table';
+            playerTable.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Players</th>
+                        <th>Minutes</th>
+                        <th>Points</th>
+                        <th>Assists</th>
+                        <th>Rebounds</th>
+                        <th>Threes</th>
+                    </tr>
+                </thead>
+            `;
             teamSection.appendChild(playerTable);
-
-            // Create a table header
-            const tableHeader = playerTable.createTHead();
-            const headerRow = tableHeader.insertRow(0);
-
-            // Define column headers
-            const columnHeaders = ['Players', 'Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'];
-
-            // Create header cells
-            for (const header of columnHeaders) {
-                const cell = document.createElement('th');
-                cell.textContent = header;
-                headerRow.appendChild(cell);
-            }
 
             // Create a div for the buttons
             const teamButtons = document.createElement('div');
@@ -290,9 +288,6 @@
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
-                            if (j === 2) {
-                                inputBox.classList.add('minutes-input'); // Add this line for Minutes input
-                            }
                             cell.appendChild(inputBox);
                         }
                     }
