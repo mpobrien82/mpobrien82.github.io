@@ -67,8 +67,8 @@
             font-size: 24px;
         }
         .input-box {
-            width: 70px; /* Adjust the width for the input box */
-            height: 30px; /* Adjust the height for the input box */
+            width: 70px; /* Adjust the width for the pace input */
+            height: 30px; /* Adjust the height for the pace input */
             font-size: 18px;
         }
         .quarter-box {
@@ -129,27 +129,19 @@
             // Create a table for the team
             const playerTable = document.createElement('table');
             playerTable.id = 'player-table';
+            playerTable.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Players</th>
+                        <th>Minutes</th>
+                        <th>Points</th>
+                        <th>Assists</th>
+                        <th>Rebounds</th>
+                        <th>Threes</th>
+                    </tr>
+                </thead>
+            `;
             teamSection.appendChild(playerTable);
-
-            // Create the headers for the table
-            const headerRow = playerTable.createTHead().insertRow();
-            const headers = ['Players', 'Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'];
-
-            headers.forEach(header => {
-                const th = document.createElement('th');
-                th.textContent = header;
-                headerRow.appendChild(th);
-            });
-
-            // Create a row for player input boxes
-            const inputBoxRow = playerTable.insertRow();
-            const inputBoxLabels = ['(input box)    (input box)    (input box)   (input box) (input box)'];
-
-            inputBoxLabels.forEach(inputLabel => {
-                const td = document.createElement('td');
-                td.innerHTML = inputLabel;
-                inputBoxRow.appendChild(td);
-            });
 
             // Create a div for the buttons
             const teamButtons = document.createElement('div');
@@ -261,11 +253,11 @@
                         currentTeamName = teamName;
                     }
 
-                    // Add player data to the team's table
+                    // Create a row for original player data
                     const playerTable = teamSection.querySelector('#player-table');
-                    const row = playerTable.insertRow();
+                    const originalRow = playerTable.insertRow();
                     for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
-                        const cell = row.insertCell();
+                        const cell = originalRow.insertCell();
 
                         // Set the data-original-value and data-column attributes for player data elements
                         let originalValue = values[j];
@@ -282,6 +274,22 @@
                             cell.classList.add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
+                        }
+                    }
+
+                    // Create a row for input boxes
+                    const inputRow = playerTable.insertRow();
+                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
+                        const cell = inputRow.insertCell();
+
+                        // Check if the current column represents a player's stat (Points, Assists, Rebounds, Threes)
+                        if (j >= 3 && j <= 6) {
+                            // Create an input box for the stat
+                            const inputBox = document.createElement('input');
+                            inputBox.type = 'number';
+                            inputBox.classList.add('input-box');
+                            inputBox.placeholder = 'Input';
+                            cell.appendChild(inputBox);
                         }
                     }
                 }
@@ -334,5 +342,4 @@
     </script>
 </body>
 </html>
-
 
