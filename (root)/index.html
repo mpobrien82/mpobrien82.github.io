@@ -67,8 +67,8 @@
             font-size: 24px;
         }
         .input-box {
-            width: 70px; /* Adjust the width for the pace input */
-            height: 30px; /* Adjust the height for the pace input */
+            width: 70px; /* Adjust the width for the input box */
+            height: 30px; /* Adjust the height for the input box */
             font-size: 18px;
         }
         .quarter-box {
@@ -129,19 +129,27 @@
             // Create a table for the team
             const playerTable = document.createElement('table');
             playerTable.id = 'player-table';
-            playerTable.innerHTML = `
-                <thead>
-                    <tr>
-                        <th>Players</th>
-                        <th>Minutes</th>
-                        <th>Points</th>
-                        <th>Assists</th>
-                        <th>Rebounds</th>
-                        <th>Threes</th>
-                    </tr>
-                </thead>
-            `;
             teamSection.appendChild(playerTable);
+
+            // Create the headers for the table
+            const headerRow = playerTable.createTHead().insertRow();
+            const headers = ['Players', 'Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'];
+
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+
+            // Create a row for player input boxes
+            const inputBoxRow = playerTable.insertRow();
+            const inputBoxLabels = ['(input box)    (input box)    (input box)   (input box) (input box)'];
+
+            inputBoxLabels.forEach(inputLabel => {
+                const td = document.createElement('td');
+                td.innerHTML = inputLabel;
+                inputBoxRow.appendChild(td);
+            });
 
             // Create a div for the buttons
             const teamButtons = document.createElement('div');
@@ -271,7 +279,7 @@
                         cell.textContent = originalValue;
 
                         if (column) {
-                            cell.classList add('player-data');
+                            cell.classList.add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
                         }
@@ -326,4 +334,5 @@
     </script>
 </body>
 </html>
+
 
