@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -69,6 +69,11 @@
         .input-box {
             width: 70px; /* Adjust the width for the pace input */
             height: 30px; /* Adjust the height for the pace input */
+            font-size: 18px;
+        }
+        .minutes-input {
+            width: 70px; /* Width for the Minutes input */
+            height: 30px; /* Height for the Minutes input */
             font-size: 18px;
         }
         .quarter-box {
@@ -129,6 +134,18 @@
             // Create a table for the team
             const playerTable = document.createElement('table');
             playerTable.id = 'player-table';
+            playerTable.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Players</th>
+                        <th>Minutes</th>
+                        <th>Points</th>
+                        <th>Assists</th>
+                        <th>Rebounds</th>
+                        <th>Threes</th>
+                    </tr>
+                </thead>
+            `;
             teamSection.appendChild(playerTable);
 
             // Create a div for the buttons
@@ -251,10 +268,8 @@
                         let originalValue = values[j];
                         let column = '';
 
-                        if (j === 2) { // Minutes column
-                            column = 'Minutes';
-                        } else if (j >= 3 && j <= 6) { // Points, Assists, Rebounds, Threes
-                            column = ['Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
+                        if (j >= 3 && j <= 6) {
+                            column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
                             originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
                         }
 
@@ -267,17 +282,20 @@
                         }
                     }
 
-                    // Create a row for input boxes
+                    // Create a row for input boxes (including Minutes)
                     const inputRow = playerTable.insertRow();
                     for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                         const cell = inputRow.insertCell();
 
                         // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
-                        if (j === 2 || (j >= 3 && j <= 6)) {
+                        if (j >= 3 && j <= 6) {
                             // Create an input box for the stat
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
+
+                            if (j === 3) inputBox.classList.add('minutes-input'); // Add this line for Minutes input
+
                             cell.appendChild(inputBox);
                         }
                     }
