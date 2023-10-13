@@ -7,7 +7,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 120vh;
+            height: 100vh;
             margin: 0;
             background-color: #333; /* Dark background color */
             color: #fff; /* Text color */
@@ -15,15 +15,15 @@
         .container {
             text-align: center;
             margin: 0;
-            height: 120vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
         .scroll-container {
             flex: 1;
-            max-height: 100vh;
-            max-width: 125%;
+            max-height: 80vh;
+            max-width: 95%;
             overflow-y: auto;
             overflow-x: auto;
         }
@@ -31,16 +31,17 @@
             padding: 20px;
             border: 1px solid #ccc;
             background-color: #222;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%; /* Make the entire box wider */
         }
         .team-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 110%;
+            width: 100%;
         }
         .team-name {
             font-size: 24px;
@@ -58,7 +59,7 @@
         }
         #player-table {
             border-collapse: collapse;
-            width: 125%;
+            width: 100%;
         }
         #player-table th, #player-table td {
             padding: 8px;
@@ -208,7 +209,7 @@
             wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
 
-               // Add the team section to the container
+            // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
 
             return teamSection;
@@ -315,3 +316,4 @@
     </script>
 </body>
 </html>
+
