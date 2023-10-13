@@ -38,6 +38,7 @@
         }
         .team-header {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space between;
             align-items: center;
             width: 100%;
@@ -99,9 +100,10 @@
         .player-row {
             display: flex;
             align-items: center;
+            justify-content: flex-start;
         }
         .player-name {
-            width: 100px;
+            width: 200px;
             font-weight: bold;
         }
     </style>
@@ -227,28 +229,30 @@
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
 
-            // Create input elements for each statistic (Minutes, Points, Assists, Rebounds, Threes) for each player
+            // Add player statistics rows
             for (let i = 0; i < playerNames.length; i++) {
-                const playerRow = playerTable.insertRow();
-                const playerCell = playerRow.insertCell();
-                playerCell.classList.add('player-row');
-                const playerNameCell = document.createElement('div');
-                playerNameCell.classList.add('player-name');
-                playerNameCell.textContent = playerNames[i];
-                playerCell.appendChild(playerNameCell);
+                const playerData = playerTable.insertRow();
+                const playerStatInputs = playerTable.insertRow();
 
-                for (let j = 0; j < 5; j++) {
-                    const cell = playerRow.insertCell();
+                for (let j = 0; j < 6; j++) {
+                    const cell = document.createElement('td');
+                    cell.textContent = ''; // Empty by default
 
-                    // Create an input element for each statistic
-                    const input = document.createElement('input');
-                    input.type = 'number';
-                    input.classList.add('stat-input');
-                    cell.appendChild(input);
+                    // Create input elements for player statistics
+                    if (j > 0) {
+                        const input = document.createElement('input');
+                        input.type = 'number';
+                        input.classList.add('stat-input');
+                        cell.appendChild(input);
+                    }
+
+                    if (j === 0) {
+                        cell.textContent = playerNames[i];
+                    }
+
+                    playerData.appendChild(cell);
                 }
             }
-
-            return teamSection;
         }
 
         // Function to handle file input change
@@ -294,6 +298,17 @@
 
                     // Add player name to the list
                     playerNames.push(values[1]);
+
+                    // Add player statistics to the table
+                    const playerTable = teamSection.querySelector('#player-table');
+                    const dataRow = playerTable.insertRow();
+                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
+                        const cell = dataRow.insertCell();
+
+                        if (j >= 3 && j <= 6) {
+                            cell.textContent = values[j];
+                        }
+                    }
                 }
             }
             if (teamSection) {
@@ -312,17 +327,17 @@
         // Function to update player data based on the current pace
         function updatePlayerData(pace, teamSection) {
             // Get all player data elements within the specified team section
-            const playerDataElements = teamSection.querySelectorAll('.stat-input');
+            const statInputs = teamSection.querySelectorAll('.stat-input');
 
             // Iterate through each player data element and update the calculated values
-            playerDataElements.forEach((element) => {
-                const originalValue = parseFloat(element.getAttribute('data-original-value'));
-                const column = element.getAttribute('data-column');
+            statInputs.forEach((input, index) => {
+                const originalValue = parseFloat(input.getAttribute('data-original-value'));
+                const column = input.getAttribute('data-column');
 
-                // Calculate and update the displayed value based on the pace
+                // Calculate and update the input value based on the pace
                 if (column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
                     const newValue = (originalValue * pace).toFixed(2);
-                    element.value = newValue;
+                    input.value = newValue;
                 }
             });
         }
@@ -330,8 +345,8 @@
         // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList.add('active');
-                otherButton.classList.remove('active');
+                clickedButton.classList.add('active);
+                otherButton.classList.remove('active);
                 updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
         }
@@ -339,7 +354,7 @@
         // Function to handle quarter button clicks
         function handleQuarterClick(clickedButton, quarterBoxes) {
             // Deselect all quarter buttons in the same team header
-            quarterBoxes.querySelectorAll('.quarter-box').forEach((button) => button.classList.remove('active'));
+            quarterBoxes.querySelectorAll('.quarter-box').forEach((button) => button.classList.remove('active));
 
             // Select the clicked button
             clickedButton.classList.add('active');
@@ -347,6 +362,7 @@
     </script>
 </body>
 </html>
+
 
 
 
