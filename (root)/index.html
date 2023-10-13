@@ -7,7 +7,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 120vh;
             margin: 0;
             background-color: #333; /* Dark background color */
             color: #fff; /* Text color */
@@ -15,15 +15,15 @@
         .container {
             text-align: center;
             margin: 0;
-            height: 100vh;
+            height: 120vh;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
         .scroll-container {
             flex: 1;
-            max-height: 80vh;
-            max-width: 95%;
+            max-height: 100vh;
+            max-width: 125%;
             overflow-y: auto;
             overflow-x: auto;
         }
@@ -31,18 +31,16 @@
             padding: 20px;
             border: 1px solid #ccc;
             background-color: #222;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 80%; /* Adjust the width of the team container */
-            max-height: 500px; /* Adjust the maximum height of the team container */
         }
         .team-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 100%;
+            width: 110%;
         }
         .team-name {
             font-size: 24px;
@@ -60,7 +58,7 @@
         }
         #player-table {
             border-collapse: collapse;
-            width: 100%;
+            width: 125%;
         }
         #player-table th, #player-table td {
             padding: 8px;
@@ -69,8 +67,8 @@
             font-size: 24px;
         }
         .input-box {
-            width: 70px;
-            height: 30px;
+            width: 70px; /* Adjust the width for the pace input */
+            height: 30px; /* Adjust the height for the pace input */
             font-size: 18px;
         }
         .quarter-box {
@@ -210,7 +208,7 @@
             wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
 
-            // Add the team section to the container
+               // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
 
             return teamSection;
@@ -263,7 +261,7 @@
                         let column = '';
 
                         if (j >= 3 && j <= 6) {
-                            column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
+                            column = ['Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
                             originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
                         }
 
@@ -273,19 +271,6 @@
                             cell.classList.add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
-
-                            // Create an input box for the player stat
-                            const inputBox = document.createElement('input');
-                            inputBox.type = 'text';
-                            inputBox.classList.add('input-box');
-                            inputBox.value = ''; // Leave it blank
-                            inputBox.placeholder = column;
-                            cell.appendChild(inputBox);
-
-                            // Add an event listener to the input box for real-time updates
-                            inputBox.addEventListener('input', () => {
-                                updatePlayerData(parseFloat(paceClicker.value), teamSection);
-                            });
                         }
                     }
                 }
