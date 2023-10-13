@@ -96,6 +96,14 @@
             height: 30px;
             font-size: 18px;
         }
+        .player-row {
+            display: flex;
+            align-items: center;
+        }
+        .player-name {
+            width: 100px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -115,7 +123,7 @@
         document.querySelector('#file-input').addEventListener('change', handleFileUpload);
 
         // Function to create a team section
-        function createTeamSection(teamName) {
+        function createTeamSection(teamName, playerNames) {
             // Create a new team section
             const teamSection = document.createElement('div');
             teamSection.classList.add('team-section');
@@ -219,11 +227,15 @@
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
 
-            // Create input elements for each statistic (Minutes, Points, Assists, Rebounds, Threes)
-            for (let i = 1; i <= 5; i++) {
+            // Create input elements for each statistic (Minutes, Points, Assists, Rebounds, Threes) for each player
+            for (let i = 0; i < playerNames.length; i++) {
                 const playerRow = playerTable.insertRow();
                 const playerCell = playerRow.insertCell();
-                playerCell.textContent = "Player " + i;
+                playerCell.classList.add('player-row');
+                const playerNameCell = document.createElement('div');
+                playerNameCell.classList.add('player-name');
+                playerNameCell.textContent = playerNames[i];
+                playerCell.appendChild(playerNameCell);
 
                 for (let j = 0; j < 5; j++) {
                     const cell = playerRow.insertCell();
@@ -262,6 +274,7 @@
             const lines = csvData.split('\n');
             let currentTeamName = null;
             let teamSection = null;
+            let playerNames = [];
 
             for (let i = 1; i < lines.length; i++) {
                 const values = lines[i].trim().split(',');
@@ -271,34 +284,20 @@
 
                     if (teamName !== currentTeamName) {
                         // Create a new team section
-                        teamSection = createTeamSection(teamName);
+                        if (teamSection) {
+                            createTeamSection(currentTeamName, playerNames);
+                        }
+                        playerNames = [];
+                        teamSection = teamName;
                         currentTeamName = teamName;
                     }
 
-                    // Add player data to the team's table
-                    const playerTable = teamSection.querySelector('#player-table');
-                    const row = playerTable.insertRow();
-                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
-                        const cell = row.insertCell();
-
-                        // Set the data-original-value and data-column attributes for player data elements
-                        let originalValue = values[j];
-                        let column = '';
-
-                        if (j >= 3 && j <= 6) {
-                            column = ['Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
-                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
-                        }
-
-                        cell.textContent = originalValue;
-
-                        if (column) {
-                            cell.classList.add('player-data');
-                            cell.setAttribute('data-original-value', originalValue);
-                            cell.setAttribute('data-column', column);
-                        }
-                    }
+                    // Add player name to the list
+                    playerNames.push(values[1]);
                 }
+            }
+            if (teamSection) {
+                createTeamSection(currentTeamName, playerNames);
             }
         }
 
@@ -313,7 +312,7 @@
         // Function to update player data based on the current pace
         function updatePlayerData(pace, teamSection) {
             // Get all player data elements within the specified team section
-            const playerDataElements = teamSection.querySelectorAll('.player-data');
+            const playerDataElements = teamSection.querySelectorAll('.stat-input');
 
             // Iterate through each player data element and update the calculated values
             playerDataElements.forEach((element) => {
@@ -321,9 +320,9 @@
                 const column = element.getAttribute('data-column');
 
                 // Calculate and update the displayed value based on the pace
-                if (column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
+                if (column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
                     const newValue = (originalValue * pace).toFixed(2);
-                    element.textContent = newValue;
+                    element.value = newValue;
                 }
             });
         }
