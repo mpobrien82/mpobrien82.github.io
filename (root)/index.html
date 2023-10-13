@@ -204,6 +204,10 @@
             rwButton.textContent = 'RW';
             teamButtons.appendChild(rwButton);
 
+            // Add click event listeners to the buttons
+            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
+            rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
+
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
 
@@ -297,7 +301,7 @@
                 const column = element.getAttribute('data-column');
 
                 // Calculate and update the displayed value based on the pace
-                if (column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
+                if (column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
                     const newValue = (originalValue * pace).toFixed(2);
                     element.textContent = newValue;
                 }
