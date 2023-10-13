@@ -285,12 +285,12 @@
                         const cell = inputRow.insertCell();
 
                         // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
-                        if (j >= 3 && j <= 6) {
+                        if (j >= 2 && j <= 6) {
                             // Create an input box for the stat
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
-                            if (j === 3) {
+                            if (j === 2) {
                                 inputBox.classList.add('minutes-input'); // Add this line for Minutes input
                             }
                             cell.appendChild(inputBox);
