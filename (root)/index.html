@@ -282,25 +282,27 @@
                         }
                     }
 
-                   // Create a row for input boxes (including Minutes)
+                    // Create a row for input boxes (including Minutes)
                     const inputRow = playerTable.insertRow();
                     for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
-                    const cell = inputRow.insertCell();
+                        const cell = inputRow.insertCell();
 
-    // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
-                    if (j >= 3 && j <= 6) {
-        // Create an input box for the stat
-                    const inputBox = document.createElement('input');
-                    inputBox.type = 'number';
-                    inputBox.classList.add('input-box');
-
-        // Add the input box to the "Minutes" column
-                     if (j === 3) {
-                    inputBox.classList.add('minutes-input');
-                    cell.appendChild(inputBox);
+                        // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
+                        if (j >= 3 && j <= 6) {
+                            // Create an input box for the stat
+                            const inputBox = document.createElement('input');
+                            inputBox.type = 'number';
+                            inputBox.classList.add('input-box');
+                            if (j === 3) {
+                                inputBox.classList.add('minutes-input'); // Add this line for Minutes input
+                            }
+                            cell.appendChild(inputBox);
+                        }
+                    }
+                }
+            }
         }
-    }
-}
+
         // Function to handle pace input changes
         function handlePaceInputChange(paceClicker, teamSection) {
             paceClicker.addEventListener('input', () => {
