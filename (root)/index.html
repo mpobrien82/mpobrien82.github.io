@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -308,8 +308,11 @@
             // Get all player data elements within the specified team section
             const playerDataElements = teamSection.querySelectorAll('.player-data');
 
+            // Get all input boxes for the Minutes column
+            const inputBoxesMinutes = teamSection.querySelectorAll('.input-box');
+
             // Iterate through each player data element and update the calculated values
-            playerDataElements.forEach((element) => {
+            playerDataElements.forEach((element, index) => {
                 const originalValue = parseFloat(element.getAttribute('data-original-value'));
                 const column = element.getAttribute('data-column');
 
@@ -317,6 +320,10 @@
                 if (column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
                     const newValue = (originalValue * pace).toFixed(2);
                     element.textContent = newValue;
+                    if (column === 'Minutes') {
+                        // Update the corresponding input box for the Minutes column
+                        inputBoxesMinutes[index].value = newValue;
+                    }
                 }
             });
         }
@@ -325,7 +332,7 @@
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
-                otherButton.classList remove('active');
+                otherButton.classList.remove('active');
                 updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
         }
@@ -341,6 +348,3 @@
     </script>
 </body>
 </html>
-
-
-
