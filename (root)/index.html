@@ -270,7 +270,16 @@
                             originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
                         }
 
-                        cell.textContent = originalValue;
+                        if (j > 2) {
+                            const playerInput = document.createElement('input');
+                            playerInput.setAttribute('data-player-name', values[1]);
+                            playerInput.setAttribute('data-team-name', values[0]);
+                            playerInput.setAttribute('data-stat-name', column);
+                            playerInput.classList.add('player-input');
+                            cell.appendChild(playerInput);
+                        } else {
+                            cell.textContent = originalValue;
+                        }
 
                         if (column) {
                             cell.classList.add('player-data');
@@ -278,11 +287,12 @@
                             cell.setAttribute('data-column', column);
                         }
                     }
-
-                    // Create input boxes for player statistics
-                    createPlayerInputBoxes(row, values[1], values[0]);
                 }
             }
+
+            // Handle pace input change
+            const paceClicker = document.querySelector('.input-box');
+            handlePaceInputChange(paceClicker, teamSection);
         }
 
         // Function to create input boxes for player statistics
