@@ -264,7 +264,7 @@
                         let column = '';
 
                         if (j >= 3 && j <= 6) {
-                            column = ['Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
+                            column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
                             originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
                         }
 
@@ -282,13 +282,12 @@
                     for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                         const cell = inputRow.insertCell();
 
-                        // Check if the current column represents a player's stat (Points, Assists, Rebounds, Threes)
+                        // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
                         if (j >= 3 && j <= 6) {
                             // Create an input box for the stat
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
-                            inputBox.placeholder = 'Input';
                             cell.appendChild(inputBox);
                         }
                     }
@@ -315,7 +314,7 @@
                 const column = element.getAttribute('data-column');
 
                 // Calculate and update the displayed value based on the pace
-                if (column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
+                if (column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
                     const newValue = (originalValue * pace).toFixed(2);
                     element.textContent = newValue;
                 }
