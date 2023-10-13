@@ -35,7 +35,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 100%; /* Make the entire box wider */
         }
         .team-header {
             display: flex;
@@ -209,7 +208,7 @@
             wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
 
-            // Add the team section to the container
+               // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
 
             return teamSection;
