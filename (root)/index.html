@@ -164,10 +164,9 @@
 
             // Create a time input box
             const timeInput = document.createElement('input');
-            timeInput.type = 'number'; // Change the input type to "number" to input time
+            timeInput.type = 'text';
             timeInput.classList.add('time-input');
-            timeInput.placeholder = 'Time (minutes left)';
-            timeInput.addEventListener('input', () => handleTimeLeftInput(timeInput, teamSection));
+            timeInput.placeholder = 'Time';
             teamHeader.appendChild(timeInput);
 
             // Create a score input box for the team
@@ -214,6 +213,9 @@
 
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
+
+            // Add event listeners for quarter and time input changes
+            handleQuarterAndTimeInput(teamSection);
 
             return teamSection;
         }
@@ -267,10 +269,6 @@
                         if (j >= 3 && j <= 6) {
                             column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
                             originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
-                        } else if (j === 2) {
-                            originalValue = parseFloat(originalValue).toFixed(2);
-                            column = 'Minutes';
-                            cell.setAttribute('data-original-minutes', originalValue);
                         }
 
                         cell.textContent = originalValue;
@@ -308,54 +306,6 @@
             });
         }
 
-        // Function to handle button clicks
-        function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
-            if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList.add('active');
-                otherButton.classList.remove('active');
-                updatePlayerData(parseFloat(paceClicker.value), teamSection);
-            }
-        }
-
-        // Function to handle quarter button clicks
-        function handleQuarterClick(clickedButton, quarterBoxes, teamSection) {
-            // Deselect all quarter buttons in the same team header
-            quarterBoxes.querySelectorAll('.quarter-box').forEach((button) => button.classList.remove('active'));
-            // Select the clicked button
-            clickedButton.classList.add('active');
-            // Update projected minutes based on the selected quarter
-            updateProjectedMinutes(teamSection);
-        }
-
-        // Function to handle the time left input
-        function handleTimeLeftInput(timeInput, teamSection) {
-            // Update projected minutes based on the entered time
-            updateProjectedMinutes(teamSection);
-        }
-
-        // Function to update the projected minutes based on the selected quarter and remaining time
-        function updateProjectedMinutes(teamSection) {
-            const quarterBox = teamSection.querySelector('.quarter-box.active');
-            const timeInput = teamSection.querySelector('.time-input');
-            const projectedMinutes = calculateProjectedMinutes(quarterBox, timeInput);
-            const minuteInputs = teamSection.querySelectorAll('.input-box');
-
-            minuteInputs.forEach((input) => {
-                const originalMinutes = parseFloat(input.getAttribute('data-original-minutes'));
-                const newMinutes = originalMinutes + projectedMinutes;
-                input.value = newMinutes.toFixed(2);
-            });
-        }
-
-        // Function to calculate projected minutes based on the selected quarter and remaining time
-        function calculateProjectedMinutes(quarterBox, timeInput) {
-            const selectedQuarter = parseInt(quarterBox.textContent.charAt(0));
-            const timeLeft = parseFloat(timeInput.value);
-            // Assuming each quarter is 12 minutes
-            const remainingMinutes = (4 - selectedQuarter) * 12 + timeLeft;
-            return remainingMinutes;
-        }
-
         // Function to update player data based on the current pace
         function updatePlayerData(pace, teamSection) {
             // Get all player data elements within the specified team section
@@ -371,6 +321,98 @@
                     const newValue = (originalValue * pace).toFixed(2);
                     element.textContent = newValue;
                 }
+            });
+        }
+
+        // Function to handle button clicks
+        function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
+            if (!clickedButton.classList.contains('active')) {
+                clickedButton.classList.add('active');
+                otherButton.classList.remove('active');
+                updatePlayerData(parseFloat(paceClicker.value), teamSection);
+            }
+        }
+
+        // Function to handle quarter and time input changes
+        function handleQuarterAndTimeInput(teamSection) {
+            const quarterBoxes = teamSection.querySelectorAll('.quarter-box');
+            const timeInput = teamSection.querySelector('.time-input');
+
+            quarterBoxes.forEach((quarterBox) => {
+                quarterBox.addEventListener('click', () => {
+                    // Deselect all quarter buttons in the same team header
+                    quarterBoxes.forEach((button) => button.classList.remove('active'));
+
+                    // Select the clicked button
+                    quarterBox.classList.add('active');
+
+                    // Calculate total minutes left based on quarter and time input
+                    const totalMinutesInGame = 48; // Total minutes in an NBA game
+                    const selectedQuarter = parseInt(quarterBox.textContent.charAt(0)); // Extract the quarter number
+                    const timeLeft = parseInt(timeInput.value) || 0;
+
+                    const minutesPlayed = (selectedQuarter - 1) * 12 + (12 - timeLeft);
+
+                    // Update player minutes for this team
+                    const playerDataElements = teamSection.querySelectorAll('.input-box');
+                    playerDataElements.forEach((inputBox) => {
+                        const projectedMinutes = parseFloat(inputBox.getAttribute('data-original-value'));
+                        const updatedMinutes = projectedMinutes - minutesPlayed;
+                        inputBox.value = updatedMinutes.toFixed(2);
+                    });
+                });
+            });
+
+            timeInput.addEventListener('input', () => {
+                // Calculate total minutes left based on quarter and time input
+                const selectedQuarter = Array.from(quarterBoxes).find((quarterBox) => quarterBox.classList.contains('active'));
+                if (selectedQuarter) {
+                    const totalMinutesInGame = 48; // Total minutes in an NBA game
+                    const timeLeft = parseInt(timeInput.value) || 0;
+                    const minutesPlayed = (selectedQuarter.textContent.charAt(0) - 1) * 12 + (12 - timeLeft);
+
+                    // Update player minutes for this team
+                    const playerDataElements = teamSection.querySelectorAll('.input-box');
+                    playerDataElements.forEach((inputBox) => {
+                        const projectedMinutes = parseFloat(inputBox.getAttribute('data-original-value'));
+                        const updatedMinutes = projectedMinutes - minutesPlayed;
+                        inputBox.value = updatedMinutes.toFixed(2);
+                    });
+                }
+            });
+        }
+
+        // Function to handle button clicks
+        function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
+            if (!clickedButton.classList.contains('active')) {
+                clickedButton.classList.add('active');
+                otherButton.classList.remove('active');
+                updatePlayerData(parseFloat(paceClicker.value), teamSection);
+            }
+        }
+
+        // Function to handle quarter button clicks
+        function handleQuarterClick(clickedButton, quarterBoxes, teamSection) {
+            // Deselect all quarter buttons in the same team header
+            quarterBoxes.forEach((button) => button.classList.remove('active'));
+
+            // Select the clicked button
+            clickedButton.classList.add('active');
+
+            // Calculate total minutes left based on quarter and time input
+            const totalMinutesInGame = 48; // Total minutes in an NBA game
+            const selectedQuarter = parseInt(clickedButton.textContent.charAt(0)); // Extract the quarter number
+            const timeInput = teamSection.querySelector('.time-input');
+            const timeLeft = parseInt(timeInput.value) || 0;
+
+            const minutesPlayed = (selectedQuarter - 1) * 12 + (12 - timeLeft);
+
+            // Update player minutes for this team
+            const playerDataElements = teamSection.querySelectorAll('.input-box');
+            playerDataElements.forEach((inputBox) => {
+                const projectedMinutes = parseFloat(inputBox.getAttribute('data-original-value'));
+                const updatedMinutes = projectedMinutes - minutesPlayed;
+                inputBox.value = updatedMinutes.toFixed(2);
             });
         }
     </script>
