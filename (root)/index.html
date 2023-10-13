@@ -38,8 +38,7 @@
         }
         .team-header {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -92,20 +91,6 @@
             height: 30px;
             font-size: 18px;
         }
-        .stat-input {
-            width: 70px;
-            height: 30px;
-            font-size: 18px;
-        }
-        .player-row {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-        }
-        .player-name {
-            width: 200px;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
@@ -144,18 +129,6 @@
             // Create a table for the team
             const playerTable = document.createElement('table');
             playerTable.id = 'player-table';
-            playerTable.innerHTML = `
-                <thead>
-                    <tr>
-                        <th>Players</th>
-                        <th>Minutes</th>
-                        <th>Points</th>
-                        <th>Assists</th>
-                        <th>Rebounds</th>
-                        <th>Threes</th>
-                    </tr>
-                </thead>
-            `;
             teamSection.appendChild(playerTable);
 
             // Create a div for the buttons
@@ -207,6 +180,23 @@
             paceClicker.value = defaultPace; // Set the default pace to 1
             teamHeader.appendChild(paceClicker);
 
+            // Create a row for player stats
+            const playerStatsRow = playerTable.insertRow();
+            for (let i = 0; i < playerNames.length; i++) {
+                const cell = playerStatsRow.insertCell();
+                cell.textContent = playerNames[i];
+            }
+
+            // Create a row for input boxes
+            const inputRow = playerTable.insertRow();
+            for (let i = 0; i < playerNames.length; i++) {
+                const cell = inputRow.insertCell();
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.classList.add('input-box');
+                cell.appendChild(input);
+            }
+
             // Create the WW button
             const wwButton = document.createElement('div');
             wwButton.classList.add('team-button');
@@ -229,30 +219,7 @@
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
 
-            // Add player statistics rows
-            for (let i = 0; i < playerNames.length; i++) {
-                const playerData = playerTable.insertRow();
-                const playerStatInputs = playerTable.insertRow();
-
-                for (let j = 0; j < 6; j++) {
-                    const cell = document.createElement('td');
-                    cell.textContent = ''; // Empty by default
-
-                    // Create input elements for player statistics
-                    if (j > 0) {
-                        const input = document.createElement('input');
-                        input.type = 'number';
-                        input.classList.add('stat-input');
-                        cell.appendChild(input);
-                    }
-
-                    if (j === 0) {
-                        cell.textContent = playerNames[i];
-                    }
-
-                    playerData.appendChild(cell);
-                }
-            }
+            return teamSection;
         }
 
         // Function to handle file input change
@@ -280,7 +247,7 @@
             let teamSection = null;
             let playerNames = [];
 
-            for (let i = 1; i < lines.length; i++) {
+            for (let i = 0; i < lines.length; i++) {
                 const values = lines[i].trim().split(',');
 
                 if (values.length >= 7) { // Ensure there are enough columns (removed RW/WW column)
@@ -289,30 +256,34 @@
                     if (teamName !== currentTeamName) {
                         // Create a new team section
                         if (teamSection) {
-                            createTeamSection(currentTeamName, playerNames);
+                            createTeamSection(teamName, playerNames);
                         }
+
                         playerNames = [];
-                        teamSection = teamName;
+
+                        // Store the current team name
                         currentTeamName = teamName;
+                        teamSection = createTeamSection(teamName, playerNames);
                     }
 
-                    // Add player name to the list
-                    playerNames.push(values[1]);
-
-                    // Add player statistics to the table
-                    const playerTable = teamSection.querySelector('#player-table');
-                    const dataRow = playerTable.insertRow();
-                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
-                        const cell = dataRow.insertCell();
-
-                        if (j >= 3 && j <= 6) {
-                            cell.textContent = values[j];
+                    if (i === 0) {
+                        for (let j = 1; j < values.length; j++) {
+                            if (j >= 2 && j <= 6) {
+                                playerNames.push(values[j]);
+                            }
+                        }
+                    } else {
+                        // Add player data to the team's table
+                        const playerTable = teamSection.querySelector('#player-table');
+                        const inputRow = playerTable.rows[1];
+                        for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
+                            const cell = inputRow.cells[j - 1];
+                            const input = cell.querySelector('input');
+                            input.setAttribute('data-original-value', values[j]);
+                            input.value = values[j];
                         }
                     }
                 }
-            }
-            if (teamSection) {
-                createTeamSection(currentTeamName, playerNames);
             }
         }
 
@@ -326,26 +297,20 @@
 
         // Function to update player data based on the current pace
         function updatePlayerData(pace, teamSection) {
-            // Get all player data elements within the specified team section
-            const statInputs = teamSection.querySelectorAll('.stat-input');
+            // Get all input elements within the specified team section
+            const inputElements = teamSection.querySelectorAll('input[data-original-value]');
 
-            // Iterate through each player data element and update the calculated values
-            statInputs.forEach((input, index) => {
+            // Iterate through each input element and update the calculated values
+            inputElements.forEach((input) => {
                 const originalValue = parseFloat(input.getAttribute('data-original-value'));
-                const column = input.getAttribute('data-column');
-
-                // Calculate and update the input value based on the pace
-                if (column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
-                    const newValue = (originalValue * pace).toFixed(2);
-                    input.value = newValue;
-                }
+                input.value = (originalValue * pace).toFixed(2);
             });
         }
 
         // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList.add('active);
+                clickedButton.classList.add('active');
                 otherButton.classList.remove('active);
                 updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
@@ -354,8 +319,8 @@
         // Function to handle quarter button clicks
         function handleQuarterClick(clickedButton, quarterBoxes) {
             // Deselect all quarter buttons in the same team header
-            quarterBoxes.querySelectorAll('.quarter-box').forEach((button) => button.classList.remove('active));
-
+            quarterBoxes.querySelectorAll('.quarter-box').forEach((button) => button.classList.remove('active'));
+            
             // Select the clicked button
             clickedButton.classList.add('active');
         }
