@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -113,7 +113,7 @@
         function createTeamSection(teamName) {
             // Create a new team section
             const teamSection = document.createElement('div');
-            teamSection.classList add('team-section');
+            teamSection.classList.add('team-section');
 
             // Create a header for the team section
             const teamHeader = document.createElement('div');
@@ -172,7 +172,7 @@
             // Create a score input box for the team
             const teamScoreInput = document.createElement('input');
             teamScoreInput.type = 'number';
-            teamScoreInput.classList.add('score-input');
+            teamScoreInput.classList add('score-input');
             teamScoreInput.placeholder = `${teamName} Score`;
             teamHeader.appendChild(teamScoreInput);
 
@@ -283,14 +283,8 @@
                         const cell = inputRow.insertCell();
 
                         // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
-                        if (j === 2) {
-                            // Create an input box for "Minutes"
-                            const minutesInputBox = document.createElement('input');
-                            minutesInputBox.type = 'number';
-                            minutesInputBox.classList.add('input-box');
-                            cell.appendChild(minutesInputBox);
-                        } else if (j >= 3 && j <= 6) {
-                            // Create an input box for other stats (Points, Assists, Rebounds, Threes)
+                        if (j >= 3 && j <= 6) {
+                            // Create an input box for the stat
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
@@ -347,3 +341,4 @@
     </script>
 </body>
 </html>
+
