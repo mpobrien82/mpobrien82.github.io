@@ -261,7 +261,7 @@
                         let column = '';
 
                         if (j >= 3 && j <= 6) {
-                            column = ['Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
+                            column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
                             originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
                         }
 
@@ -271,6 +271,19 @@
                             cell.classList.add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
+
+                            // Create an input box for the player stat
+                            const inputBox = document.createElement('input');
+                            inputBox.type = 'text';
+                            inputBox.classList.add('input-box');
+                            inputBox.value = ''; // Leave it blank
+                            inputBox.placeholder = column;
+                            cell.appendChild(inputBox);
+
+                            // Add an event listener to the input box for real-time updates
+                            inputBox.addEventListener('input', () => {
+                                updatePlayerData(parseFloat(paceClicker.value), teamSection);
+                            });
                         }
                     }
                 }
@@ -288,7 +301,7 @@
                 const column = element.getAttribute('data-column');
 
                 // Calculate and update the displayed value based on the pace
-                if (column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
+                if (column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
                     const newValue = (originalValue * pace).toFixed(2);
                     element.textContent = newValue;
                 }
