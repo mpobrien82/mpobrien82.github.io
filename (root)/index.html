@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space between;
             align-items: center;
             width: 100%;
         }
@@ -91,7 +91,7 @@
             height: 30px;
             font-size: 18px;
         }
-        .player-stats-input {
+        .stat-input {
             width: 70px;
             height: 30px;
             font-size: 18px;
@@ -213,8 +213,28 @@
             wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
 
+            // Add input event listener to handle pace changes
+            handlePaceInputChange(paceClicker, teamSection);
+
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
+
+            // Create input elements for each statistic (Minutes, Points, Assists, Rebounds, Threes)
+            for (let i = 1; i <= 5; i++) {
+                const playerRow = playerTable.insertRow();
+                const playerCell = playerRow.insertCell();
+                playerCell.textContent = "Player " + i;
+
+                for (let j = 0; j < 5; j++) {
+                    const cell = playerRow.insertCell();
+
+                    // Create an input element for each statistic
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.classList.add('stat-input');
+                    cell.appendChild(input);
+                }
+            }
 
             return teamSection;
         }
@@ -266,8 +286,8 @@
                         let column = '';
 
                         if (j >= 3 && j <= 6) {
-                            column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
-                            originalValue = parseFloat(originalValue).toFixed(2);
+                            column = ['Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
+                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
                         }
 
                         cell.textContent = originalValue;
@@ -282,6 +302,14 @@
             }
         }
 
+        // Function to handle pace input changes
+        function handlePaceInputChange(paceClicker, teamSection) {
+            paceClicker.addEventListener('input', () => {
+                const pace = parseFloat(paceClicker.value);
+                updatePlayerData(pace, teamSection);
+            });
+        }
+
         // Function to update player data based on the current pace
         function updatePlayerData(pace, teamSection) {
             // Get all player data elements within the specified team section
@@ -293,7 +321,7 @@
                 const column = element.getAttribute('data-column');
 
                 // Calculate and update the displayed value based on the pace
-                if (column !== 'Minutes') {
+                if (column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
                     const newValue = (originalValue * pace).toFixed(2);
                     element.textContent = newValue;
                 }
@@ -320,6 +348,7 @@
     </script>
 </body>
 </html>
+
 
 
 
