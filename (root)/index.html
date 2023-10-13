@@ -64,7 +64,7 @@
             padding: 8px;
             text-align: center;
             border: none;
-            font-size: 18px;
+            font-size: 24px;
         }
         .input-box {
             width: 70px; /* Adjust the width for the pace input */
@@ -110,7 +110,7 @@
         document.querySelector('#file-input').addEventListener('change', handleFileUpload);
 
         // Function to create a team section
-        function createTeamSection(teamName, playerNames) {
+        function createTeamSection(teamName) {
             // Create a new team section
             const teamSection = document.createElement('div');
             teamSection.classList.add('team-section');
@@ -143,34 +143,66 @@
             `;
             teamSection.appendChild(playerTable);
 
-            // Create a row for player names
-            const playerNamesRow = playerTable.insertRow();
-            for (let i = 0; i < playerNames.length; i++) {
-                const cell = playerNamesRow.insertCell();
-                cell.textContent = playerNames[i];
+            // Create a div for the buttons
+            const teamButtons = document.createElement('div');
+            teamButtons.classList.add('team-buttons');
+            teamHeader.appendChild(teamButtons);
+
+            // Create the quarter boxes
+            const quarterBoxes = document.createElement('div');
+            quarterBoxes.classList.add('team-buttons');
+            teamHeader.appendChild(quarterBoxes);
+
+            // Create the quarter buttons
+            for (let i = 1; i <= 4; i++) {
+                const quarterBox = document.createElement('div');
+                quarterBox.classList.add('quarter-box');
+                quarterBox.textContent = `${i}Q`;
+                quarterBox.addEventListener('click', () => handleQuarterClick(quarterBox, quarterBoxes));
+                quarterBoxes.appendChild(quarterBox);
             }
 
-            // Create a row for input boxes
-            const inputRow = playerTable.insertRow();
-            for (let i = 0; i < playerNames.length; i++) {
-                const cell = inputRow.insertCell();
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.classList.add('input-box');
-                cell.appendChild(input);
-            }
+            // Create a time input box
+            const timeInput = document.createElement('input');
+            timeInput.type = 'text';
+            timeInput.classList.add('time-input');
+            timeInput.placeholder = 'Time';
+            teamHeader.appendChild(timeInput);
+
+            // Create a score input box for the team
+            const teamScoreInput = document.createElement('input');
+            teamScoreInput.type = 'number';
+            teamScoreInput.classList.add('score-input');
+            teamScoreInput.placeholder = `${teamName} Score`;
+            teamHeader.appendChild(teamScoreInput);
+
+            // Create a score input box for the opponent
+            const opponentScoreInput = document.createElement('input');
+            opponentScoreInput.type = 'number';
+            opponentScoreInput.classList.add('score-input');
+            opponentScoreInput.placeholder = 'Opponent Score';
+            teamHeader.appendChild(opponentScoreInput);
+
+            // Create an input for the pace clicker
+            const paceClicker = document.createElement('input');
+            paceClicker.type = 'number';
+            paceClicker.classList.add('input-box');
+            paceClicker.placeholder = 'Pace';
+            paceClicker.step = 0.01; // Set the step value to 0.01
+            paceClicker.value = defaultPace; // Set the default pace to 1
+            teamHeader.appendChild(paceClicker);
 
             // Create the WW button
             const wwButton = document.createElement('div');
             wwButton.classList.add('team-button');
             wwButton.textContent = 'WW';
-            teamHeader.appendChild(wwButton);
+            teamButtons.appendChild(wwButton);
 
             // Create the RW button
             const rwButton = document.createElement('div');
             rwButton.classList.add('team-button');
             rwButton.textContent = 'RW';
-            teamHeader.appendChild(rwButton);
+            teamButtons.appendChild(rwButton);
 
             // Add click event listeners to the buttons
             wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
@@ -208,9 +240,8 @@
             const lines = csvData.split('\n');
             let currentTeamName = null;
             let teamSection = null;
-            let playerNames = [];
 
-            for (let i = 0; i < lines.length; i++) {
+            for (let i = 1; i < lines.length; i++) {
                 const values = lines[i].trim().split(',');
 
                 if (values.length >= 7) { // Ensure there are enough columns (removed RW/WW column)
@@ -218,39 +249,31 @@
 
                     if (teamName !== currentTeamName) {
                         // Create a new team section
-                        teamSection = createTeamSection(teamName, playerNames);
+                        teamSection = createTeamSection(teamName);
                         currentTeamName = teamName;
-                        playerNames = [];
                     }
 
                     // Add player data to the team's table
                     const playerTable = teamSection.querySelector('#player-table');
+                    const row = playerTable.insertRow();
+                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
+                        const cell = row.insertCell();
 
-                    if (i === 0) {
-                        for (let j = 1; j < values.length; j++) {
-                            playerNames.push(values[j]);
+                        // Set the data-original-value and data-column attributes for player data elements
+                        let originalValue = values[j];
+                        let column = '';
+
+                        if (j >= 3 && j <= 6) {
+                            column = ['Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
+                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
                         }
-                    } else {
-                        const row = playerTable.insertRow();
-                        for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
-                            const cell = row.insertCell();
 
-                            // Set the data-original-value and data-column attributes for player data elements
-                            let originalValue = values[j];
-                            let column = '';
+                        cell.textContent = originalValue;
 
-                            if (j >= 3 && j <= 6) {
-                                column = ['Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
-                                originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
-                            }
-
-                            cell.textContent = originalValue;
-
-                            if (column) {
-                                cell.classList.add('player-data');
-                                cell.setAttribute('data-original-value', originalValue);
-                                cell.setAttribute('data-column', column);
-                            }
+                        if (column) {
+                            cell.classList add('player-data');
+                            cell.setAttribute('data-original-value', originalValue);
+                            cell.setAttribute('data-column', column);
                         }
                     }
                 }
@@ -303,3 +326,4 @@
     </script>
 </body>
 </html>
+
