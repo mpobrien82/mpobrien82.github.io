@@ -67,8 +67,8 @@
             font-size: 24px;
         }
         .input-box {
-            width: 70px; /* Adjust the width for the pace input */
-            height: 30px; /* Adjust the height for the pace input */
+            width: 70px;
+            height: 30px;
             font-size: 18px;
         }
         .quarter-box {
@@ -188,15 +188,6 @@
             opponentScoreInput.placeholder = 'Opponent Score';
             teamHeader.appendChild(opponentScoreInput);
 
-            // Create an input for the pace clicker
-            const paceClicker = document.createElement('input');
-            paceClicker.type = 'number';
-            paceClicker.classList.add('input-box');
-            paceClicker.placeholder = 'Pace';
-            paceClicker.step = 0.01; // Set the step value to 0.01
-            paceClicker.value = defaultPace; // Set the default pace to 1
-            teamHeader.appendChild(paceClicker);
-
             // Create the WW button
             const wwButton = document.createElement('div');
             wwButton.classList.add('team-button');
@@ -205,13 +196,28 @@
 
             // Create the RW button
             const rwButton = document.createElement('div');
-            rwButton.classList.add('team-button');
+            rwButton.classList add ('team-button');
             rwButton.textContent = 'RW';
             teamButtons.appendChild(rwButton);
 
             // Add click event listeners to the buttons
-            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
-            rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
+            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, teamSection));
+            rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, teamSection));
+
+            // Create input boxes for player statistics
+            const playerRow = playerTable.insertRow();
+            for (let j = 0; j < 6; j++) {
+                const cell = playerRow.insertCell();
+                if (j > 1) {
+                    const column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
+                    const playerInput = document.createElement('input');
+                    playerInput.setAttribute('data-player-name', '');
+                    playerInput.setAttribute('data-team-name', teamName);
+                    playerInput.setAttribute('data-stat-name', column);
+                    playerInput.classList.add('player-input');
+                    cell.appendChild(playerInput);
+                }
+            }
 
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
@@ -289,23 +295,6 @@
                     }
                 }
             }
-
-            // Handle pace input change
-            const paceClicker = document.querySelector('.input-box');
-            handlePaceInputChange(paceClicker, teamSection);
-        }
-
-        // Function to create input boxes for player statistics
-        function createPlayerInputBoxes(playerRow, playerName, teamName) {
-            const statistics = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'];
-            statistics.forEach(stat => {
-                const input = document.createElement('input');
-                input.classList.add('player-input');
-                input.placeholder = stat;
-                input.setAttribute('data-player-name', playerName);
-                input.setAttribute('data-team-name', teamName);
-                playerRow.appendChild(input);
-            });
         }
 
         // Function to handle pace input changes
@@ -336,7 +325,7 @@
 
                     // Update the input boxes connected to this player
                     playerInputElements.forEach((input) => {
-                        if (input.getAttribute('data-player-name') === playerName && input.getAttribute('data-team-name') === teamName) {
+                        if (input.getAttribute('data-player-name') === playerName && input.getAttribute('data-team-name') === teamName && input.getAttribute('data-stat-name') === column) {
                             input.value = newValue;
                         }
                     });
@@ -345,11 +334,10 @@
         }
 
         // Function to handle button clicks
-        function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
+        function handleButtonClick(clickedButton, otherButton, teamSection) {
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
-                updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
         }
 
@@ -364,6 +352,7 @@
     </script>
 </body>
 </html>
+
 
 
 
