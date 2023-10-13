@@ -117,7 +117,7 @@
 
             // Create a header for the team section
             const teamHeader = document.createElement('div');
-            teamHeader.classList.add('team-header');
+            teamHeader.classList add('team-header');
             teamSection.appendChild(teamHeader);
 
             // Add the team name to the header
@@ -242,9 +242,9 @@
             let teamSection = null;
 
             for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].trim().split(',');
+                const values = lines[i].trim().split('\t');
 
-                if (values.length >= 7) { // Ensure there are enough columns (removed RW/WW column)
+                if (values.length === 6) { // Ensure there are six columns
                     const teamName = values[0];
 
                     if (teamName !== currentTeamName) {
@@ -256,39 +256,34 @@
                     // Create a row for original player data
                     const playerTable = teamSection.querySelector('#player-table');
                     const originalRow = playerTable.insertRow();
-                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
-                        const cell = originalRow.insertCell();
+                    const inputRow = playerTable.insertRow(); // Add a row for input boxes
 
-                        // Set the data-original-value and data-column attributes for player data elements
+                    for (let j = 0; j < values.length; j++) {
+                        const cellOriginal = originalRow.insertCell();
+                        const cellInput = inputRow.insertCell(); // Add a cell for input box
+
                         let originalValue = values[j];
-                        let column = '';
+                        let column = ['Players', 'Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j];
 
-                        if (j >= 3 && j <= 6) {
-                            column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
-                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
+                        if (j === 1) { // Minutes column
+                            column = 'Minutes';
                         }
 
-                        cell.textContent = originalValue;
+                        cellOriginal.textContent = originalValue;
 
                         if (column) {
-                            cell.classList.add('player-data');
-                            cell.setAttribute('data-original-value', originalValue);
-                            cell.setAttribute('data-column', column);
+                            cellOriginal.classList.add('player-data');
+                            cellOriginal.setAttribute('data-original-value', originalValue);
+                            cellOriginal.setAttribute('data-column', column);
                         }
-                    }
-
-                    // Create a row for input boxes
-                    const inputRow = playerTable.insertRow();
-                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
-                        const cell = inputRow.insertCell();
 
                         // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
-                        if (j >= 3 && j <= 6) {
+                        if (j >= 1 && j <= 5) {
                             // Create an input box for the stat
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
-                            cell.appendChild(inputBox);
+                            cellInput.appendChild(inputBox);
                         }
                     }
                 }
@@ -331,7 +326,7 @@
         // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList.add('active');
+                clickedButton.classList add('active');
                 otherButton.classList.remove('active');
                 updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
