@@ -267,6 +267,10 @@
                         if (j >= 3 && j <= 6) {
                             column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
                             originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
+                        } else if (j === 2) {
+                            originalValue = parseFloat(originalValue).toFixed(2);
+                            column = 'Minutes';
+                            cell.setAttribute('data-original-minutes', originalValue);
                         }
 
                         cell.textContent = originalValue;
