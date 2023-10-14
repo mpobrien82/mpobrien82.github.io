@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -289,6 +289,11 @@
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
+
+                            // Add input event listeners to player data input boxes
+                            inputBox.addEventListener('input', () => {
+                                updatePlayerData(paceClicker, teamSection);
+                            });
                         }
                     }
                 }
@@ -298,15 +303,15 @@
         // Function to handle pace input changes
         function handlePaceInputChange(paceClicker, teamSection) {
             paceClicker.addEventListener('input', () => {
-                const pace = parseFloat(paceClicker.value);
-                updatePlayerData(pace, teamSection);
+                updatePlayerData(paceClicker, teamSection);
             });
         }
 
         // Function to update player data based on the current pace
-        function updatePlayerData(pace, teamSection) {
+        function updatePlayerData(paceClicker, teamSection) {
             // Get all player data elements within the specified team section
             const playerDataElements = teamSection.querySelectorAll('.player-data');
+            const pace = parseFloat(paceClicker.value);
 
             // Iterate through each player data element and update the calculated values
             playerDataElements.forEach((element) => {
@@ -326,7 +331,7 @@
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
-                updatePlayerData(parseFloat(paceClicker.value), teamSection);
+                updatePlayerData(paceClicker, teamSection);
             }
         }
 
