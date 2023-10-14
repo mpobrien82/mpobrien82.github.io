@@ -197,30 +197,30 @@
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
 
             handlePaceInputChange(paceClicker, teamSection);
-            createInputRow(playerTable); // Create input rows for players
-
-            handleMinuteProjectionInputChange(teamSection); // Add input event listeners for minute projections
+            createInputRow(playerTable, teamName);
+            handleMinuteProjectionInputChange(teamSection);
 
             return teamSection;
         }
 
-        function createInputRow(playerTable) {
+        function createInputRow(playerTable, teamName) {
             const inputRow = playerTable.insertRow();
 
-            for (let j = 1; j <= 5; j++) {
-                const cell = inputRow.insertCell();
+            const cell = inputRow.insertCell();
+            cell.textContent = teamName;
 
-                if (j === 2) {
-                    const inputBox = document.createElement('input');
-                    inputBox.type = 'number';
-                    inputBox.classList.add('minute-projection-input');
-                    cell.appendChild(inputBox);
-                } else {
-                    const inputBox = document.createElement('input');
-                    inputBox.type = 'number';
-                    inputBox.classList.add('input-box');
-                    cell.appendChild(inputBox);
-                }
+            const minuteProjectionCell = inputRow.insertCell();
+            const minuteProjectionInput = document.createElement('input');
+            minuteProjectionInput.type = 'number';
+            minuteProjectionInput.classList.add('minute-projection-input');
+            minuteProjectionCell.appendChild(minuteProjectionInput);
+
+            for (let j = 1; j <= 4; j++) {
+                const cell = inputRow.insertCell();
+                const inputBox = document.createElement('input');
+                inputBox.type = 'number';
+                inputBox.classList.add('input-box');
+                cell.appendChild(inputBox);
             }
         }
 
