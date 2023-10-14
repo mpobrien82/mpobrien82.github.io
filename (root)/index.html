@@ -214,25 +214,6 @@
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
 
-            // Function to handle input box changes
-            function handleInputBoxChange(inputBox, teamSection, paceClicker) {
-                const pace = parseFloat(paceClicker.value);
-                const originalMinutes = parseFloat(inputBox.getAttribute('data-original-value'));
-
-                // Calculate the new projection
-                const newProjection = originalMinutes - parseFloat(inputBox.value);
-
-                // Update the displayed value
-                inputBox.setAttribute('data-original-value', newProjection);
-                inputBox.value = newProjection;
-
-                // Update the player data based on the new projection and pace
-                updatePlayerData(pace, teamSection);
-            }
-
-            // Add input event listeners for the input boxes (Minutes, Points, Assists, Rebounds, Threes)
-            inputBox.addEventListener('input', () => handleInputBoxChange(inputBox, teamSection, paceClicker));
-
             return teamSection;
         }
 
@@ -308,8 +289,6 @@
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
-                            inputBox.setAttribute('data-original-value', values[j]);
-                            inputBox.value = values[j];
                         }
                     }
                 }
