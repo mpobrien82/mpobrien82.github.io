@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>NBA Live Model</title>
     <style>
@@ -9,9 +10,10 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #333; /* Dark background color */
-            color: #fff; /* Text color */
+            background-color: #333;
+            color: #fff;
         }
+
         .container {
             text-align: center;
             margin: 0;
@@ -20,6 +22,7 @@
             flex-direction: column;
             align-items: center;
         }
+
         .scroll-container {
             flex: 1;
             max-height: 80vh;
@@ -27,6 +30,7 @@
             overflow-y: auto;
             overflow-x: auto;
         }
+
         .team-section {
             padding: 20px;
             border: 1px solid #ccc;
@@ -36,41 +40,51 @@
             flex-direction: column;
             align-items: center;
         }
+
         .team-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
         }
+
         .team-name {
             font-size: 24px;
-            color: #FFD700; /* Gold color for team names */
+            color: #FFD700;
         }
+
         .team-buttons {
             display: flex;
         }
+
         .team-button {
             padding: 5px 10px;
             cursor: pointer;
         }
+
         .team-button.active {
-            background-color: #FFD700; /* Highlight color for active button */
+            background-color: #FFD700;
         }
+
         #player-table {
             border-collapse: collapse;
             width: 100%;
         }
-        #player-table th, #player-table td {
+
+        #player-table th,
+        #player-table td {
             padding: 8px;
             text-align: center;
             border: none;
             font-size: 24px;
         }
+
         .input-box {
-            width: 70px; /* Adjust the width for the pace input */
-            height: 30px; /* Adjust the height for the pace input */
+            width: 70px;
+            height: 30px;
             font-size: 18px;
         }
+
         .quarter-box {
             width: 50px;
             height: 30px;
@@ -78,14 +92,17 @@
             text-align: center;
             border: 1px solid #ccc;
         }
+
         .quarter-box.active {
             background-color: #FFD700;
         }
+
         .time-input {
             width: 70px;
             height: 30px;
             font-size: 18px;
         }
+
         .score-input {
             width: 70px;
             height: 30px;
@@ -93,6 +110,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>NBA Live Model</h1>
@@ -158,7 +176,7 @@
                 const quarterBox = document.createElement('div');
                 quarterBox.classList.add('quarter-box');
                 quarterBox.textContent = `${i}Q`;
-                quarterBox.addEventListener('click', () => handleQuarterClick(quarterBox, quarterBoxes, teamSection));
+                quarterBox.addEventListener('click', () => handleQuarterClick(quarterBox, quarterBoxes));
                 quarterBoxes.appendChild(quarterBox);
             }
 
@@ -188,8 +206,8 @@
             paceClicker.type = 'number';
             paceClicker.classList.add('input-box');
             paceClicker.placeholder = 'Pace';
-            paceClicker.step = 0.01; // Set the step value to 0.01
-            paceClicker.value = defaultPace; // Set the default pace to 1
+            paceClicker.step = 0.01;
+            paceClicker.value = defaultPace;
             teamHeader.appendChild(paceClicker);
 
             // Create the WW button
@@ -211,11 +229,11 @@
             // Add input event listener to handle pace changes
             handlePaceInputChange(paceClicker, teamSection);
 
+            // Add input event listener to handle projection input changes
+            handleProjectionInput(teamSection);
+
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
-
-            // Add event listeners for quarter and time input changes
-            handleQuarterAndTimeInput(teamSection);
 
             return teamSection;
         }
@@ -225,12 +243,9 @@
             const file = event.target.files[0];
 
             if (file) {
-                // Handle the uploaded file, e.g., read and process the CSV data
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     const csvData = e.target.result;
-
-                    // Process the CSV data (parse and create team sections)
                     processDataFromCSV(csvData);
                 };
                 reader.readAsText(file);
@@ -239,7 +254,6 @@
 
         // Function to process data from the uploaded CSV
         function processDataFromCSV(csvData) {
-            // Parse and process the CSV data, then create team sections
             const lines = csvData.split('\n');
             let currentTeamName = null;
             let teamSection = null;
@@ -247,22 +261,19 @@
             for (let i = 1; i < lines.length; i++) {
                 const values = lines[i].trim().split(',');
 
-                if (values.length >= 7) { // Ensure there are enough columns (removed RW/WW column)
+                if (values.length >= 7) {
                     const teamName = values[0];
 
                     if (teamName !== currentTeamName) {
-                        // Create a new team section
                         teamSection = createTeamSection(teamName);
                         currentTeamName = teamName;
                     }
 
-                    // Create a row for original player data
                     const playerTable = teamSection.querySelector('#player-table');
                     const originalRow = playerTable.insertRow();
-                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
-                        const cell = originalRow.insertCell();
 
-                        // Set the data-original-value and data-column attributes for player data elements
+                    for (let j = 1; j < values.length; j++) {
+                        const cell = originalRow.insertCell();
                         let originalValue = values[j];
                         let column = '';
 
@@ -280,14 +291,11 @@
                         }
                     }
 
-                    // Create a row for input boxes (including Minutes)
                     const inputRow = playerTable.insertRow();
-                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
+                    for (let j = 1; j < values.length; j++) {
                         const cell = inputRow.insertCell();
 
-                        // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
                         if (j >= 2 && j <= 6) {
-                            // Create an input box for the stat
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
@@ -298,123 +306,19 @@
             }
         }
 
-        // Function to handle pace input changes
-        function handlePaceInputChange(paceClicker, teamSection) {
-            paceClicker.addEventListener('input', () => {
-                const pace = parseFloat(paceClicker.value);
-                updatePlayerData(pace, teamSection);
-            });
-        }
+        function handleProjectionInput(teamSection) {
+            const inputBoxes = teamSection.querySelectorAll('.input-box');
 
-        // Function to update player data based on the current pace
-        function updatePlayerData(pace, teamSection) {
-            // Get all player data elements within the specified team section
-            const playerDataElements = teamSection.querySelectorAll('.player-data');
-
-            // Iterate through each player data element and update the calculated values
-            playerDataElements.forEach((element) => {
-                const originalValue = parseFloat(element.getAttribute('data-original-value'));
-                const column = element.getAttribute('data-column');
-
-                // Calculate and update the displayed value based on the pace
-                if (column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
-                    const newValue = (originalValue * pace).toFixed(2);
-                    element.textContent = newValue;
-                }
-            });
-        }
-
-        // Function to handle button clicks
-        function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
-            if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList.add('active');
-                otherButton.classList.remove('active');
-                updatePlayerData(parseFloat(paceClicker.value), teamSection);
-            }
-        }
-
-        // Function to handle quarter and time input changes
-        function handleQuarterAndTimeInput(teamSection) {
-            const quarterBoxes = teamSection.querySelectorAll('.quarter-box');
-            const timeInput = teamSection.querySelector('.time-input');
-
-            quarterBoxes.forEach((quarterBox) => {
-                quarterBox.addEventListener('click', () => {
-                    // Deselect all quarter buttons in the same team header
-                    quarterBoxes.forEach((button) => button.classList.remove('active'));
-
-                    // Select the clicked button
-                    quarterBox.classList.add('active');
-
-                    // Calculate total minutes left based on quarter and time input
-                    const totalMinutesInGame = 48; // Total minutes in an NBA game
-                    const selectedQuarter = parseInt(quarterBox.textContent.charAt(0)); // Extract the quarter number
-                    const timeLeft = parseInt(timeInput.value) || 0;
-
-                    const minutesPlayed = (selectedQuarter - 1) * 12 + (12 - timeLeft);
-
-                    // Update player minutes for this team
-                    const playerDataElements = teamSection.querySelectorAll('.input-box');
-                    playerDataElements.forEach((inputBox) => {
-                        const projectedMinutes = parseFloat(inputBox.getAttribute('data-original-value'));
-                        const updatedMinutes = projectedMinutes - minutesPlayed;
-                        inputBox.value = updatedMinutes.toFixed(2);
-                    });
+            inputBoxes.forEach((inputBox) => {
+                inputBox.addEventListener('input', () => {
+                    const pace = parseFloat(document.getElementById('paceInput').value);
+                    updatePlayerData(pace, teamSection);
                 });
             });
-
-            timeInput.addEventListener('input', () => {
-                // Calculate total minutes left based on quarter and time input
-                const selectedQuarter = Array.from(quarterBoxes).find((quarterBox) => quarterBox.classList.contains('active'));
-                if (selectedQuarter) {
-                    const totalMinutesInGame = 48; // Total minutes in an NBA game
-                    const timeLeft = parseInt(timeInput.value) || 0;
-                    const minutesPlayed = (selectedQuarter.textContent.charAt(0) - 1) * 12 + (12 - timeLeft);
-
-                    // Update player minutes for this team
-                    const playerDataElements = teamSection.querySelectorAll('.input-box');
-                    playerDataElements.forEach((inputBox) => {
-                        const projectedMinutes = parseFloat(inputBox.getAttribute('data-original-value'));
-                        const updatedMinutes = projectedMinutes - minutesPlayed;
-                        inputBox.value = updatedMinutes.toFixed(2);
-                    });
-                }
-            });
         }
 
-        // Function to handle button clicks
-        function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
-            if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList.add('active');
-                otherButton.classList.remove('active');
-                updatePlayerData(parseFloat(paceClicker.value), teamSection);
-            }
-        }
-
-        // Function to handle quarter button clicks
-        function handleQuarterClick(clickedButton, quarterBoxes, teamSection) {
-            // Deselect all quarter buttons in the same team header
-            quarterBoxes.forEach((button) => button.classList.remove('active'));
-
-            // Select the clicked button
-            clickedButton.classList.add('active');
-
-            // Calculate total minutes left based on quarter and time input
-            const totalMinutesInGame = 48; // Total minutes in an NBA game
-            const selectedQuarter = parseInt(clickedButton.textContent.charAt(0)); // Extract the quarter number
-            const timeInput = teamSection.querySelector('.time-input');
-            const timeLeft = parseInt(timeInput.value) || 0;
-
-            const minutesPlayed = (selectedQuarter - 1) * 12 + (12 - timeLeft);
-
-            // Update player minutes for this team
-            const playerDataElements = teamSection.querySelectorAll('.input-box');
-            playerDataElements.forEach((inputBox) => {
-                const projectedMinutes = parseFloat(inputBox.getAttribute('data-original-value'));
-                const updatedMinutes = projectedMinutes - minutesPlayed;
-                inputBox.value = updatedMinutes.toFixed(2);
-            });
-        }
+        // ... (the rest of your JavaScript code)
     </script>
 </body>
+
 </html>
