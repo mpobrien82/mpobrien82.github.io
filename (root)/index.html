@@ -208,51 +208,48 @@
             wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
 
-            // Add input event listener to handle pace changes
-            paceClicker.addEventListener('input', () => {
-                updatePlayerData(paceClicker, teamSection);
-            });
-
             // Create an array to store the input boxes for player minutes
             const playerMinutesInputBoxes = [];
 
-            // Create a row for original player data
-            const playerData = [];
+            // Create rows for original player data
             for (let i = 1; i <= 5; i++) {
                 const playerRow = playerTable.insertRow();
-                playerData.push([]);
+                const playerData = [];
+
                 for (let j = 0; j < 6; j++) {
                     const cell = playerRow.insertCell();
                     const inputBox = document.createElement('input');
                     inputBox.type = 'number';
                     inputBox.classList.add('input-box');
                     cell.appendChild(inputBox);
-                    playerData[i - 1].push(inputBox);
+                    playerData.push(inputBox);
 
                     // Add input event listener to player minutes input boxes
                     if (j === 1) {
                         inputBox.addEventListener('input', () => {
-                            updatePlayerMinutes(playerData, paceClicker, teamSection);
+                            updatePlayerMinutes(paceClicker, teamSection);
                         });
                     }
                 }
-            }
 
-            // Store player minutes input boxes
-            playerMinutesInputBoxes.push(playerData);
+                // Store player minutes input boxes
+                playerMinutesInputBoxes.push(playerData);
+            }
 
             return teamSection;
         }
 
         // Function to update player minutes based on the current pace
-        function updatePlayerMinutes(playerData, paceClicker, teamSection) {
+        function updatePlayerMinutes(paceClicker, teamSection) {
             const pace = parseFloat(paceClicker.value);
 
-            for (let i = 0; i < playerData.length; i++) {
-                const originalMinutes = parseFloat(playerData[i][1].value);
-                const updatedMinutes = (originalMinutes * pace).toFixed(2);
-                teamSection.querySelectorAll('.player-data')[i * 5 + 1].textContent = updatedMinutes;
-            }
+            teamSection.querySelectorAll('.player-data').forEach((element, index) => {
+                if (index % 6 === 1) {
+                    const originalMinutes = parseFloat(playerMinutesInputBoxes[Math.floor(index / 6)][1].value);
+                    const updatedMinutes = (originalMinutes * pace).toFixed(2);
+                    element.textContent = updatedMinutes;
+                }
+            });
         }
 
         // Function to handle file input change
@@ -292,11 +289,9 @@
                     }
 
                     // Fill player data input boxes
-                    const playerData = [];
                     for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                         // Store original data for use in calculations
                         const originalValue = values[j];
-                        playerData.push(originalValue);
 
                         // Update player data input boxes
                         if (j >= 2 && j <= 6) {
@@ -310,8 +305,8 @@
         // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList.add('active);
-                otherButton.classList.remove('active);
+                clickedButton.classList.add('active');
+                otherButton.classList.remove('active');
                 updatePlayerData(paceClicker, teamSection);
             }
         }
@@ -327,3 +322,4 @@
     </script>
 </body>
 </html>
+
