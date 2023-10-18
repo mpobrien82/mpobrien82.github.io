@@ -200,7 +200,7 @@
 
             // Create the RW button
             const rwButton = document.createElement('div');
-            rwButton.classList add('team-button');
+            rwButton.classList.add('team-button');
             rwButton.textContent = 'RW';
             teamButtons.appendChild(rwButton);
 
@@ -271,7 +271,7 @@
                         cell.textContent = originalValue;
 
                         if (column) {
-                            cell.classList.add('player-data');
+                            cell.classList add ('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
                         }
