@@ -133,7 +133,6 @@
                 <thead>
                     <tr>
                         <th>Players</th>
-                        <th>Projected Minutes</th>
                         <th>Minutes</th>
                         <th>Points</th>
                         <th>Assists</th>
@@ -215,9 +214,6 @@
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
 
-            // Add input event listener to handle projected minutes changes
-            handleProjectedMinutesInputChange(playerTable, paceClicker, teamSection);
-
             return teamSection;
         }
 
@@ -268,8 +264,10 @@
                         let column = '';
 
                         if (j >= 3 && j <= 6) {
-                            column = ['Projected Minutes', 'Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
-                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
+                            column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
+                            if (column === 'Minutes') {
+                                originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
+                            }
                         }
 
                         cell.textContent = originalValue;
@@ -281,17 +279,19 @@
                         }
                     }
 
-                    // Create a row for input boxes (including Projected Minutes)
+                    // Create a row for input boxes (including Minutes)
                     const inputRow = playerTable.insertRow();
                     for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                         const cell = inputRow.insertCell();
 
-                        // Check if the current column represents a player's stat (Projected Minutes, Minutes, Points, Assists, Rebounds, Threes)
+                        // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
                         if (j >= 2 && j <= 6) {
                             // Create an input box for the stat
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
+                            inputBox.setAttribute('data-original-value', parseFloat(values[j]));
+                            handleMinuteInputChange(inputBox, teamSection); // Add input change listener
                             cell.appendChild(inputBox);
                         }
                     }
@@ -299,31 +299,22 @@
             }
         }
 
+        // Function to handle input changes in the minute input boxes
+        function handleMinuteInputChange(inputBox, teamSection) {
+            inputBox.addEventListener('input', () => {
+                const pace = parseFloat(teamSection.querySelector('.input-box').value);
+                const originalMinutes = parseFloat(inputBox.getAttribute('data-original-value'));
+                const newValue = originalMinutes - pace;
+                inputBox.value = newValue;
+                updatePlayerData(pace, teamSection);
+            });
+        }
+
         // Function to handle pace input changes
         function handlePaceInputChange(paceClicker, teamSection) {
             paceClicker.addEventListener('input', () => {
                 const pace = parseFloat(paceClicker.value);
                 updatePlayerData(pace, teamSection);
-            });
-        }
-
-        // Function to handle projected minutes input changes
-        function handleProjectedMinutesInputChange(playerTable, paceClicker, teamSection) {
-            const projectedMinutesInputs = playerTable.querySelectorAll('.input-box');
-
-            projectedMinutesInputs.forEach((inputBox, index) => {
-                inputBox.addEventListener('input', () => {
-                    const projectedMinutes = parseFloat(inputBox.getAttribute('data-original-value'));
-                    const inputMinutes = parseFloat(inputBox.value);
-                    const actualMinutes = projectedMinutes - inputMinutes;
-
-                    // Update the displayed actual minutes
-                    const minutesCell = inputBox.parentNode.previousElementSibling; // Minutes cell
-                    minutesCell.textContent = actualMinutes.toFixed(2);
-
-                    // Update the pace-adjusted values if needed
-                    updatePlayerData(parseFloat(paceClicker.value), teamSection);
-                });
             });
         }
 
@@ -338,7 +329,7 @@
                 const column = element.getAttribute('data-column');
 
                 // Calculate and update the displayed value based on the pace
-                if (column === 'Projected Minutes' || column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
+                if (column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
                     const newValue = (originalValue * pace).toFixed(2);
                     element.textContent = newValue;
                 }
