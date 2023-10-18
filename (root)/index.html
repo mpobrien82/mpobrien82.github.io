@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space between;
             align-items: center;
             width: 100%;
         }
@@ -133,6 +133,7 @@
                 <thead>
                     <tr>
                         <th>Players</th>
+                        <th>Projected Minutes</th>
                         <th>Minutes</th>
                         <th>Points</th>
                         <th>Assists</th>
@@ -204,21 +205,18 @@
             rwButton.textContent = 'RW';
             teamButtons.appendChild(rwButton);
 
-            // Create an update minutes button
-            const updateMinutesButton = document.createElement('button');
-            updateMinutesButton.textContent = 'Update Minutes';
-            teamHeader.appendChild(updateMinutesButton);
-
             // Add click event listeners to the buttons
             wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
-            updateMinutesButton.addEventListener('click', () => handleMinutesUpdate(teamSection));
 
             // Add input event listener to handle pace changes
             handlePaceInputChange(paceClicker, teamSection);
 
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
+
+            // Add input event listener to handle projected minutes changes
+            handleProjectedMinutesInputChange(playerTable, paceClicker, teamSection);
 
             return teamSection;
         }
@@ -270,25 +268,25 @@
                         let column = '';
 
                         if (j >= 3 && j <= 6) {
-                            column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
+                            column = ['Projected Minutes', 'Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
                             originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
                         }
 
                         cell.textContent = originalValue;
 
                         if (column) {
-                            cell.classList add('player-data');
+                            cell.classList.add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
                         }
                     }
 
-                    // Create a row for input boxes (including Minutes)
+                    // Create a row for input boxes (including Projected Minutes)
                     const inputRow = playerTable.insertRow();
                     for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                         const cell = inputRow.insertCell();
 
-                        // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
+                        // Check if the current column represents a player's stat (Projected Minutes, Minutes, Points, Assists, Rebounds, Threes)
                         if (j >= 2 && j <= 6) {
                             // Create an input box for the stat
                             const inputBox = document.createElement('input');
@@ -301,28 +299,31 @@
             }
         }
 
-        // Function to handle minutes input changes
-        function handleMinutesUpdate(teamSection) {
-            // Get all input boxes for Minutes within the specified team section
-            const minutesInputBoxes = teamSection.querySelectorAll('.input-box');
-
-            // Iterate through each input box and update the displayed minutes
-            minutesInputBoxes.forEach((inputBox) => {
-                const minutesInputElement = inputBox;
-                const playerDataRow = inputBox.parentElement.parentElement.previousElementSibling;
-                const playerDataElements = playerDataRow.querySelectorAll('.player-data');
-                const originalMinutes = parseFloat(playerDataElements[0].getAttribute('data-original-value')); // Assuming Minutes is the first column
-                let newMinutes = originalMinutes - parseFloat(minutesInputElement.value);
-                newMinutes = newMinutes > 0 ? newMinutes : 0;
-                playerDataElements[0].textContent = newMinutes.toFixed(2);
-            });
-        }
-
         // Function to handle pace input changes
         function handlePaceInputChange(paceClicker, teamSection) {
             paceClicker.addEventListener('input', () => {
                 const pace = parseFloat(paceClicker.value);
                 updatePlayerData(pace, teamSection);
+            });
+        }
+
+        // Function to handle projected minutes input changes
+        function handleProjectedMinutesInputChange(playerTable, paceClicker, teamSection) {
+            const projectedMinutesInputs = playerTable.querySelectorAll('.input-box');
+
+            projectedMinutesInputs.forEach((inputBox, index) => {
+                inputBox.addEventListener('input', () => {
+                    const projectedMinutes = parseFloat(inputBox.getAttribute('data-original-value'));
+                    const inputMinutes = parseFloat(inputBox.value);
+                    const actualMinutes = projectedMinutes - inputMinutes;
+
+                    // Update the displayed actual minutes
+                    const minutesCell = inputBox.parentNode.previousElementSibling; // Minutes cell
+                    minutesCell.textContent = actualMinutes.toFixed(2);
+
+                    // Update the pace-adjusted values if needed
+                    updatePlayerData(parseFloat(paceClicker.value), teamSection);
+                });
             });
         }
 
@@ -337,7 +338,7 @@
                 const column = element.getAttribute('data-column');
 
                 // Calculate and update the displayed value based on the pace
-                if (column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
+                if (column === 'Projected Minutes' || column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
                     const newValue = (originalValue * pace).toFixed(2);
                     element.textContent = newValue;
                 }
