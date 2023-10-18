@@ -200,7 +200,7 @@
 
             // Create the RW button
             const rwButton = document.createElement('div');
-            rwButton.classList.add('team-button');
+            rwButton.classList add('team-button');
             rwButton.textContent = 'RW';
             teamButtons.appendChild(rwButton);
 
@@ -298,10 +298,6 @@
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
                                 const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-
-                                // Update other stats (Points, Assists, Rebounds, Threes) based on the real-time Minutes change
-                                const pace = parseFloat(paceClicker.value);
-                                updateOtherStats(originalRow, pace);
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
@@ -317,22 +313,6 @@
                         }
                     }
                 }
-            }
-        }
-
-        // Function to update other stats (Points, Assists, Rebounds, Threes) based on the real-time Minutes change
-        function updateOtherStats(originalRow, pace) {
-            const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
-
-            // Iterate through Points, Assists, Rebounds, Threes columns (3-6)
-            for (let j = 3; j <= 6; j++) {
-                const cell = originalRow.cells[j];
-                const column = ['Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
-
-                // Calculate and update the displayed value based on the real-time Minutes and pace
-                const originalValue = parseFloat(cell.getAttribute('data-original-value'));
-                const newValue = (originalValue * projectedMinutes * pace).toFixed(2);
-                cell.textContent = newValue;
             }
         }
 
