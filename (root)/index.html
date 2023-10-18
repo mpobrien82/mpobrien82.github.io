@@ -296,28 +296,41 @@
                             // Add an event listener to handle real-time update for Minutes
                             inputBox.addEventListener('input', () => {
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
-                                // Update Points, Assists, Rebounds, and Threes based on the entered Minutes
-                                const pace = parseFloat(paceClicker.value);
-                                const multiplier = enteredMinutes / projectedMinutes;
-                                for (let k = 2; k <= 5; k++) {
-                                    originalRow.cells[k].textContent = (parseFloat(originalRow.cells[k].getAttribute('data-original-value')) * multiplier).toFixed(2);
+                                const realTimeMinutes = projectedMinutes - enteredMinutes;
+                                originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
+
+                                // Update the other columns (Points, Assists, Rebounds, Threes) when Minutes change
+                                for (let k = 3; k <= 6; k++) {
+                                    const otherCell = inputRow.cells[k];
+                                    const otherOriginalValue = parseFloat(otherCell.getAttribute('data-original-value'));
+                                    otherCell.textContent = (otherOriginalValue * (realTimeMinutes / projectedMinutes)).toFixed(2);
                                 }
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList add('input-box');
+                            inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
 
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
                             inputBox.addEventListener('input', () => {
-                                // Handle other stats if needed
+                                const enteredValue = parseFloat(inputBox.value) || 0;
+                                originalRow.cells[j].textContent = enteredValue.toFixed(2);
+                                updateMinutesOnStatChange(inputRow, originalRow, j);
                             });
                         }
                     }
                 }
             }
+        }
+
+        // Function to update Minutes when other stats (Points, Assists, Rebounds, Threes) change
+        function updateMinutesOnStatChange(inputRow, originalRow, changedStatColumn) {
+            const newStatValue = parseFloat(inputRow.cells[changedStatColumn].textContent);
+            const originalMinutes = parseFloat(originalRow.cells[1].getAttribute('data-original-value'));
+            const newMinutes = (newStatValue / parseFloat(originalRow.cells[changedStatColumn].getAttribute('data-original-value'))) * originalMinutes;
+            originalRow.cells[1].textContent = newMinutes.toFixed(2);
         }
 
         // Function to handle pace input changes
