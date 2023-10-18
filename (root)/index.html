@@ -209,7 +209,7 @@
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
 
             // Add input event listener to handle pace changes
-            handlePaceInputChange(paceClicker, teamSection);
+            paceClicker.addEventListener('input', () => handlePaceInputChange(paceClicker, teamSection));
 
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
@@ -270,7 +270,7 @@
                         cell.textContent = originalValue;
 
                         if (column) {
-                            cell.classList.add('player-data');
+                            cell.classList add ('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
                         }
@@ -305,16 +305,19 @@
             const column = inputBox.parentNode.previousElementSibling.getAttribute('data-column');
 
             // Get the entered value from the input box
-            const enteredValue = parseFloat(inputBox.value) || 0;
+            const enteredValue = parseFloat(inputBox.value);
 
-            // Calculate the updated value for this column based on the entered value
-            const updatedValue = originalValue - enteredValue;
+            // Check if the entered value is a valid number
+            if (!isNaN(enteredValue)) {
+                // Calculate the updated value for this column based on the entered value
+                const updatedValue = originalValue - enteredValue;
 
-            // Update the displayed value in the original cell
-            inputBox.parentNode.previousElementSibling.textContent = updatedValue;
+                // Update the displayed value in the original cell
+                inputBox.parentNode.previousElementSibling.textContent = updatedValue;
 
-            // Update other related calculations
-            updatePlayerData(parseFloat(teamSection.querySelector('.input-box').value), teamSection);
+                // Update other related calculations
+                updatePlayerData(parseFloat(teamSection.querySelector('.input-box').value), teamSection);
+            }
         }
 
         // Function to handle pace input changes
