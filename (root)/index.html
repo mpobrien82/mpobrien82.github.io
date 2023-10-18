@@ -263,8 +263,8 @@
                         let originalValue = values[j];
                         let column = '';
 
-                        if (j === 1) {
-                            column = 'Minutes';
+                        if (j >= 3 && j <= 6) {
+                            column = ['Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
                         }
 
                         cell.textContent = originalValue;
@@ -282,43 +282,43 @@
                         const cell = inputRow.insertCell();
 
                         // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
-                        if (j === 1) { // Check if it's the Minutes column
+                        if (j === 2) { // Check if it's the Minutes column
                             // Create an input box for Minutes
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
 
-                            // Get the projected Minutes value as a number
-                            const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
-
-                            // Add an event listener to handle real-time update for Minutes
+                            // Add an event listener to handle real-time update for Minutes and other stats
                             inputBox.addEventListener('input', () => {
-                                const enteredMinutes = parseFloat(inputBox.value) || 0;
-                                const realTimeMinutes = projectedMinutes - enteredMinutes;
-                                originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-
-                                // Update the other stats based on the new minutes value
-                                updateStatsFromMinutes(originalRow, originalRow.cells[1].textContent);
+                                updatePlayerStats(inputBox, originalRow, playerTable);
                             });
-                        } else if (j >= 2 && j <= 5) { // Check if it's Points, Assists, Rebounds, or Threes columns
+                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
-
-                            // Get the projected value as a number
-                            const projectedValue = parseFloat(originalRow.cells[j].textContent);
-
-                            // Add an event listener to handle real-time update for other stats
-                            inputBox.addEventListener('input', () => {
-                                const enteredValue = parseFloat(inputBox.value) || 0;
-                                const realTimeValue = projectedValue - enteredValue;
-                                originalRow.cells[j].textContent = realTimeValue.toFixed(2);
-                            });
                         }
                     }
+                }
+            }
+        }
+
+        // Function to update player stats (Points, Assists, Rebounds, Threes) based on Minutes and other stats
+        function updatePlayerStats(minutesInput, originalRow, playerTable) {
+            const enteredMinutes = parseFloat(minutesInput.value) || 0;
+            const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
+
+            // Calculate and update the other stats (Points, Assists, Rebounds, Threes)
+            for (let j = 3; j <= 6; j++) {
+                const cell = playerTable.rows[0].cells[j];
+                const originalValue = parseFloat(cell.getAttribute('data-original-value'));
+                const column = cell.getAttribute('data-column');
+
+                if (column) {
+                    const newValue = (originalValue * (enteredMinutes / projectedMinutes)).toFixed(2);
+                    originalRow.cells[j].textContent = newValue;
                 }
             }
         }
@@ -342,7 +342,7 @@
                 const column = element.getAttribute('data-column');
 
                 // Calculate and update the displayed value based on the pace
-                if (column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
+                if (column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
                     const newValue = (originalValue * pace).toFixed(2);
                     element.textContent = newValue;
                 }
@@ -365,23 +365,6 @@
 
             // Select the clicked button
             clickedButton.classList.add('active');
-        }
-
-        // Function to update stats based on minutes input
-        function updateStatsFromMinutes(playerRow, newMinutes) {
-            const pace = parseFloat(document.querySelector('.input-box').value);
-            const projectedMinutes = parseFloat(playerRow.querySelector('.input-box').value);
-            const realTimeMinutes = projectedMinutes - newMinutes;
-            
-            // Calculate and update the Points, Assists, Rebounds, and Threes
-            const columnsToUpdate = ['Points', 'Assists', 'Rebounds', 'Threes'];
-            
-            columnsToUpdate.forEach((column) => {
-                const cellIndex = playerRow.cells[0].cellIndex + columnsToUpdate.indexOf(column) + 2;
-                const originalValue = parseFloat(playerRow.cells[cellIndex].getAttribute('data-original-value'));
-                const newValue = (originalValue * (realTimeMinutes / projectedMinutes) * pace).toFixed(2);
-                playerRow.cells[cellIndex].textContent = newValue;
-            });
         }
     </script>
 </body>
