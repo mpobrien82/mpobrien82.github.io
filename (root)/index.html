@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -209,7 +209,7 @@
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
 
             // Add input event listener to handle pace changes
-            handlePaceInputChange(paceClicker, teamSection);
+            paceClicker.addEventListener('input', () => handlePaceInputChange(paceClicker, teamSection));
 
             // Add the team section to the container
             document.querySelector('#team-container').appendChild(teamSection);
