@@ -264,7 +264,8 @@
                         let column = '';
 
                         if (j >= 3 && j <= 6) {
-                            column = ['Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
+                            column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
+                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
                         }
 
                         cell.textContent = originalValue;
@@ -286,12 +287,17 @@
                             // Create an input box for Minutes
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList.add('input-box');
+                            inputBox.classList add('input-box');
                             cell.appendChild(inputBox);
 
-                            // Add an event listener to handle real-time update for Minutes and other stats
+                            // Get the projected Minutes value as a number
+                            const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
+
+                            // Add an event listener to handle real-time update for Minutes
                             inputBox.addEventListener('input', () => {
-                                updateOtherStats(inputBox, originalRow, column);
+                                const enteredMinutes = parseFloat(inputBox.value) || 0;
+                                const realTimeMinutes = projectedMinutes - enteredMinutes;
+                                originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
@@ -299,22 +305,14 @@
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
+
+                            // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
+                            inputBox.addEventListener('input', () => {
+                                // Handle other stats if needed
+                            });
                         }
                     }
                 }
-            }
-        }
-
-        // Function to update other stats (Points, Assists, Rebounds, Threes) based on entered Minutes
-        function updateOtherStats(minutesInput, originalRow, column) {
-            const enteredMinutes = parseFloat(minutesInput.value) || 0;
-            const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
-
-            if (column) {
-                // Calculate and update the other stats (Points, Assists, Rebounds, Threes)
-                const originalValue = parseFloat(originalRow.querySelector(`[data-column="${column}"]`).getAttribute('data-original-value'));
-                const newValue = (originalValue * (enteredMinutes / projectedMinutes)).toFixed(2);
-                originalRow.querySelector(`[data-column="${column}"]`).textContent = newValue;
             }
         }
 
@@ -337,7 +335,7 @@
                 const column = element.getAttribute('data-column');
 
                 // Calculate and update the displayed value based on the pace
-                if (column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
+                if (column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
                     const newValue = (originalValue * pace).toFixed(2);
                     element.textContent = newValue;
                 }
