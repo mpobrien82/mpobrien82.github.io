@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -287,28 +287,32 @@
                             // Create an input box for Minutes
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList.add('input-box');
+                            inputBox.classList.add('input-box', 'minutes-input'); // Add 'minutes-input' class
                             cell.appendChild(inputBox);
 
                             // Get the projected Minutes value as a number
                             const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
 
-                            // Add an event listener to handle real-time update for Minutes
+                            // Add an event listener to handle real-time update for Minutes and other stats
                             inputBox.addEventListener('input', () => {
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
                                 const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
+
+                                // Calculate and update columns 3-6 (Points, Assists, Rebounds, Threes)
+                                updatePlayerStats(realTimeMinutes, teamSection);
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList.add('input-box');
+                            inputBox.classList.add('input-box', 'other-stats-input'); // Add 'other-stats-input' class
                             cell.appendChild(inputBox);
 
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
                             inputBox.addEventListener('input', () => {
                                 // Handle other stats if needed
+                                updatePlayerStats(parseFloat(inputBox.value) || 0, teamSection);
                             });
                         }
                     }
@@ -358,6 +362,24 @@
 
             // Select the clicked button
             clickedButton.classList.add('active');
+        }
+
+        // Function to update player stats based on the real-time minutes
+        function updatePlayerStats(minutes, teamSection) {
+            // Get all player data elements within the specified team section
+            const playerDataElements = teamSection.querySelectorAll('.player-data');
+            
+            // Iterate through each player data element
+            playerDataElements.forEach((element) => {
+                const column = element.getAttribute('data-column');
+
+                // Calculate and update the displayed value for Points, Assists, Rebounds, and Threes based on the entered minutes
+                if (column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
+                    const originalValue = parseFloat(element.getAttribute('data-original-value'));
+                    const newValue = (originalValue * (minutes / 48)).toFixed(2);
+                    element.textContent = newValue;
+                }
+            });
         }
     </script>
 </body>
