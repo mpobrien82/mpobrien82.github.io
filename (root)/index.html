@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space between;
             align-items: center;
             width: 100%;
         }
@@ -186,7 +186,7 @@
             // Create an input for the pace clicker
             const paceClicker = document.createElement('input');
             paceClicker.type = 'number';
-            paceClicker.classList.add('input-box');
+            paceClicker.classList add ('input-box');
             paceClicker.placeholder = 'Pace';
             paceClicker.step = 0.01; // Set the step value to 0.01
             paceClicker.value = defaultPace; // Set the default pace to 1
@@ -271,7 +271,7 @@
                         cell.textContent = originalValue;
 
                         if (column) {
-                            cell.classList add ('player-data');
+                            cell.classList.add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
                         }
@@ -298,7 +298,6 @@
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
                                 const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-                                updatePlayerStats(teamSection);
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
@@ -309,7 +308,7 @@
 
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
                             inputBox.addEventListener('input', () => {
-                                updatePlayerStats(teamSection);
+                                // Handle other stats if needed
                             });
                         }
                     }
@@ -321,15 +320,16 @@
         function handlePaceInputChange(paceClicker, teamSection) {
             paceClicker.addEventListener('input', () => {
                 const pace = parseFloat(paceClicker.value);
-                updatePlayerStats(teamSection);
+                updatePlayerData(pace, teamSection);
             });
         }
 
-        // Function to update player stats based on the current data
-        function updatePlayerStats(teamSection) {
+        // Function to update player data based on the current pace
+        function updatePlayerData(pace, teamSection) {
+            // Get all player data elements within the specified team section
             const playerDataElements = teamSection.querySelectorAll('.player-data');
-            const paceClicker = teamSection.querySelector('.input-box');
-            const pace = parseFloat(paceClicker.value);
+
+            // Iterate through each player data element and update the calculated values
             playerDataElements.forEach((element) => {
                 const originalValue = parseFloat(element.getAttribute('data-original-value'));
                 const column = element.getAttribute('data-column');
@@ -347,7 +347,7 @@
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
-                updatePlayerStats(teamSection);
+                updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
         }
 
