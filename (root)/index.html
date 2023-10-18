@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -279,6 +279,8 @@
 
                     // Create a row for input boxes (including Minutes)
                     const inputRow = playerTable.insertRow();
+                    let totalSubtraction = 0; // Initialize the total subtraction
+
                     for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                         const cell = inputRow.insertCell();
 
@@ -294,7 +296,8 @@
                             inputBox.addEventListener('input', () => {
                                 const projectedMinutes = parseFloat(originalRow.cells[1].textContent); // Get the projected Minutes value as a number
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
-                                const realTimeMinutes = projectedMinutes - enteredMinutes;
+                                totalSubtraction += enteredMinutes; // Add the entered minutes to the total subtraction
+                                const realTimeMinutes = projectedMinutes - totalSubtraction; // Calculate the real-time minutes
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
                             });
                         }
