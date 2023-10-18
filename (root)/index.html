@@ -242,7 +242,7 @@
             let teamSection = null;
 
             for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].trim().split('\t'); // Use '\t' as the delimiter for tab-separated values
+                const values = lines[i].trim().split(',');
 
                 if (values.length >= 7) { // Ensure there are enough columns (removed RW/WW column)
                     const teamName = values[0];
@@ -265,6 +265,7 @@
 
                         if (j >= 3 && j <= 6) {
                             column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
+                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
                         }
 
                         cell.textContent = originalValue;
@@ -297,24 +298,26 @@
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
                                 const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
+                                // Update other stats
+                                updateOtherStats(inputBox, teamSection);
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList add('input-box');
+                            inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
 
-                            // Get the Minutes value for this player
-                            const minutesValue = parseFloat(originalRow.cells[1].textContent);
+                            // Set the data-original-value for input boxes
+                            const column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
+                            const originalValue = parseFloat(values[j]);
+                            inputBox.setAttribute('data-original-value', originalValue);
+                            inputBox.setAttribute('data-column', column);
 
                             // Add an event listener to handle real-time update for other stats (Points, Assists, Rebounds, Threes)
                             inputBox.addEventListener('input', () => {
-                                // Calculate the new value for the corresponding stat
-                                const statColumn = j - 2; // Map the column index to the stat column (3-6)
-                                const enteredValue = parseFloat(inputBox.value) || 0;
-                                const newValue = (enteredValue / minutesValue).toFixed(2);
-                                originalRow.cells[j].textContent = newValue;
+                                // Handle other stats if needed
+                                updateOtherStats(inputBox, teamSection);
                             });
                         }
                     }
@@ -327,6 +330,8 @@
             paceClicker.addEventListener('input', () => {
                 const pace = parseFloat(paceClicker.value);
                 updatePlayerData(pace, teamSection);
+                // Update other stats
+                updateOtherStats(paceClicker, teamSection);
             });
         }
 
@@ -348,12 +353,35 @@
             });
         }
 
+        // Function to update other stats (Points, Assists, Rebounds, Threes)
+        function updateOtherStats(inputBox, teamSection) {
+            // Get the projected minutes for this player
+            const projectedMinutes = parseFloat(inputBox.getAttribute('data-original-value'));
+
+            // Get the other input boxes for this player (Points, Assists, Rebounds, Threes)
+            const inputBoxes = Array.from(inputBox.parentElement.parentElement.getElementsByTagName('input'));
+
+            inputBoxes.forEach(otherInputBox => {
+                if (otherInputBox !== inputBox) {
+                    const column = otherInputBox.getAttribute('data-column');
+                    const originalValue = parseFloat(otherInputBox.getAttribute('data-original-value'));
+                    const newValue = (originalValue * projectedMinutes).toFixed(2);
+                    otherInputBox.value = newValue;
+                }
+            });
+
+            // Update the player data displayed on the table
+            updatePlayerData(parseFloat(paceClicker.value), teamSection);
+        }
+
         // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
                 updatePlayerData(parseFloat(paceClicker.value), teamSection);
+                // Update other stats
+                updateOtherStats(paceClicker, teamSection);
             }
         }
 
