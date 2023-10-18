@@ -271,7 +271,7 @@
 
                         if (column) {
                             cell.classList.add('player-data');
-                            cell.setAttribute('data-original-value', originalValue);
+                            cell.setAttribute('data-original-value', originalValue.toString()); // Convert to string
                             cell.setAttribute('data-column', column);
                         }
                     }
@@ -308,7 +308,7 @@
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList add('input-box');
+                            inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
 
                             // Add an event listener to handle real-time update for other stats
@@ -354,8 +354,8 @@
         // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList.add('active');
-                otherButton.classList.remove('active);
+                clickedButton.classList.add('active'); // Add the missing single quote
+                otherButton.classList.remove('active');
                 updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
         }
