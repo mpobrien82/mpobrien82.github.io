@@ -105,6 +105,7 @@
     <script>
         // Set the default pace to start at 1
         const defaultPace = 1;
+        const playerMinutesMap = new Map(); // Map to track player minutes
 
         // Function to handle file input change
         document.querySelector('#file-input').addEventListener('change', handleFileUpload);
@@ -242,10 +243,11 @@
             let teamSection = null;
 
             for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].trim().split(',');
+                const values = lines[i].trim().split('\t'); // Split using tab delimiter
 
-                if (values.length >= 7) { // Ensure there are enough columns (removed RW/WW column)
+                if (values.length >= 7) { // Ensure there are enough columns
                     const teamName = values[0];
+                    const minutes = parseFloat(values[2]); // Minutes from column 2 in your webpage
 
                     if (teamName !== currentTeamName) {
                         // Create a new team section
@@ -256,7 +258,7 @@
                     // Create a row for original player data
                     const playerTable = teamSection.querySelector('#player-table');
                     const originalRow = playerTable.insertRow();
-                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
+                    for (let j = 1; j < values.length; j++) {
                         const cell = originalRow.insertCell();
 
                         // Set the data-original-value and data-column attributes for player data elements
@@ -265,10 +267,15 @@
 
                         if (j >= 3 && j <= 6) {
                             column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
-                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
+                            originalValue = (parseFloat(originalValue)).toFixed(2);
                         }
 
                         cell.textContent = originalValue;
+
+                        if (column === 'Minutes') {
+                            const player = values[1];
+                            playerMinutesMap.set(player, minutes);
+                        }
 
                         if (column) {
                             cell.classList.add('player-data');
@@ -279,11 +286,11 @@
 
                     // Create a row for input boxes (including Minutes)
                     const inputRow = playerTable.insertRow();
-                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
+                    for (let j = 1; j < values.length; j++) {
                         const cell = inputRow.insertCell();
 
                         // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
-                        if (j === 2) { // Check if it's the Minutes column
+                        if (j === 2) {
                             // Create an input box for Minutes
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
@@ -291,24 +298,31 @@
                             cell.appendChild(inputBox);
 
                             // Get the projected Minutes value as a number
-                            const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
+                            const player = values[1];
+                            const projectedMinutes = playerMinutesMap.get(player);
 
                             // Add an event listener to handle real-time update for Minutes
                             inputBox.addEventListener('input', () => {
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
                                 const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
+
+                                // Update other stats based on the new Minutes value
+                                for (let k = 3; k <= 6; k++) {
+                                    updateOtherStats(originalRow, inputBox, k);
+                                }
                             });
-                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
+                        } else if (j >= 3 && j <= 6) {
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList.add('input-box');
+                            inputBox.classList add('input-box');
                             cell.appendChild(inputBox);
 
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
                             inputBox.addEventListener('input', () => {
-                                updateOtherStats(projectedMinutes, inputBox, originalRow, j);
+                                const columnIndex = j;
+                                updateOtherStats(originalRow, inputBox, columnIndex);
                             });
                         }
                     }
@@ -361,9 +375,13 @@
         }
 
         // Function to update other stats (Points, Assists, Rebounds, Threes) based on the entered value
-        function updateOtherStats(projectedMinutes, inputBox, originalRow, columnIndex) {
-            const enteredMinutes = parseFloat(inputBox.value) || 0;
-            const realTimeValue = enteredMinutes / projectedMinutes * parseFloat(originalRow.cells[1].textContent);
+        function updateOtherStats(originalRow, inputBox, columnIndex) {
+            const enteredValue = parseFloat(inputBox.value) || 0;
+            const originalMinutes = parseFloat(originalRow.cells[1].textContent);
+            const originalValue = parseFloat(originalRow.cells[columnIndex].getAttribute('data-original-value'));
+
+            // Calculate and update the real-time value
+            const realTimeValue = (enteredValue / originalMinutes) * originalValue;
             originalRow.cells[columnIndex].textContent = realTimeValue.toFixed(2);
         }
     </script>
