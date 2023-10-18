@@ -271,7 +271,7 @@
                         cell.textContent = originalValue;
 
                         if (column) {
-                            cell.classList.add('player-data');
+                            cell.classList add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
                         }
@@ -312,7 +312,8 @@
             inputBoxes.forEach((inputBox) => {
                 const originalMinutes = parseFloat(inputBox.getAttribute('data-original-minutes'));
                 const newValue = (originalMinutes - parseFloat(inputBox.value)).toFixed(2);
-                teamSection.querySelector('.player-data[data-column="Minutes"]').textContent = newValue;
+                const playerDataMinutes = teamSection.querySelector('.player-data[data-column="Minutes"]');
+                playerDataMinutes.textContent = newValue;
             });
         }
 
