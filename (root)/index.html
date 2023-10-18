@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space between;
             align-items: center;
             width: 100%;
         }
@@ -292,7 +292,7 @@
 
                             // Add an event listener to handle real-time update
                             inputBox.addEventListener('input', () => {
-                                const projectedMinutes = parseFloat(values[1]);
+                                const projectedMinutes = parseFloat(originalRow.cells[1].textContent); // Get the projected Minutes value as a number
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
                                 const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
