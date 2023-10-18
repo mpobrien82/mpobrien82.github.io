@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -298,9 +298,6 @@
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
                                 const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-
-                                // Update other stats in real-time based on the new minutes projection
-                                updateOtherStatsBasedOnMinutes(teamSection);
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
@@ -311,8 +308,7 @@
 
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
                             inputBox.addEventListener('input', () => {
-                                // Handle other stats if needed
-                                updateOtherStatsBasedOnMinutes(teamSection);
+                                updateOtherStats(projectedMinutes, inputBox, originalRow, j);
                             });
                         }
                     }
@@ -364,26 +360,12 @@
             clickedButton.classList.add('active');
         }
 
-        // Function to update other stats based on the new minutes projection
-        function updateOtherStatsBasedOnMinutes(teamSection) {
-            const minutes = parseFloat(teamSection.querySelector('#player-table .player-data[data-column="Minutes"]').textContent);
-            const pace = parseFloat(teamSection.querySelector('.input-box').value);
-
-            // Get all player data elements within the specified team section
-            const playerDataElements = teamSection.querySelectorAll('.player-data');
-
-            // Iterate through each player data element and update the calculated values
-            playerDataElements.forEach((element) => {
-                const column = element.getAttribute('data-column');
-
-                if (column !== 'Minutes') {
-                    const originalValue = parseFloat(element.getAttribute('data-original-value'));
-                    const newValue = (originalValue * pace * minutes / 48).toFixed(2);
-                    element.textContent = newValue;
-                }
-            });
+        // Function to update other stats (Points, Assists, Rebounds, Threes) based on the entered value
+        function updateOtherStats(projectedMinutes, inputBox, originalRow, columnIndex) {
+            const enteredMinutes = parseFloat(inputBox.value) || 0;
+            const realTimeValue = enteredMinutes / projectedMinutes * parseFloat(originalRow.cells[1].textContent);
+            originalRow.cells[columnIndex].textContent = realTimeValue.toFixed(2);
         }
     </script>
 </body>
 </html>
-
