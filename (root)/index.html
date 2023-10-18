@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space between;
             align-items: center;
             width: 100%;
         }
@@ -265,7 +265,7 @@
 
                         if (j >= 3 && j <= 6) {
                             column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
-                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
+                            originalValue = parseFloat(originalValue).toFixed(2); // Don't multiply by initial Minutes
                         }
 
                         cell.textContent = originalValue;
@@ -287,7 +287,7 @@
                             // Create an input box for Minutes
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList add('input-box');
+                            inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
 
                             // Get the projected Minutes value as a number
@@ -298,12 +298,14 @@
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
                                 const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
+                                // Update other player data based on the current pace
+                                updatePlayerData(parseFloat(paceClicker.value), teamSection);
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList.add('input-box');
+                            inputBox.classList add('input-box');
                             cell.appendChild(inputBox);
 
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
