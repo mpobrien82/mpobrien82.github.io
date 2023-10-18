@@ -200,7 +200,7 @@
 
             // Create the RW button
             const rwButton = document.createElement('div');
-            rwButton.classList.add('team-button');
+            rwButton.classList add('team-button');
             rwButton.textContent = 'RW';
             teamButtons.appendChild(rwButton);
 
@@ -287,7 +287,7 @@
                             // Create an input box for Minutes
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList.add('input-box', 'minutes-input');
+                            inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
 
                             // Get the projected Minutes value as a number
@@ -298,16 +298,7 @@
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
                                 const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-
-                                // Calculate and update Points, Assists, Rebounds, and Threes based on the entered minutes
-                                playerDataElements.forEach((element, i) => {
-                                    if (i >= 2 && i <= 5) { // Columns 2-5 represent Minutes, Points, Assists, Rebounds, and Threes
-                                        const column = element.getAttribute('data-column');
-                                        const originalValue = parseFloat(element.getAttribute('data-original-value'));
-                                        const newValue = (originalValue * (realTimeMinutes / 48)).toFixed(2);
-                                        element.textContent = newValue;
-                                    }
-                                });
+                                updatePlayerStats(teamSection);
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
@@ -318,7 +309,7 @@
 
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
                             inputBox.addEventListener('input', () => {
-                                // Handle other stats if needed
+                                updatePlayerStats(teamSection);
                             });
                         }
                     }
@@ -330,16 +321,15 @@
         function handlePaceInputChange(paceClicker, teamSection) {
             paceClicker.addEventListener('input', () => {
                 const pace = parseFloat(paceClicker.value);
-                updatePlayerData(pace, teamSection);
+                updatePlayerStats(teamSection);
             });
         }
 
-        // Function to update player data based on the current pace
-        function updatePlayerData(pace, teamSection) {
-            // Get all player data elements within the specified team section
+        // Function to update player stats based on the current data
+        function updatePlayerStats(teamSection) {
             const playerDataElements = teamSection.querySelectorAll('.player-data');
-
-            // Iterate through each player data element and update the calculated values
+            const paceClicker = teamSection.querySelector('.input-box');
+            const pace = parseFloat(paceClicker.value);
             playerDataElements.forEach((element) => {
                 const originalValue = parseFloat(element.getAttribute('data-original-value'));
                 const column = element.getAttribute('data-column');
@@ -357,7 +347,7 @@
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
-                updatePlayerData(parseFloat(paceClicker.value), teamSection);
+                updatePlayerStats(teamSection);
             }
         }
 
@@ -369,9 +359,6 @@
             // Select the clicked button
             clickedButton.classList.add('active');
         }
-
-        // Get all player data elements
-        const playerDataElements = document.querySelectorAll('.player-data');
     </script>
 </body>
 </html>
