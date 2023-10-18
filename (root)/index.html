@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -290,9 +290,11 @@
                             inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
 
+                            // Get the projected Minutes value as a number
+                            const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
+
                             // Add an event listener to handle real-time update
                             inputBox.addEventListener('input', () => {
-                                const projectedMinutes = parseFloat(originalRow.cells[1].textContent); // Get the projected Minutes value as a number
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
                                 const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
@@ -349,5 +351,3 @@
     </script>
 </body>
 </html>
-
-
