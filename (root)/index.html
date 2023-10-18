@@ -271,7 +271,7 @@
                         cell.textContent = originalValue;
 
                         if (column) {
-                            cell.classList add('player-data');
+                            cell.classList.add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
                         }
@@ -289,6 +289,14 @@
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
+
+                            // Add an event listener to handle real-time update
+                            inputBox.addEventListener('input', () => {
+                                const projectedMinutes = parseFloat(originalRow.cells[1].textContent); // Get the projected Minutes value as a number
+                                const enteredMinutes = parseFloat(inputBox.value) || 0;
+                                const realTimeMinutes = projectedMinutes - enteredMinutes;
+                                originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
+                            });
                         }
                     }
                 }
@@ -298,21 +306,24 @@
         // Function to handle pace input changes
         function handlePaceInputChange(paceClicker, teamSection) {
             paceClicker.addEventListener('input', () => {
-                updatePlayerData(paceClicker, teamSection);
+                const pace = parseFloat(paceClicker.value);
+                updatePlayerData(pace, teamSection);
             });
         }
 
         // Function to update player data based on the current pace
-        function updatePlayerData(paceClicker, teamSection) {
-            const pace = parseFloat(paceClicker.value);
+        function updatePlayerData(pace, teamSection) {
+            // Get all player data elements within the specified team section
             const playerDataElements = teamSection.querySelectorAll('.player-data');
 
+            // Iterate through each player data element and update the calculated values
             playerDataElements.forEach((element) => {
                 const originalValue = parseFloat(element.getAttribute('data-original-value'));
                 const column = element.getAttribute('data-column');
 
+                // Calculate and update the displayed value based on the pace
                 if (column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
-                    const newValue = (originalValue - pace).toFixed(2);
+                    const newValue = (originalValue * pace).toFixed(2);
                     element.textContent = newValue;
                 }
             });
@@ -323,7 +334,7 @@
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
-                updatePlayerData(paceClicker, teamSection);
+                updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
         }
 
@@ -338,3 +349,5 @@
     </script>
 </body>
 </html>
+
+
