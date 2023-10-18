@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -204,9 +204,15 @@
             rwButton.textContent = 'RW';
             teamButtons.appendChild(rwButton);
 
+            // Create an update minutes button
+            const updateMinutesButton = document.createElement('button');
+            updateMinutesButton.textContent = 'Update Minutes';
+            teamHeader.appendChild(updateMinutesButton);
+
             // Add click event listeners to the buttons
             wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
+            updateMinutesButton.addEventListener('click', () => handleMinutesUpdate(teamSection));
 
             // Add input event listener to handle pace changes
             handlePaceInputChange(paceClicker, teamSection);
@@ -271,7 +277,7 @@
                         cell.textContent = originalValue;
 
                         if (column) {
-                            cell.classList.add('player-data');
+                            cell.classList add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
                         }
@@ -288,7 +294,6 @@
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
-                            inputBox.addEventListener('input', () => handleMinutesInput(inputBox, paceClicker, teamSection));
                             cell.appendChild(inputBox);
                         }
                     }
@@ -297,16 +302,20 @@
         }
 
         // Function to handle minutes input changes
-        function handleMinutesInput(inputBox, paceClicker, teamSection) {
-            const pace = parseFloat(paceClicker.value);
-            const minutesInputElement = inputBox;
-            const playerDataRow = inputBox.parentElement.parentElement.previousElementSibling;
-            const playerDataElements = playerDataRow.querySelectorAll('.player-data');
-            const originalMinutes = parseFloat(playerDataElements[0].getAttribute('data-original-value')); // Assuming Minutes is the first column
-            let newMinutes = originalMinutes - parseFloat(minutesInputElement.value);
-            newMinutes = newMinutes > 0 ? newMinutes : 0;
-            playerDataElements[0].textContent = newMinutes.toFixed(2);
-            updatePlayerData(pace, teamSection);
+        function handleMinutesUpdate(teamSection) {
+            // Get all input boxes for Minutes within the specified team section
+            const minutesInputBoxes = teamSection.querySelectorAll('.input-box');
+
+            // Iterate through each input box and update the displayed minutes
+            minutesInputBoxes.forEach((inputBox) => {
+                const minutesInputElement = inputBox;
+                const playerDataRow = inputBox.parentElement.parentElement.previousElementSibling;
+                const playerDataElements = playerDataRow.querySelectorAll('.player-data');
+                const originalMinutes = parseFloat(playerDataElements[0].getAttribute('data-original-value')); // Assuming Minutes is the first column
+                let newMinutes = originalMinutes - parseFloat(minutesInputElement.value);
+                newMinutes = newMinutes > 0 ? newMinutes : 0;
+                playerDataElements[0].textContent = newMinutes.toFixed(2);
+            });
         }
 
         // Function to handle pace input changes
