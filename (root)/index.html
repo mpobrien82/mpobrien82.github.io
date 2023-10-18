@@ -291,7 +291,7 @@
 
                             // Add an event listener to handle real-time update for Minutes and other stats
                             inputBox.addEventListener('input', () => {
-                                updatePlayerStats(inputBox, originalRow, playerTable);
+                                updateOtherStats(inputBox, originalRow, column);
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
@@ -305,21 +305,16 @@
             }
         }
 
-        // Function to update player stats (Points, Assists, Rebounds, Threes) based on Minutes and other stats
-        function updatePlayerStats(minutesInput, originalRow, playerTable) {
+        // Function to update other stats (Points, Assists, Rebounds, Threes) based on entered Minutes
+        function updateOtherStats(minutesInput, originalRow, column) {
             const enteredMinutes = parseFloat(minutesInput.value) || 0;
             const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
 
-            // Calculate and update the other stats (Points, Assists, Rebounds, Threes)
-            for (let j = 3; j <= 6; j++) {
-                const cell = playerTable.rows[0].cells[j];
-                const originalValue = parseFloat(cell.getAttribute('data-original-value'));
-                const column = cell.getAttribute('data-column');
-
-                if (column) {
-                    const newValue = (originalValue * (enteredMinutes / projectedMinutes)).toFixed(2);
-                    originalRow.cells[j].textContent = newValue;
-                }
+            if (column) {
+                // Calculate and update the other stats (Points, Assists, Rebounds, Threes)
+                const originalValue = parseFloat(originalRow.querySelector(`[data-column="${column}"]`).getAttribute('data-original-value'));
+                const newValue = (originalValue * (enteredMinutes / projectedMinutes)).toFixed(2);
+                originalRow.querySelector(`[data-column="${column}"]`).textContent = newValue;
             }
         }
 
