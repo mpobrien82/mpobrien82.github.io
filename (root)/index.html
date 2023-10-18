@@ -263,15 +263,16 @@
                         let originalValue = values[j];
                         let column = '';
 
-                        if (j === 2) {
-                            column = 'Minutes';
+                        if (j >= 3 && j <= 6) {
+                            column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
+                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
                         }
 
                         cell.textContent = originalValue;
 
                         if (column) {
                             cell.classList.add('player-data');
-                            cell.setAttribute('data-original-value', originalValue.toString()); // Convert to string
+                            cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
                         }
                     }
@@ -281,6 +282,7 @@
                     for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                         const cell = inputRow.insertCell();
 
+                        // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
                         if (j === 2) { // Check if it's the Minutes column
                             // Create an input box for Minutes
                             const inputBox = document.createElement('input');
@@ -296,13 +298,6 @@
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
                                 const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-
-                                // Update other stats based on Minutes change
-                                const minuteFactor = realTimeMinutes / projectedMinutes;
-                                for (let k = 3; k <= 6; k++) {
-                                    const statValue = parseFloat(originalRow.cells[k].getAttribute('data-original-value'));
-                                    originalRow.cells[k].textContent = (statValue * minuteFactor).toFixed(2);
-                                }
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
@@ -311,13 +306,9 @@
                             inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
 
-                            // Add an event listener to handle real-time update for other stats
+                            // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
                             inputBox.addEventListener('input', () => {
-                                const originalStatValue = parseFloat(originalRow.cells[j].getAttribute('data-original-value'));
-                                const updatedValue = parseFloat(inputBox.value || 0);
-                                const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
-
-                                originalRow.cells[j].textContent = (originalStatValue / projectedMinutes * updatedValue).toFixed(2);
+                                // Handle other stats if needed
                             });
                         }
                     }
@@ -354,7 +345,7 @@
         // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList.add('active'); // Add the missing single quote
+                clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
                 updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
