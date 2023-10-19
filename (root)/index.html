@@ -143,69 +143,45 @@
             `;
             teamSection.appendChild(playerTable);
 
-            // Inside the loop where you create input boxes (including Minutes)
-            for (let j = 1; j <= 6; j++) {
-                const cell = document.createElement('td');
+            // Create a div for the buttons
+            const teamButtons = document.createElement('div');
+            teamButtons.classList.add('team-buttons');
+            teamHeader.appendChild(teamButtons);
 
-                if (j === 2) { // Check if it's the Minutes column
-                    // Create an input box for Minutes
-                    const inputBox = document.createElement('input');
-                    inputBox.type = 'number';
-                    inputBox.classList.add('input-box');
-                    cell.appendChild(inputBox);
+            // Create the quarter boxes
+            const quarterBoxes = document.createElement('div');
+            quarterBoxes.classList.add('team-buttons');
+            teamHeader.appendChild(quarterBoxes);
 
-                    // Get the projected Minutes value as a number
-                    const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
-
-                    // Add an event listener to handle real-time update for Minutes
-                    inputBox.addEventListener('input', () => {
-                        const enteredMinutes = parseFloat(inputBox.value) || 0;
-                        const realTimeMinutes = projectedMinutes - enteredMinutes;
-                        originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-                        updatePlayerStats(originalRow); // Update player stats
-                    });
-                }
-
-                // Create a div for the buttons
-                const teamButtons = document.createElement('div');
-                teamButtons.classList.add('team-buttons');
-                teamHeader.appendChild(teamButtons);
-
-                // Create the quarter boxes
-                const quarterBoxes = document.createElement('div');
-                quarterBoxes.classList.add('team-buttons');
-                teamHeader.appendChild(quarterBoxes);
-
-                // Create the quarter buttons
-                for (let i = 1; i <= 4; i++) {
-                    const quarterBox = document.createElement('div');
-                    quarterBox.classList.add('quarter-box');
-                    quarterBox.textContent = `${i}Q`;
-                    quarterBox.addEventListener('click', () => handleQuarterClick(quarterBox, quarterBoxes));
-                    quarterBoxes.appendChild(quarterBox);
-                }
-
-                // Create a time input box
-                const timeInput = document.createElement('input');
-                timeInput.type = 'text';
-                timeInput.classList.add('time-input');
-                timeInput.placeholder = 'Time';
-                teamHeader.appendChild(timeInput);
-
-                // Create a score input box for the team
-                const teamScoreInput = document.createElement('input');
-                teamScoreInput.type = 'number';
-                teamScoreInput.classList.add('score-input');
-                teamScoreInput.placeholder = `${teamName} Score`;
-                teamHeader.appendChild(teamScoreInput);
-
-                // Create a score input box for the opponent
-                const opponentScoreInput = document.createElement('input');
-                opponentScoreInput.type = 'number';
-                opponentScoreInput.classList.add('score-input');
-                opponentScoreInput.placeholder = 'Opponent Score';
-                teamHeader.appendChild(opponentScoreInput);
+            // Create the quarter buttons
+            for (let i = 1; i <= 4; i++) {
+                const quarterBox = document.createElement('div');
+                quarterBox.classList.add('quarter-box');
+                quarterBox.textContent = `${i}Q`;
+                quarterBox.addEventListener('click', () => handleQuarterClick(quarterBox, quarterBoxes));
+                quarterBoxes.appendChild(quarterBox);
             }
+
+            // Create a time input box
+            const timeInput = document.createElement('input');
+            timeInput.type = 'text';
+            timeInput.classList.add('time-input');
+            timeInput.placeholder = 'Time';
+            teamHeader.appendChild(timeInput);
+
+            // Create a score input box for the team
+            const teamScoreInput = document.createElement('input');
+            teamScoreInput.type = 'number';
+            teamScoreInput.classList.add('score-input');
+            teamScoreInput.placeholder = `${teamName} Score`;
+            teamHeader.appendChild(teamScoreInput);
+
+            // Create a score input box for the opponent
+            const opponentScoreInput = document.createElement('input');
+            opponentScoreInput.type = 'number';
+            opponentScoreInput.classList.add('score-input');
+            opponentScoreInput.placeholder = 'Opponent Score';
+            teamHeader.appendChild(opponentScoreInput);
 
             // Create an input for the pace clicker
             const paceClicker = document.createElement('input');
@@ -348,20 +324,20 @@
                 const pace = parseFloat(paceClicker.value);
                 updatePlayerData(pace, teamSection);
             });
-        }
-
-        // Function to update player stats based on the current Minutes
-        function updatePlayerStats(playerRow) {
+                }
+        
+                           // Function to update player stats based on the current Minutes
+                 function updatePlayerStats(playerRow) {
             // Get the displayed minutes value (the number above the input box)
             const minutes = parseFloat(playerRow.cells[1].textContent);
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
-
+        
             // Get the original player projections from the data-original-value attributes
             const originalPoints = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
             const originalAssists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
             const originalRebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
             const originalThrees = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
-
+        
             // Update the Points, Assists, Rebounds, Threes based on the original projections and the displayed Minutes
             playerRow.cells[2].textContent = (originalPoints * minutes * pace).toFixed(2);
             playerRow.cells[3].textContent = (originalAssists * minutes * pace).toFixed(2);
