@@ -105,8 +105,8 @@
     <script>
         // Set the default pace to start at 1
         const defaultPace = 1;
-        
-        // Store the original projections
+
+        // Store the original projections from the CSV
         const originalProjections = {};
 
         // Function to handle file input change
@@ -269,12 +269,6 @@
                         if (j >= 3 && j <= 6) {
                             column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
                             originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
-
-                            // Store the original projections
-                            if (!originalProjections[teamName]) {
-                                originalProjections[teamName] = {};
-                            }
-                            originalProjections[teamName][column] = originalValue;
                         }
 
                         cell.textContent = originalValue;
@@ -285,6 +279,14 @@
                             cell.setAttribute('data-column', column);
                         }
                     }
+
+                    // Store the original projections for Points, Assists, Rebounds, and Threes
+                    originalProjections[teamName] = {
+                        Points: parseFloat(values[3]),
+                        Assists: parseFloat(values[4]),
+                        Rebounds: parseFloat(values[5]),
+                        Threes: parseFloat(values[6])
+                    };
 
                     // Create a row for input boxes (including Minutes)
                     const inputRow = playerTable.insertRow();
@@ -307,9 +309,9 @@
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
                                 const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-                                updatePlayerStats(originalRow); // Update player stats
+                                updatePlayerStats(originalRow, teamName); // Update player stats
                             });
-                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, Threes columns
+                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
@@ -319,7 +321,7 @@
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
                             inputBox.addEventListener('input', () => {
                                 // Update player stats when other input boxes change
-                                updatePlayerStats(originalRow);
+                                updatePlayerStats(originalRow, teamName);
                             });
                         }
                     }
@@ -336,15 +338,15 @@
         }
 
         // Function to update player stats based on the current Minutes and Pace
-        function updatePlayerStats(playerRow) {
+        function updatePlayerStats(playerRow, teamName) {
             const minutes = parseFloat(playerRow.cells[1].textContent);
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
 
             // Get the player's Points, Assists, Rebounds, Threes
-            const points = parseFloat(playerRow.cells[2].textContent);
-            const assists = parseFloat(playerRow.cells[3].textContent);
-            const rebounds = parseFloat(playerRow.cells[4].textContent);
-            const threes = parseFloat(playerRow.cells[5].textContent);
+            const points = originalProjections[teamName].Points;
+            const assists = originalProjections[teamName].Assists;
+            const rebounds = originalProjections[teamName].Rebounds;
+            const threes = originalProjections[teamName].Threes;
 
             // Update the Points, Assists, Rebounds, Threes based on the current Minutes and Pace
             playerRow.cells[2].textContent = (points * minutes * pace).toFixed(2);
@@ -391,3 +393,4 @@
     </script>
 </body>
 </html>
+
