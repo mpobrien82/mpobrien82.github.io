@@ -1,4 +1,3 @@
-still getting the same proble. Here is my entire code: 
 <!DOCTYPE html>
 <html>
 <head>
@@ -326,11 +325,9 @@ still getting the same proble. Here is my entire code:
                 updatePlayerData(pace, teamSection);
             });
                 }
-        
-                           // Function to update player stats based on the current Minutes
+                
                  function updatePlayerStats(playerRow) {
-            // Get the displayed minutes value (the number above the input box)
-            const minutes = parseFloat(playerRow.cells[1].textContent);
+            const minutesInput = parseFloat(playerRow.cells[1].querySelector('.input-box').value);
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
         
             // Get the original player projections from the data-original-value attributes
@@ -340,10 +337,10 @@ still getting the same proble. Here is my entire code:
             const originalThrees = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
         
             // Update the Points, Assists, Rebounds, Threes based on the original projections and the displayed Minutes
-            playerRow.cells[2].textContent = (originalPoints * minutes * pace).toFixed(2);
-            playerRow.cells[3].textContent = (originalAssists * minutes * pace).toFixed(2);
-            playerRow.cells[4].textContent = (originalRebounds * minutes * pace).toFixed(2);
-            playerRow.cells[5].textContent = (originalThrees * minutes * pace).toFixed(2);
+            playerRow.cells[2].textContent = (originalPoints * minutesInput * pace).toFixed(2);
+            playerRow.cells[3].textContent = (originalAssists * minutesInput * pace).toFixed(2);
+            playerRow.cells[4].textContent = (originalRebounds * minutesInput * pace).toFixed(2);
+            playerRow.cells[5].textContent = (originalThrees * minutesInput * pace).toFixed(2);
         }
 
         // Function to update player data based on the current pace
