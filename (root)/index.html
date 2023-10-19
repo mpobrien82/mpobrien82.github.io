@@ -370,14 +370,15 @@
             });
         }
 
-        // Function to handle button clicks
+       // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
-                updatePlayerStats(teamSection);
+                updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
         }
+
 
         // Function to handle quarter button clicks
         function handleQuarterClick(clickedButton, quarterBoxes) {
