@@ -332,14 +332,12 @@
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
         
             // Get the original player projections from the data-original-value attributes
-            const originalMinutes = parseFloat(playerRow.cells[1].getAttribute('data-original-value'));
             const originalPoints = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
             const originalAssists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
             const originalRebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
             const originalThrees = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
         
             // Update the Points, Assists, Rebounds, Threes based on the original projections and current Minutes and Pace
-            playerRow.cells[1].textContent = (originalMinutes * minutes).toFixed(2);
             playerRow.cells[2].textContent = (originalPoints * minutes * pace).toFixed(2);
             playerRow.cells[3].textContent = (originalAssists * minutes * pace).toFixed(2);
             playerRow.cells[4].textContent = (originalRebounds * minutes * pace).toFixed(2);
