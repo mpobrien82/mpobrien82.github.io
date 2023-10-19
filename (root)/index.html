@@ -326,27 +326,24 @@
             });
                 }
         
-                   // Function to update player stats based on the current Minutes and Pace
+                           // Function to update player stats based on the current Minutes and Pace
         function updatePlayerStats(playerRow) {
-            const minutesInput = parseFloat(playerRow.cells[1].querySelector('input').value);
+            const minutes = parseFloat(playerRow.cells[1].querySelector('input').value);
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
         
             // Get the original player projections from the data-original-value attributes
-            const originalMinutes = parseFloat(playerRow.cells[1].getAttribute('data-original-value'));
             const originalPoints = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
             const originalAssists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
             const originalRebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
             const originalThrees = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
         
-            // Update the Minutes based on the input value
-            playerRow.cells[1].textContent = (originalMinutes * minutesInput).toFixed(2);
-        
-            // Update the Points, Assists, Rebounds, Threes based on the original projections and the updated Minutes and Pace
-            playerRow.cells[2].textContent = (originalPoints * (originalMinutes * minutesInput) * pace).toFixed(2);
-            playerRow.cells[3].textContent = (originalAssists * (originalMinutes * minutesInput) * pace).toFixed(2);
-            playerRow.cells[4].textContent = (originalRebounds * (originalMinutes * minutesInput) * pace).toFixed(2);
-            playerRow.cells[5].textContent = (originalThrees * (originalMinutes * minutesInput) * pace).toFixed(2);
+            // Update the Points, Assists, Rebounds, Threes based on the original projections and the updated Minutes
+            playerRow.cells[2].textContent = (originalPoints * minutes).toFixed(2);
+            playerRow.cells[3].textContent = (originalAssists * minutes).toFixed(2);
+            playerRow.cells[4].textContent = (originalRebounds * minutes).toFixed(2);
+            playerRow.cells[5].textContent = (originalThrees * minutes).toFixed(2);
         }
+
 
         // Function to update player data based on the current pace
         function updatePlayerData(pace, teamSection) {
