@@ -338,10 +338,10 @@
             const originalThrees = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
 
             // Update the Points, Assists, Rebounds, Threes based on the current Minutes and Pace
-            playerRow.cells[2].textContent = (originalPoints * minutes / 34.6 * pace).toFixed(2);
-            playerRow.cells[3].textContent = (originalAssists * minutes / 34.6 * pace).toFixed(2);
-            playerRow.cells[4].textContent = (originalRebounds * minutes / 34.6 * pace).toFixed(2);
-            playerRow.cells[5].textContent = (originalThrees * minutes / 34.6 * pace).toFixed(2);
+            playerRow.cells[2].textContent = (originalPoints * minutes * pace).toFixed(2);
+            playerRow.cells[3].textContent = (originalAssists * minutes * pace).toFixed(2);
+            playerRow.cells[4].textContent = (originalRebounds * minutes * pace).toFixed(2);
+            playerRow.cells[5].textContent = (originalThrees * minutes * pace).toFixed(2);
 
             // Also update other players in the same team section
             const playerDataElements = teamSection.querySelectorAll('.player-data');
