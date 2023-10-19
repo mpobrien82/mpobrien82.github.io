@@ -114,6 +114,7 @@
             // Create a new team section
             const teamSection = document.createElement('div');
             teamSection.classList.add('team-section');
+            teamSection.dataset.originalProjections = JSON.stringify(originalProjections);
 
             // Create a header for the team section
             const teamHeader = document.createElement('div');
@@ -249,13 +250,14 @@
 
                     if (teamName !== currentTeamName) {
                         // Create a new team section
-                        createTeamSection(teamName, {
+                        const originalProjections = {
                             minutes: parseFloat(values[2]),
                             points: parseFloat(values[3]),
                             assists: parseFloat(values[4]),
                             rebounds: parseFloat(values[5]),
                             threes: parseFloat(values[6])
-                        });
+                        };
+                        teamSection = createTeamSection(teamName, originalProjections);
                         currentTeamName = teamName;
                     }
 
@@ -306,7 +308,7 @@
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
                                 updatePlayerStats(originalRow); // Update player stats
                             });
-                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
+                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, Threes columns
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
@@ -368,7 +370,7 @@
             });
         }
 
-        // Function to handle button clicks
+       // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
@@ -388,4 +390,3 @@
     </script>
 </body>
 </html>
-
