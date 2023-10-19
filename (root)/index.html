@@ -371,7 +371,7 @@
 
                 // Calculate and update the displayed value based on the pace
                 if (column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
-                    const newValue = (originalValue / 34.6 * pace).toFixed(2);
+                    const newValue = (originalValue * pace).toFixed(2);
                     element.textContent = newValue;
                 }
             });
