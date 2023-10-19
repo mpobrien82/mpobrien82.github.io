@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -256,6 +256,8 @@
                     // Create a row for original player data
                     const playerTable = teamSection.querySelector('#player-table');
                     const originalRow = playerTable.insertRow();
+                    let originalProjections = {};
+
                     for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                         const cell = originalRow.insertCell();
 
@@ -265,13 +267,14 @@
 
                         if (j >= 3 && j <= 6) {
                             column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
-                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
+                            originalValue = (parseFloat(originalValue)).toFixed(2);
+                            originalProjections[column] = parseFloat(originalValue);
                         }
 
                         cell.textContent = originalValue;
 
                         if (column) {
-                            cell.classList.add('player-data');
+                            cell.classList add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
                         }
@@ -293,28 +296,24 @@
                             // Get the projected Minutes value as a number
                             const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
 
-                            // Add a data-original-projection attribute to store the original projection
-                            inputBox.setAttribute('data-original-projection', projectedMinutes);
-
                             // Add an event listener to handle real-time update for Minutes
                             inputBox.addEventListener('input', () => {
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
-                                const originalProjection = parseFloat(inputBox.getAttribute('data-original-projection'));
-                                const realTimeMinutes = originalProjection - enteredMinutes;
+                                const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-                                updatePlayerStats(originalRow); // Update player stats
+                                updatePlayerStats(originalRow, originalProjections); // Update player stats
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, Threes columns
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList add('input-box');
+                            inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
 
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
                             inputBox.addEventListener('input', () => {
                                 // Update player stats when other input boxes change
-                                updatePlayerStats(originalRow);
+                                updatePlayerStats(originalRow, originalProjections);
                             });
                         }
                     }
@@ -331,15 +330,15 @@
         }
 
         // Function to update player stats based on the current Minutes and Pace
-        function updatePlayerStats(playerRow) {
+        function updatePlayerStats(playerRow, originalProjections) {
             const minutes = parseFloat(playerRow.cells[1].textContent);
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
 
             // Get the player's Points, Assists, Rebounds, Threes
-            const points = parseFloat(playerRow.cells[2].textContent);
-            const assists = parseFloat(playerRow.cells[3].textContent);
-            const rebounds = parseFloat(playerRow.cells[4].textContent);
-            const threes = parseFloat(playerRow.cells[5].textContent);
+            const points = originalProjections['Points'];
+            const assists = originalProjections['Assists'];
+            const rebounds = originalProjections['Rebounds'];
+            const threes = originalProjections['Threes'];
 
             // Update the Points, Assists, Rebounds, Threes based on the current Minutes and Pace
             playerRow.cells[2].textContent = (points * minutes * pace).toFixed(2);
