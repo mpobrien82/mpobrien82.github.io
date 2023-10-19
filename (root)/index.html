@@ -326,27 +326,28 @@
             });
         }
 
-        // Function to update player stats based on the current Minutes and Pace
+       // Function to update player stats based on the current Minutes and Pace
         function updatePlayerStats(playerRow, pace) {
-            const minutes = parseFloat(playerRow.cells[1].textContent);
+                const minutes = parseFloat(playerRow.cells[1].textContent);
 
-            // Get the original Points, Assists, Rebounds, Threes
-            const originalPoints = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
-            const originalAssists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
-            const originalRebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
-            const originalThrees = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
+    // Get the original Points, Assists, Rebounds, Threes
+                const originalMinutes = parseFloat(playerRow.cells[1].getAttribute('data-original-value'));
+                const originalPoints = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
+                const originalAssists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
+                const originalRebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
+                const originalThrees = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
 
-            // Calculate the Points, Assists, Rebounds, Threes based on the original projections, current Minutes, and Pace
-            const points = (originalPoints / originalPoints * minutes * pace).toFixed(2);
-            const assists = (originalAssists / originalPoints * minutes * pace).toFixed(2);
-            const rebounds = (originalRebounds / originalPoints * minutes * pace).toFixed(2);
-            const threes = (originalThrees / originalPoints * minutes * pace).toFixed(2);
+    // Calculate the Points, Assists, Rebounds, Threes based on the original projections, current Minutes, and Pace
+                const points = (originalPoints / originalMinutes * minutes * pace).toFixed(2);
+                const assists = (originalAssists / originalMinutes * minutes * pace).toFixed(2);
+                const rebounds = (originalRebounds / originalMinutes * minutes * pace).toFixed(2);
+                const threes = (originalThrees / originalMinutes * minutes * pace).toFixed(2);
 
-            // Update the Points, Assists, Rebounds, Threes based on the current Minutes and Pace
-            playerRow.cells[2].textContent = points;
-            playerRow.cells[3].textContent = assists;
-            playerRow.cells[4].textContent = rebounds;
-            playerRow.cells[5].textContent = threes;
+                // Update the Points, Assists, Rebounds, Threes based on the current Minutes and Pace
+                playerRow.cells[2].textContent = points;
+                playerRow.cells[3].textContent = assists;
+                playerRow.cells[4].textContent = rebounds;
+                playerRow.cells[5].textContent = threes;
         }
 
         // Function to update player data based on the current pace
