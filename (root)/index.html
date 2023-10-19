@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space between;
             align-items: center;
             width: 100%;
         }
@@ -296,7 +296,7 @@
                             // Create an input box for Minutes
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList.add('input-box');
+                            inputBox.classList add('input-box');
                             cell.appendChild(inputBox);
 
                             // Get the projected Minutes value as a number
@@ -337,7 +337,8 @@
 
         // Function to update player stats based on the current Minutes and Pace
         function updatePlayerStats(playerRow, teamName) {
-            const minutes = parseFloat(playerRow.cells[1].textContent);
+            const minutesInput = playerRow.cells[1].querySelector('input');
+            const minutes = parseFloat(minutesInput.value) || 0; // Use the input value, or 0 if it's NaN
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
 
             // Get the player's Points, Assists, Rebounds, Threes
