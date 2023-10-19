@@ -265,7 +265,12 @@
 
                         if (j >= 3 && j <= 6) {
                             column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
-                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
+                            if (column === 'Minutes') {
+                                originalValue = parseFloat(originalValue);
+                            } else {
+                                originalValue = parseFloat(originalValue);
+                                cell.setAttribute('data-original-projection', originalValue);
+                            }
                         }
 
                         cell.textContent = originalValue;
@@ -337,11 +342,11 @@
             const rebounds = parseFloat(playerRow.cells[4].textContent);
             const threes = parseFloat(playerRow.cells[5].textContent);
 
-            // Update the Points, Assists, Rebounds, Threes based on the current Minutes and Pace
-            playerRow.cells[2].textContent = (points * minutes * pace).toFixed(2);
-            playerRow.cells[3].textContent = (assists * minutes * pace).toFixed(2);
-            playerRow.cells[4].textContent = (rebounds * minutes * pace).toFixed(2);
-            playerRow.cells[5].textContent = (threes * minutes * pace).toFixed(2);
+            // Update the Points, Assists, Rebounds, Threes based on the original projections and the current Minutes and Pace
+            playerRow.cells[2].textContent = (originalValue * minutes * pace).toFixed(2);
+            playerRow.cells[3].textContent = (originalValue * minutes * pace).toFixed(2);
+            playerRow.cells[4].textContent = (originalValue * minutes * pace).toFixed(2);
+            playerRow.cells[5].textContent = (originalValue * minutes * pace).toFixed(2);
         }
 
         // Function to update player data based on the current pace
