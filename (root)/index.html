@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space between;
             align-items: center;
             width: 100%;
         }
@@ -263,14 +263,12 @@
                         let originalValue = values[j];
                         let column = '';
 
-                        if (j >= 3 && j <= 6) {
-                            column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
-                            if (column === 'Minutes') {
-                                originalValue = parseFloat(originalValue);
-                            } else {
-                                originalValue = parseFloat(originalValue);
-                                cell.setAttribute('data-original-projection', originalValue);
-                            }
+                        if (j === 2) {
+                            column = 'Minutes';
+                        } else if (j >= 3 && j <= 6) {
+                            column = ['Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
+                            originalValue = parseFloat(originalValue);
+                            cell.setAttribute('data-original-projection', originalValue);
                         }
 
                         cell.textContent = originalValue;
@@ -343,10 +341,17 @@
             const threes = parseFloat(playerRow.cells[5].textContent);
 
             // Update the Points, Assists, Rebounds, Threes based on the original projections and the current Minutes and Pace
-            playerRow.cells[2].textContent = (originalValue * minutes * pace).toFixed(2);
-            playerRow.cells[3].textContent = (originalValue * minutes * pace).toFixed(2);
-            playerRow.cells[4].textContent = (originalValue * minutes * pace).toFixed(2);
-            playerRow.cells[5].textContent = (originalValue * minutes * pace).toFixed(2);
+            const originalProjections = {
+                Points: parseFloat(playerRow.cells[2].getAttribute('data-original-projection')),
+                Assists: parseFloat(playerRow.cells[3].getAttribute('data-original-projection')),
+                Rebounds: parseFloat(playerRow.cells[4].getAttribute('data-original-projection')),
+                Threes: parseFloat(playerRow.cells[5].getAttribute('data-original-projection')),
+            };
+
+            playerRow.cells[2].textContent = (originalProjections.Points * minutes * pace).toFixed(2);
+            playerRow.cells[3].textContent = (originalProjections.Assists * minutes * pace).toFixed(2);
+            playerRow.cells[4].textContent = (originalProjections.Rebounds * minutes * pace).toFixed(2);
+            playerRow.cells[5].textContent = (originalProjections.Threes * minutes * pace).toFixed(2);
         }
 
         // Function to update player data based on the current pace
