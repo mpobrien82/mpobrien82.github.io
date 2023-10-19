@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -298,7 +298,7 @@
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
                                 const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-                                updatePlayerStats(originalRow, parseFloat(teamSection.querySelector('.input-box').value)); // Update player stats
+                                updatePlayerStats(originalRow, parseFloat(paceClicker.value)); // Update player stats
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
@@ -310,7 +310,7 @@
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
                             inputBox.addEventListener('input', () => {
                                 // Update player stats when other input boxes change
-                                updatePlayerStats(originalRow, parseFloat(teamSection.querySelector('.input-box').value));
+                                updatePlayerStats(originalRow, parseFloat(paceClicker.value));
                             });
                         }
                     }
@@ -328,16 +328,14 @@
 
         // Function to update player stats based on the current Minutes and Pace
         function updatePlayerStats(playerRow, pace) {
-            const minutes = parseFloat(playerRow.cells[1].textContent);
-
-            // Get the original Points, Assists, Rebounds, Threes
             const originalMinutes = parseFloat(playerRow.cells[1].getAttribute('data-original-value'));
             const originalPoints = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
             const originalAssists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
             const originalRebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
             const originalThrees = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
 
-            // Calculate the Points, Assists, Rebounds, Threes based on the original projections, current Minutes, and Pace
+            const minutes = parseFloat(playerRow.cells[1].textContent);
+
             const points = (originalPoints / originalMinutes * minutes * pace).toFixed(2);
             const assists = (originalAssists / originalMinutes * minutes * pace).toFixed(2);
             const rebounds = (originalRebounds / originalMinutes * minutes * pace).toFixed(2);
@@ -388,3 +386,4 @@
     </script>
 </body>
 </html>
+
