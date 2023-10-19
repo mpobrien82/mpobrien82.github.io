@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space between;
             align-items: center;
             width: 100%;
         }
@@ -200,7 +200,7 @@
 
             // Create the RW button
             const rwButton = document.createElement('div');
-            rwButton.classList add('team-button');
+            rwButton.classList.add('team-button');
             rwButton.textContent = 'RW';
             teamButtons.appendChild(rwButton);
 
@@ -287,7 +287,7 @@
                             // Create an input box for Minutes
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList.add('input-box'); // Add the 'input-box' class
+                            inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
 
                             // Get the projected Minutes value as a number
@@ -298,35 +298,24 @@
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
                                 const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-                                updatePlayerStats(originalRow, getProjections(originalRow)); // Update player stats
+                                updatePlayerStats(originalRow); // Update player stats
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList.add('input-box'); // Add the 'input-box' class
+                            inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
 
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
                             inputBox.addEventListener('input', () => {
                                 // Update player stats when other input boxes change
-                                updatePlayerStats(originalRow, getProjections(originalRow));
+                                updatePlayerStats(originalRow);
                             });
                         }
                     }
                 }
             }
-        }
-
-        // Function to get the player's original projections
-        function getProjections(playerRow) {
-            const originalMinutes = parseFloat(playerRow.cells[1].getAttribute('data-original-value'));
-            const originalPoints = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
-            const originalAssists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
-            const originalRebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
-            const originalThrees = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
-
-            return [originalMinutes, originalPoints, originalAssists, originalRebounds, originalThrees];
         }
 
         // Function to handle pace input changes
@@ -338,20 +327,21 @@
         }
 
         // Function to update player stats based on the current Minutes and Pace
-        function updatePlayerStats(playerRow, playerProjections) {
-            const inputBoxes = playerRow.parentElement.nextElementSibling.getElementsByTagName('input');
-
-            // Get the entered minutes value from the input box
-            const enteredMinutes = parseFloat(inputBoxes[0].value) || 0;
-
-            // Get the pace from the input box in the team header
+        function updatePlayerStats(playerRow) {
+            const minutes = parseFloat(playerRow.cells[1].textContent);
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
 
-            // Calculate and update the Points, Assists, Rebounds, and Threes based on the original projections, Minutes, and Pace
-            playerRow.cells[2].textContent = ((playerProjections[1] - (enteredMinutes * playerProjections[1] / playerProjections[0])) * (enteredMinutes * pace / 48)).toFixed(2);
-            playerRow.cells[3].textContent = ((playerProjections[2] - (enteredMinutes * playerProjections[2] / playerProjections[0])) * (enteredMinutes * pace / 48)).toFixed(2);
-            playerRow.cells[4].textContent = ((playerProjections[3] - (enteredMinutes * playerProjections[3] / playerProjections[0])) * (enteredMinutes * pace / 48)).toFixed(2);
-            playerRow.cells[5].textContent = ((playerProjections[4] - (enteredMinutes * playerProjections[4] / playerProjections[0])) * (enteredMinutes * pace / 48)).toFixed(2);
+            // Get the player's Points, Assists, Rebounds, Threes
+            const points = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
+            const assists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
+            const rebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
+            const threes = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
+
+            // Update the Points, Assists, Rebounds, Threes based on the current Minutes and Pace
+            playerRow.cells[2].textContent = (points * minutes * pace).toFixed(2);
+            playerRow.cells[3].textContent = (assists * minutes * pace).toFixed(2);
+            playerRow.cells[4].textContent = (rebounds * minutes * pace).toFixed(2);
+            playerRow.cells[5].textContent = (threes * minutes * pace).toFixed(2);
         }
 
         // Function to update player data based on the current pace
@@ -375,7 +365,7 @@
         // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList.add('active');
+                clickedButton.classList add('active');
                 otherButton.classList.remove('active');
                 updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
