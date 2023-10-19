@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -162,7 +162,7 @@
                 quarterBoxes.appendChild(quarterBox);
             }
 
-            // Create a time input
+            // Create a time input box
             const timeInput = document.createElement('input');
             timeInput.type = 'text';
             timeInput.classList.add('time-input');
@@ -265,12 +265,7 @@
 
                         if (j >= 3 && j <= 6) {
                             column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
-                            if (column === 'Minutes') {
-                                originalValue = parseFloat(originalValue);
-                            } else {
-                                originalValue = parseFloat(originalValue);
-                                cell.setAttribute('data-original-projection', originalValue);
-                            }
+                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
                         }
 
                         cell.textContent = originalValue;
@@ -301,10 +296,11 @@
                             // Add an event listener to handle real-time update for Minutes
                             inputBox.addEventListener('input', () => {
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
-                                originalRow.cells[1].textContent = enteredMinutes.toFixed(2);
+                                const realTimeMinutes = projectedMinutes - enteredMinutes;
+                                originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
                                 updatePlayerStats(originalRow); // Update player stats
                             });
-                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
+                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, Threes columns
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
@@ -341,18 +337,11 @@
             const rebounds = parseFloat(playerRow.cells[4].textContent);
             const threes = parseFloat(playerRow.cells[5].textContent);
 
-            // Update the Points, Assists, Rebounds, Threes based on the original projections and the current Minutes and Pace
-            const originalProjections = {
-                Points: parseFloat(playerRow.cells[2].getAttribute('data-original-projection')),
-                Assists: parseFloat(playerRow.cells[3].getAttribute('data-original-projection')),
-                Rebounds: parseFloat(playerRow.cells[4].getAttribute('data-original-projection')),
-                Threes: parseFloat(playerRow.cells[5].getAttribute('data-original-projection')),
-            };
-
-            playerRow.cells[2].textContent = (originalProjections.Points * minutes * pace).toFixed(2);
-            playerRow.cells[3].textContent = (originalProjections.Assists * minutes * pace).toFixed(2);
-            playerRow.cells[4].textContent = (originalProjections.Rebounds * minutes * pace).toFixed(2);
-            playerRow.cells[5].textContent = (originalProjections.Threes * minutes * pace).toFixed(2);
+            // Update the Points, Assists, Rebounds, Threes based on the current Minutes and Pace
+            playerRow.cells[2].textContent = (points * minutes * pace).toFixed(2);
+            playerRow.cells[3].textContent = (assists * minutes * pace).toFixed(2);
+            playerRow.cells[4].textContent = (rebounds * minutes * pace).toFixed(2);
+            playerRow.cells[5].textContent = (threes * minutes * pace).toFixed(2);
         }
 
         // Function to update player data based on the current pace
