@@ -344,10 +344,10 @@
             const threes = originalProjections['Threes']; // Use original projection
 
             // Update the Points, Assists, Rebounds, Threes based on the current Minutes and Pace
-            playerRow.cells[2].textContent = (points * minutes * pace).toFixed(2);
-            playerRow.cells[3].textContent = (assists * minutes * pace).toFixed(2);
-            playerRow.cells[4].textContent = (rebounds * minutes * pace).toFixed(2);
-            playerRow.cells[5].textContent = (threes * minutes * pace).toFixed(2);
+            playerRow.cells[2].textContent = (points * minutes) * pace).toFixed(2);
+            playerRow.cells[3].textContent = (assists * minutes) * pace).toFixed(2);
+            playerRow.cells[4].textContent = (rebounds * minutes) * pace).toFixed(2);
+            playerRow.cells[5].textContent = (threes * minutes) * pace).toFixed(2);
         }
 
         // Function to update player data based on the current pace
