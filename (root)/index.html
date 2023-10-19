@@ -162,7 +162,7 @@
                 quarterBoxes.appendChild(quarterBox);
             }
 
-            // Create a time input box
+            // Create a time input
             const timeInput = document.createElement('input');
             timeInput.type = 'text';
             timeInput.classList.add('time-input');
@@ -263,12 +263,14 @@
                         let originalValue = values[j];
                         let column = '';
 
-                        if (j === 2) {
-                            column = 'Minutes';
-                        } else if (j >= 3 && j <= 6) {
-                            column = ['Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
-                            originalValue = parseFloat(originalValue);
-                            cell.setAttribute('data-original-projection', originalValue);
+                        if (j >= 3 && j <= 6) {
+                            column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
+                            if (column === 'Minutes') {
+                                originalValue = parseFloat(originalValue);
+                            } else {
+                                originalValue = parseFloat(originalValue);
+                                cell.setAttribute('data-original-projection', originalValue);
+                            }
                         }
 
                         cell.textContent = originalValue;
@@ -299,8 +301,7 @@
                             // Add an event listener to handle real-time update for Minutes
                             inputBox.addEventListener('input', () => {
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
-                                const realTimeMinutes = projectedMinutes - enteredMinutes;
-                                originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
+                                originalRow.cells[1].textContent = enteredMinutes.toFixed(2);
                                 updatePlayerStats(originalRow); // Update player stats
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
