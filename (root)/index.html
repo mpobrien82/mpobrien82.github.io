@@ -302,13 +302,16 @@
                             // Get the projected Minutes value as a number
                             const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
 
-                            // Add an event listener to handle real-time update for Minutes
-                            inputBox.addEventListener('input', () => {
-                                const enteredMinutes = parseFloat(inputBox.value) || 0;
-                                const realTimeMinutes = projectedMinutes - enteredMinutes;
-                                originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-                                updatePlayerStats(originalRow, teamSection); // Update player stats
-                            });
+                            // Function to handle real-time update for Minutes
+                        inputBox.addEventListener('input', () => {
+                            const enteredMinutes = parseFloat(inputBox.value) || 0;
+                            const originalProjections = JSON.parse(teamSection.dataset.originalProjections);
+
+                            // Calculate the real-time Minutes and update the player stats
+                            const realTimeMinutes = parseFloat(originalProjections.minutes) - enteredMinutes;
+                            originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
+                            updatePlayerStats(originalRow, teamSection); // Update player stats
+                        });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
@@ -392,6 +395,3 @@
     </script>
 </body>
 </html>
-
-
-
