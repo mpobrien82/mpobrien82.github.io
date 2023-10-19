@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space between;
             align-items: center;
             width: 100%;
         }
@@ -300,7 +300,7 @@
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
                                 updatePlayerStats(originalRow); // Update player stats
                             });
-                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, Threes columns
+                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
