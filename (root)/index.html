@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space between;
             align-items: center;
             width: 100%;
         }
@@ -296,34 +296,32 @@
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
+                            inputBox.dataset.originalMinutes = values[2]; // Store the original minutes value
                             cell.appendChild(inputBox);
 
                             // Get the projected Minutes value as a number
                             const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
 
-                            // Store the original minutes value in the data-original-minutes attribute
-                            inputBox.dataset.originalMinutes = projectedMinutes;
-
                             // Add an event listener to handle real-time update for Minutes
                             inputBox.addEventListener('input', () => {
                                 const originalMinutes = parseFloat(inputBox.dataset.originalMinutes); // Get the original minutes
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
-                                const realTimeMinutes = originalMinutes - enteredMinutes;
+                                const realTimeMinutes = originalMinutes - enteredMinutes; // Calculate real-time minutes
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-                                updatePlayerStats(originalRow, realTimeMinutes); // Update player stats
+                                // Update player stats with the real-time minutes
+                                updatePlayerStats(originalRow, realTimeMinutes);
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, Threes columns
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList add('input-box');
+                            inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
 
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
                             inputBox.addEventListener('input', () => {
-                                const originalMinutes = parseFloat(originalRow.cells[1].textContent);
-                                const enteredMinutes = parseFloat(inputBox.dataset.originalMinutes) - parseFloat(inputBox.value) || 0;
-                                updatePlayerStats(originalRow, enteredMinutes); // Update player stats
+                                // Update player stats when other input boxes change
+                                updatePlayerStats(originalRow, parseFloat(originalRow.cells[1].textContent));
                             });
                         }
                     }
@@ -340,16 +338,16 @@
         }
 
         // Function to update player stats based on the current Minutes and Pace
-        function updatePlayerStats(playerRow, minutes) {
+        function updatePlayerStats(playerRow, realTimeMinutes) {
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
             // Get the original player projections from the dataset
             const originalProjections = JSON.parse(playerRow.parentElement.parentElement.dataset.originalProjections);
 
             // Calculate the adjusted Points, Assists, Rebounds, Threes based on the current Minutes and Pace
-            playerRow.cells[2].textContent = (originalProjections.points * minutes * pace).toFixed(2);
-            playerRow.cells[3].textContent = (originalProjections.assists * minutes * pace).toFixed(2);
-            playerRow.cells[4].textContent = (originalProjections.rebounds * minutes * pace).toFixed(2);
-            playerRow.cells[5].textContent = (originalProjections.threes * minutes * pace).toFixed(2);
+            playerRow.cells[2].textContent = (originalProjections.points * realTimeMinutes * pace).toFixed(2);
+            playerRow.cells[3].textContent = (originalProjections.assists * realTimeMinutes * pace).toFixed(2);
+            playerRow.cells[4].textContent = (originalProjections.rebounds * realTimeMinutes * pace).toFixed(2);
+            playerRow.cells[5].textContent = (originalProjections.threes * realTimeMinutes * pace).toFixed(2);
         }
 
         // Function to update player data based on the current pace
