@@ -271,7 +271,7 @@
                         cell.textContent = originalValue;
 
                         if (column) {
-                            cell.classList.add('player-data');
+                            cell.classList add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
                         }
@@ -296,11 +296,11 @@
                             // Add an event listener to handle real-time update for Minutes
                             inputBox.addEventListener('input', () => {
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
-                                const real-timeMinutes = projectedMinutes - enteredMinutes;
-                                originalRow.cells[1].textContent = real-timeMinutes.toFixed(2);
+                                const realTimeMinutes = projectedMinutes - enteredMinutes;
+                                originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
                                 updatePlayerStats(originalRow); // Update player stats
                             });
-                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, Threes columns
+                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
@@ -328,20 +328,24 @@
 
         // Function to update player stats based on the current Minutes and Pace
         function updatePlayerStats(playerRow) {
-            const minutes = parseFloat(playerRow.cells[1].textContent);
+            const minutesInput = parseFloat(playerRow.querySelector('input[type="number"]').value);
+            const originalMinutes = parseFloat(playerRow.cells[1].textContent);
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
 
-            // Get the player's Points, Assists, Rebounds, Threes
-            const points = parseFloat(playerRow.cells[2].textContent);
-            const assists = parseFloat(playerRow.cells[3].textContent);
-            const rebounds = parseFloat(playerRow.cells[4].textContent);
-            const threes = parseFloat(playerRow.cells[5].textContent);
+            // Update the displayed Minutes
+            playerRow.cells[1].textContent = minutesInput.toFixed(2);
 
-            // Update the Points, Assists, Rebounds, Threes based on the current Minutes and Pace
-            playerRow.cells[2].textContent = (points * minutes * pace).toFixed(2);
-            playerRow.cells[3].textContent = (assists * minutes * pace).toFixed(2);
-            playerRow.cells[4].textContent = (rebounds * minutes * pace).toFixed(2);
-            playerRow.cells[5].textContent = (threes * minutes * pace).toFixed(2);
+            // Get the player's original Points, Assists, Rebounds, Threes
+            const points = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
+            const assists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
+            const rebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
+            const threes = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
+
+            // Calculate the Points, Assists, Rebounds, Threes based on the current Minutes and Pace
+            playerRow.cells[2].textContent = (points * minutesInput * pace).toFixed(2);
+            playerRow.cells[3].textContent = (assists * minutesInput * pace).toFixed(2);
+            playerRow.cells[4].textContent = (rebounds * minutesInput * pace).toFixed(2);
+            playerRow.cells[5].textContent = (threes * minutesInput * pace).toFixed(2);
         }
 
         // Function to update player data based on the current pace
@@ -382,5 +386,4 @@
     </script>
 </body>
 </html>
-
 
