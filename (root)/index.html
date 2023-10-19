@@ -102,285 +102,307 @@
         </div>
     </div>
 
-    <script>
-        // Set the default pace to start at 1
-        const defaultPace = 1;
+ <script>
+    // Set the default pace to start at 1
+    const defaultPace = 1;
 
-        // Function to handle file input change
-        document.querySelector('#file-input').addEventListener('change', handleFileUpload);
+    // Function to handle file input change
+    document.querySelector('#file-input').addEventListener('change', handleFileUpload);
 
-        // Function to create a team section
-        function createTeamSection(teamName) {
-            // Create a new team section
-            const teamSection = document.createElement('div');
-            teamSection.classList.add('team-section');
+    // Function to create a team section
+    function createTeamSection(teamName) {
+        // Create a new team section
+        const teamSection = document.createElement('div');
+        teamSection.classList.add('team-section');
 
-            // Create a header for the team section
-            const teamHeader = document.createElement('div');
-            teamHeader.classList.add('team-header');
-            teamSection.appendChild(teamHeader);
+        // Create a header for the team section
+        const teamHeader = document.createElement('div');
+        teamHeader.classList.add('team-header');
+        teamSection.appendChild(teamHeader);
 
-            // Add the team name to the header
-            const teamNameElement = document.createElement('div');
-            teamNameElement.classList.add('team-name');
-            teamNameElement.textContent = teamName;
-            teamHeader.appendChild(teamNameElement);
+        // Add the team name to the header
+        const teamNameElement = document.createElement('div');
+        teamNameElement.classList.add('team-name');
+        teamNameElement.textContent = teamName;
+        teamHeader.appendChild(teamNameElement);
 
-            // Create a table for the team
-            const playerTable = document.createElement('table');
-            playerTable.id = 'player-table';
-            playerTable.innerHTML = `
-                <thead>
-                    <tr>
-                        <th>Players</th>
-                        <th>Minutes</th>
-                        <th>Points</th>
-                        <th>Assists</th>
-                        <th>Rebounds</th>
-                        <th>Threes</th>
-                    </tr>
-                </thead>
-            `;
-            teamSection.appendChild(playerTable);
+        // Create a table for the team
+        const playerTable = document.createElement('table');
+        playerTable.id = 'player-table';
+        playerTable.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Players</th>
+                    <th>Minutes</th>
+                    <th>Points</th>
+                    <th>Assists</th>
+                    <th>Rebounds</th>
+                    <th>Threes</th>
+                </tr>
+            </thead>
+        `;
+        teamSection.appendChild(playerTable);
 
-            // Create a div for the buttons
-            const teamButtons = document.createElement('div');
-            teamButtons.classList.add('team-buttons');
-            teamHeader.appendChild(teamButtons);
+// Inside the loop where you create input boxes (including Minutes)
+            for (let j = 1; j <= 6; j++) {
+                const cell = document.createElement('td');
 
-            // Create the quarter boxes
-            const quarterBoxes = document.createElement('div');
-            quarterBoxes.classList.add('team-buttons');
-            teamHeader.appendChild(quarterBoxes);
+                if (j === 2) { // Check if it's the Minutes column
+                    // Create an input box for Minutes
+                    const inputBox = document.createElement('input');
+                    inputBox.type = 'number';
+                    inputBox.classList.add('input-box');
+                    cell.appendChild(inputBox);
 
-            // Create the quarter buttons
-            for (let i = 1; i <= 4; i++) {
-                const quarterBox = document.createElement('div');
-                quarterBox.classList.add('quarter-box');
-                quarterBox.textContent = `${i}Q`;
-                quarterBox.addEventListener('click', () => handleQuarterClick(quarterBox, quarterBoxes));
-                quarterBoxes.appendChild(quarterBox);
-            }
+                    // Get the projected Minutes value as a number
+                    const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
 
-            // Create a time input box
-            const timeInput = document.createElement('input');
-            timeInput.type = 'text';
-            timeInput.classList.add('time-input');
-            timeInput.placeholder = 'Time';
-            teamHeader.appendChild(timeInput);
+                    // Add an event listener to handle real-time update for Minutes
+                    inputBox.addEventListener('input', () => {
+                        const enteredMinutes = parseFloat(inputBox.value) || 0;
+                        const realTimeMinutes = projectedMinutes - enteredMinutes;
+                        originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
+                        updatePlayerStats(originalRow); // Update player stats
+                    });
+                }
 
-            // Create a score input box for the team
-            const teamScoreInput = document.createElement('input');
-            teamScoreInput.type = 'number';
-            teamScoreInput.classList.add('score-input');
-            teamScoreInput.placeholder = `${teamName} Score`;
-            teamHeader.appendChild(teamScoreInput);
+        // Create a div for the buttons
+        const teamButtons = document.createElement('div');
+        teamButtons.classList.add('team-buttons');
+        teamHeader.appendChild(teamButtons);
 
-            // Create a score input box for the opponent
-            const opponentScoreInput = document.createElement('input');
-            opponentScoreInput.type = 'number';
-            opponentScoreInput.classList.add('score-input');
-            opponentScoreInput.placeholder = 'Opponent Score';
-            teamHeader.appendChild(opponentScoreInput);
+        // Create the quarter boxes
+        const quarterBoxes = document.createElement('div');
+        quarterBoxes.classList.add('team-buttons');
+        teamHeader.appendChild(quarterBoxes);
 
-            // Create an input for the pace clicker
-            const paceClicker = document.createElement('input');
-            paceClicker.type = 'number';
-            paceClicker.classList.add('input-box');
-            paceClicker.placeholder = 'Pace';
-            paceClicker.step = 0.01; // Set the step value to 0.01
-            paceClicker.value = defaultPace; // Set the default pace to 1
-            teamHeader.appendChild(paceClicker);
-
-            // Create the WW button
-            const wwButton = document.createElement('div');
-            wwButton.classList.add('team-button');
-            wwButton.textContent = 'WW';
-            teamButtons.appendChild(wwButton);
-
-            // Create the RW button
-            const rwButton = document.createElement('div');
-            rwButton.classList.add('team-button');
-            rwButton.textContent = 'RW';
-            teamButtons.appendChild(rwButton);
-
-            // Add click event listeners to the buttons
-            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
-            rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
-
-            // Add input event listener to handle pace changes
-            handlePaceInputChange(paceClicker, teamSection);
-
-            // Add the team section to the container
-            document.querySelector('#team-container').appendChild(teamSection);
-
-            return teamSection;
+        // Create the quarter buttons
+        for (let i = 1; i <= 4; i++) {
+            const quarterBox = document.createElement('div');
+            quarterBox.classList.add('quarter-box');
+            quarterBox.textContent = `${i}Q`;
+            quarterBox.addEventListener('click', () => handleQuarterClick(quarterBox, quarterBoxes));
+            quarterBoxes.appendChild(quarterBox);
         }
 
-        // Function to handle file input change
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
+        // Create a time input box
+        const timeInput = document.createElement('input');
+        timeInput.type = 'text';
+        timeInput.classList.add('time-input');
+        timeInput.placeholder = 'Time';
+        teamHeader.appendChild(timeInput);
 
-            if (file) {
-                // Handle the uploaded file, e.g., read and process the CSV data
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const csvData = e.target.result;
+        // Create a score input box for the team
+        const teamScoreInput = document.createElement('input');
+        teamScoreInput.type = 'number';
+        teamScoreInput.classList.add('score-input');
+        teamScoreInput.placeholder = `${teamName} Score`;
+        teamHeader.appendChild(teamScoreInput);
 
-                    // Process the CSV data (parse and create team sections)
-                    processDataFromCSV(csvData);
-                };
-                reader.readAsText(file);
-            }
+        // Create a score input box for the opponent
+        const opponentScoreInput = document.createElement('input');
+        opponentScoreInput.type = 'number';
+        opponentScoreInput.classList.add('score-input');
+        opponentScoreInput.placeholder = 'Opponent Score';
+        teamHeader.appendChild(opponentScoreInput);
+
+        // Create an input for the pace clicker
+        const paceClicker = document.createElement('input');
+        paceClicker.type = 'number';
+        paceClicker.classList.add('input-box');
+        paceClicker.placeholder = 'Pace';
+        paceClicker.step = 0.01; // Set the step value to 0.01
+        paceClicker.value = defaultPace; // Set the default pace to 1
+        teamHeader.appendChild(paceClicker);
+
+        // Create the WW button
+        const wwButton = document.createElement('div');
+        wwButton.classList.add('team-button');
+        wwButton.textContent = 'WW';
+        teamButtons.appendChild(wwButton);
+
+        // Create the RW button
+        const rwButton = document.createElement('div');
+        rwButton.classList.add('team-button');
+        rwButton.textContent = 'RW';
+        teamButtons.appendChild(rwButton);
+
+        // Add click event listeners to the buttons
+        wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
+        rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
+
+        // Add input event listener to handle pace changes
+        handlePaceInputChange(paceClicker, teamSection);
+
+        // Add the team section to the container
+        document.querySelector('#team-container').appendChild(teamSection);
+
+        return teamSection;
+    }
+
+    // Function to handle file input change
+    function handleFileUpload(event) {
+        const file = event.target.files[0];
+
+        if (file) {
+            // Handle the uploaded file, e.g., read and process the CSV data
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const csvData = e.target.result;
+
+                // Process the CSV data (parse and create team sections)
+                processDataFromCSV(csvData);
+            };
+            reader.readAsText(file);
         }
+    }
 
-        // Function to process data from the uploaded CSV
-        function processDataFromCSV(csvData) {
-            // Parse and process the CSV data, then create team sections
-            const lines = csvData.split('\n');
-            let currentTeamName = null;
-            let teamSection = null;
+    // Function to process data from the uploaded CSV
+    function processDataFromCSV(csvData) {
+        // Parse and process the CSV data, then create team sections
+        const lines = csvData.split('\n');
+        let currentTeamName = null;
+        let teamSection = null;
 
-            for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].trim().split(',');
+        for (let i = 1; i < lines.length; i++) {
+            const values = lines[i].trim().split(',');
 
-                if (values.length >= 7) { // Ensure there are enough columns (removed RW/WW column)
-                    const teamName = values[0];
+            if (values.length >= 7) { // Ensure there are enough columns (removed RW/WW column)
+                const teamName = values[0];
 
-                    if (teamName !== currentTeamName) {
-                        // Create a new team section
-                        teamSection = createTeamSection(teamName);
-                        currentTeamName = teamName;
+                if (teamName !== currentTeamName) {
+                    // Create a new team section
+                    teamSection = createTeamSection(teamName);
+                    currentTeamName = teamName;
+                }
+
+                // Create a row for original player data
+                const playerTable = teamSection.querySelector('#player-table');
+                const originalRow = playerTable.insertRow();
+                for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
+                    const cell = originalRow.insertCell();
+
+                    // Set the data-original-value and data-column attributes for player data elements
+                    let originalValue = values[j];
+                    let column = '';
+
+                    if (j >= 3 && j <= 6) {
+                        column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
+                        originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
                     }
 
-                    // Create a row for original player data
-                    const playerTable = teamSection.querySelector('#player-table');
-                    const originalRow = playerTable.insertRow();
-                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
-                        const cell = originalRow.insertCell();
+                    cell.textContent = originalValue;
 
-                        // Set the data-original-value and data-column attributes for player data elements
-                        let originalValue = values[j];
-                        let column = '';
-
-                        if (j >= 3 && j <= 6) {
-                            column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
-                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
-                        }
-
-                        cell.textContent = originalValue;
-
-                        if (column) {
-                            cell.classList.add('player-data');
-                            cell.setAttribute('data-original-value', originalValue);
-                            cell.setAttribute('data-column', column);
-                        }
+                    if (column) {
+                        cell.classList.add('player-data');
+                        cell.setAttribute('data-original-value', originalValue);
+                        cell.setAttribute('data-column', column);
                     }
+                }
 
-                    // Create a row for input boxes (including Minutes)
-                    const inputRow = playerTable.insertRow();
-                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
-                        const cell = inputRow.insertCell();
+                // Create a row for input boxes (including Minutes)
+                const inputRow = playerTable.insertRow();
+                for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
+                    const cell = inputRow.insertCell();
 
-                        // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
-                        if (j === 2) { // Check if it's the Minutes column
-                            // Create an input box for Minutes
-                            const inputBox = document.createElement('input');
-                            inputBox.type = 'number';
-                            inputBox.classList add('input-box');
-                            cell.appendChild(inputBox);
+                    // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
+                    if (j === 2) { // Check if it's the Minutes column
+                        // Create an input box for Minutes
+                        const inputBox = document.createElement('input');
+                        inputBox.type = 'number';
+                        inputBox.classList.add('input-box');
+                        cell.appendChild(inputBox);
 
-                            // Get the projected Minutes value as a number
-                            const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
+                        // Get the projected Minutes value as a number
+                        const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
 
-                            // Add an event listener to handle real-time update for Minutes
-                            inputBox.addEventListener('input', () => {
-                                const enteredMinutes = parseFloat(inputBox.value) || 0;
-                                const realTimeMinutes = projectedMinutes - enteredMinutes;
-                                originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-                                updatePlayerStats(originalRow); // Update player stats
-                            });
-                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
-                            // Create an input box for other stats
-                            const inputBox = document.createElement('input');
-                            inputBox.type = 'number';
-                            inputBox.classList.add('input-box');
-                            cell.appendChild(inputBox);
+                        // Add an event listener to handle real-time update for Minutes
+                        inputBox.addEventListener('input', () => {
+                            const enteredMinutes = parseFloat(inputBox.value) || 0;
+                            const realTimeMinutes = projectedMinutes - enteredMinutes;
+                            originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
+                            updatePlayerStats(originalRow); // Update player stats
+                        });
+                    } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
+                        // Create an input box for other stats
+                        const inputBox = document.createElement('input');
+                        inputBox.type = 'number';
+                        inputBox.classList.add('input-box');
+                        cell.appendChild(inputBox);
 
-                            // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
-                            inputBox.addEventListener('input', () => {
-                                // Update player stats when other input boxes change
-                                updatePlayerStats(originalRow);
-                            });
-                        }
+                        // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
+                        inputBox.addEventListener('input', () => {
+                            // Update player stats when other input boxes change
+                            updatePlayerStats(originalRow);
+                        });
                     }
                 }
             }
         }
+    }
 
-        // Function to handle pace input changes
-        function handlePaceInputChange(paceClicker, teamSection) {
-            paceClicker.addEventListener('input', () => {
-                const pace = parseFloat(paceClicker.value);
-                updatePlayerData(pace, teamSection);
-            });
-        }
+    // Function to handle pace input changes
+    function handlePaceInputChange(paceClicker, teamSection) {
+        paceClicker.addEventListener('input', () => {
+            const pace = parseFloat(paceClicker.value);
+            updatePlayerData(pace, teamSection);
+        });
+    }
 
-        // Function to update player stats based on the current Minutes
-        function updatePlayerStats(playerRow) {
-            // Get the displayed minutes value (the number above the input box)
-            const minutes = parseFloat(playerRow.cells[1].textContent);
-            const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
+    // Function to update player stats based on the current Minutes
+    function updatePlayerStats(playerRow) {
+        // Get the displayed minutes value (the number above the input box)
+        const minutes = parseFloat(playerRow.cells[1].textContent);
+        const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
 
-            // Get the original player projections from the data-original-value attributes
-            const originalPoints = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
-            const originalAssists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
-            const originalRebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
-            const originalThrees = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
+        // Get the original player projections from the data-original-value attributes
+        const originalPoints = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
+        const originalAssists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
+        const originalRebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
+        const originalThrees = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
 
-            // Update the Points, Assists, Rebounds, Threes based on the original projections and the displayed Minutes
-            playerRow.cells[2].textContent = (originalPoints * minutes * pace).toFixed(2);
-            playerRow.cells[3].textContent = (originalAssists * minutes * pace).toFixed(2);
-            playerRow.cells[4].textContent = (originalRebounds * minutes * pace).toFixed(2);
-            playerRow.cells[5].textContent = (originalThrees * minutes * pace).toFixed(2);
-        }
+        // Update the Points, Assists, Rebounds, Threes based on the original projections and the displayed Minutes
+        playerRow.cells[2].textContent = (originalPoints * minutes * pace).toFixed(2);
+        playerRow.cells[3].textContent = (originalAssists * minutes * pace).toFixed(2);
+        playerRow.cells[4].textContent = (originalRebounds * minutes * pace).toFixed(2);
+        playerRow.cells[5].textContent = (originalThrees * minutes * pace).toFixed(2);
+    }
 
-        // Function to update player data based on the current pace
-        function updatePlayerData(pace, teamSection) {
-            // Get all player data elements within the specified team section
-            const playerDataElements = teamSection.querySelectorAll('.player-data');
+    // Function to update player data based on the current pace
+    function updatePlayerData(pace, teamSection) {
+        // Get all player data elements within the specified team section
+        const playerDataElements = teamSection.querySelectorAll('.player-data');
 
-            // Iterate through each player data element and update the calculated values
-            playerDataElements.forEach((element) => {
-                const originalValue = parseFloat(element.getAttribute('data-original-value'));
-                const column = element.getAttribute('data-column');
+        // Iterate through each player data element and update the calculated values
+        playerDataElements.forEach((element) => {
+            const originalValue = parseFloat(element.getAttribute('data-original-value'));
+            const column = element.getAttribute('data-column');
 
-                // Calculate and update the displayed value based on the pace
-                if (column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
-                    const newValue = (originalValue * pace).toFixed(2);
-                    element.textContent = newValue;
-                }
-            });
-        }
-
-        // Function to handle button clicks
-        function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
-            if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList add('active');
-                otherButton.classList.remove('active');
-                updatePlayerData(parseFloat(paceClicker.value), teamSection);
+            // Calculate and update the displayed value based on the pace
+            if (column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
+                const newValue = (originalValue * pace).toFixed(2);
+                element.textContent = newValue;
             }
-        }
+        });
+    }
 
-        // Function to handle quarter button clicks
-        function handleQuarterClick(clickedButton, quarterBoxes) {
-            // Deselect all quarter buttons in the same team header
-            quarterBoxes.querySelectorAll('.quarter-box').forEach((button) => button.classList.remove('active'));
-
-            // Select the clicked button
+    // Function to handle button clicks
+    function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
+        if (!clickedButton.classList.contains('active')) {
             clickedButton.classList.add('active');
+            otherButton.classList.remove('active');
+            updatePlayerData(parseFloat(paceClicker.value), teamSection);
         }
-    </script>
+    }
+
+    // Function to handle quarter button clicks
+    function handleQuarterClick(clickedButton, quarterBoxes) {
+        // Deselect all quarter buttons in the same team header
+        quarterBoxes.querySelectorAll('.quarter-box').forEach((button) => button.classList.remove('active'));
+
+        // Select the clicked button
+        clickedButton.classList.add('active');
+    }
+</script>
 </body>
 </html>
-
