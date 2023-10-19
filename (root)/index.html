@@ -103,11 +103,11 @@
     </div>
 
     <script>
+        // Define the original player projections data
+        const originalProjections = {};
+
         // Set the default pace to start at 1
         const defaultPace = 1;
-
-        // Create a dictionary to store original projections by player ID
-        const originalProjections = {};
 
         // Function to handle file input change
         document.querySelector('#file-input').addEventListener('change', handleFileUpload);
@@ -187,7 +187,7 @@
             teamHeader.appendChild(opponentScoreInput);
 
             // Create an input for the pace clicker
-            const paceClicker = document.createElement('input');
+            const paceClicker = document.createElement('input';
             paceClicker.type = 'number';
             paceClicker.classList.add('input-box');
             paceClicker.placeholder = 'Pace';
@@ -303,7 +303,7 @@
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
                                 updatePlayerStats(originalRow); // Update player stats
                             });
-                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
+                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, Threes columns
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
