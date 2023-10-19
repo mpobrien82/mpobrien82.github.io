@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -265,7 +265,7 @@
 
                         if (j >= 3 && j <= 6) {
                             column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
-                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
+                            originalValue = parseFloat(originalValue).toFixed(2);
                         }
 
                         cell.textContent = originalValue;
@@ -291,13 +291,13 @@
                             cell.appendChild(inputBox);
 
                             // Get the projected Minutes value as a number
-                            const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
+                            const projectedMinutes = parseFloat(originalRow.cells[1].getAttribute('data-original-value'));
 
                             // Add an event listener to handle real-time update for Minutes
                             inputBox.addEventListener('input', () => {
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
-                                const projectedMinutes = parseFloat(originalRow.cells[1].getAttribute('data-original-value'));
-                                originalRow.cells[1].textContent = projectedMinutes - enteredMinutes;
+                                const updatedProjectedMinutes = projectedMinutes - enteredMinutes;
+                                originalRow.cells[1].textContent = updatedProjectedMinutes.toFixed(2);
                                 updatePlayerStats(originalRow); // Update player stats
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
@@ -332,10 +332,10 @@
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
 
             // Get the player's Points, Assists, Rebounds, Threes
-            const points = parseFloat(playerRow.cells[2].textContent);
-            const assists = parseFloat(playerRow.cells[3].textContent);
-            const rebounds = parseFloat(playerRow.cells[4].textContent);
-            const threes = parseFloat(playerRow.cells[5].textContent);
+            const points = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
+            const assists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
+            const rebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
+            const threes = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
 
             // Update the Points, Assists, Rebounds, Threes based on the current Minutes and Pace
             playerRow.cells[2].textContent = (points * minutes * pace).toFixed(2);
