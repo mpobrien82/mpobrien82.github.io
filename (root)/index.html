@@ -106,9 +106,6 @@
         // Set the default pace to start at 1
         const defaultPace = 1;
 
-        // Store original player projections in a map
-        const originalProjections = new Map();
-
         // Function to handle file input change
         document.querySelector('#file-input').addEventListener('change', handleFileUpload);
 
@@ -278,19 +275,6 @@
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
                         }
-
-                        // Store original projections in the map
-                        const inputBox = cell.querySelector('.input-box');
-                        if (inputBox) {
-                            const playerProjections = {
-                                Minutes: parseFloat(originalRow.cells[1].textContent),
-                                Points: parseFloat(originalRow.cells[2].textContent),
-                                Assists: parseFloat(originalRow.cells[3].textContent),
-                                Rebounds: parseFloat(originalRow.cells[4].textContent),
-                                Threes: parseFloat(originalRow.cells[5].textContent)
-                            };
-                            originalProjections.set(inputBox, playerProjections);
-                        }
                     }
 
                     // Create a row for input boxes (including Minutes)
@@ -314,7 +298,7 @@
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
                                 const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-                                updatePlayerStats(originalRow, originalProjections.get(inputBox)); // Update player stats
+                                updatePlayerStats(originalRow, values);
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
@@ -326,7 +310,7 @@
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
                             inputBox.addEventListener('input', () => {
                                 // Update player stats when other input boxes change
-                                updatePlayerStats(originalRow, originalProjections.get(inputBox));
+                                updatePlayerStats(originalRow, values);
                             });
                         }
                     }
@@ -344,14 +328,30 @@
 
         // Function to update player stats based on the current Minutes and Pace
         function updatePlayerStats(playerRow, playerProjections) {
-            const minutes = parseFloat(playerRow.cells[1].textContent);
-            const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
+            const inputBoxes = playerRow.parentElement.nextElementSibling.getElementsByTagName('input');
 
-            // Update the Points, Assists, Rebounds, Threes based on the original projections, Minutes, and Pace
-            playerRow.cells[2].textContent = (playerProjections.Points * minutes * pace).toFixed(2);
-            playerRow.cells[3].textContent = (playerProjections.Assists * minutes * pace).toFixed(2);
-            playerRow.cells[4].textContent = (playerProjections.Rebounds * minutes * pace).toFixed(2);
-            playerRow.cells[5].textContent = (playerProjections.Threes * minutes * pace).toFixed(2);
+            // Get the entered minutes value from the input box
+            const enteredMinutes = parseFloat(inputBoxes[0].value) || 0;
+
+            // Get the player's Minutes, Points, Assists, Rebounds, Threes from the original projections
+            const projectedMinutes = parseFloat(playerProjections[1]);
+            const projectedPoints = parseFloat(playerProjections[2]);
+            const projectedAssists = parseFloat(playerProjections[3]);
+            const projectedRebounds = parseFloat(playerProjections[4]);
+            const projectedThrees = parseFloat(playerProjections[5]);
+
+            // Calculate and update the Points, Assists, Rebounds, Threes based on the entered Minutes
+            const realTimeMinutes = projectedMinutes - enteredMinutes;
+            const realTimePoints = (projectedPoints / projectedMinutes) * realTimeMinutes;
+            const realTimeAssists = (projectedAssists / projectedMinutes) * realTimeMinutes;
+            const realTimeRebounds = (projectedRebounds / projectedMinutes) * realTimeMinutes;
+            const realTimeThrees = (projectedThrees / projectedMinutes) * realTimeMinutes;
+
+            // Update the Points, Assists, Rebounds, Threes
+            playerRow.cells[2].textContent = realTimePoints.toFixed(2);
+            playerRow.cells[3].textContent = realTimeAssists.toFixed(2);
+            playerRow.cells[4].textContent = realTimeRebounds.toFixed(2);
+            playerRow.cells[5].textContent = realTimeThrees.toFixed(2);
         }
 
         // Function to update player data based on the current pace
