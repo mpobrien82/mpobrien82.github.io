@@ -110,13 +110,11 @@
         document.querySelector('#file-input').addEventListener('change', handleFileUpload);
 
         // Function to create a team section
-        function createTeamSection(teamName, projections) {
+        function createTeamSection(teamName, originalProjections) {
             // Create a new team section
             const teamSection = document.createElement('div');
             teamSection.classList.add('team-section');
-
-            // Store the original projections in the dataset
-            teamSection.dataset.originalProjections = JSON.stringify(projections);
+            teamSection.dataset.originalProjections = JSON.stringify(originalProjections);
 
             // Create a header for the team section
             const teamHeader = document.createElement('div');
@@ -252,14 +250,14 @@
 
                     if (teamName !== currentTeamName) {
                         // Create a new team section
-                        const projections = {
+                        const originalProjections = {
                             minutes: parseFloat(values[2]),
                             points: parseFloat(values[3]),
                             assists: parseFloat(values[4]),
                             rebounds: parseFloat(values[5]),
-                            threes: parseFloat(values[6]),
+                            threes: parseFloat(values[6])
                         };
-                        teamSection = createTeamSection(teamName, projections);
+                        teamSection = createTeamSection(teamName, originalProjections);
                         currentTeamName = teamName;
                     }
 
@@ -306,12 +304,9 @@
                             // Add an event listener to handle real-time update for Minutes
                             inputBox.addEventListener('input', () => {
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
-                                const originalProjections = JSON.parse(teamSection.dataset.originalProjections);
-
-                                // Calculate the real-time Minutes and update the player stats
-                                const realTimeMinutes = parseFloat(originalProjections.minutes) - enteredMinutes;
+                                const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-                                updatePlayerStats(originalRow, teamSection); // Update player stats
+                                updatePlayerStats(originalRow); // Update player stats
                             });
                         } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
                             // Create an input box for other stats
@@ -323,7 +318,7 @@
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
                             inputBox.addEventListener('input', () => {
                                 // Update player stats when other input boxes change
-                                updatePlayerStats(originalRow, teamSection);
+                                updatePlayerStats(originalRow);
                             });
                         }
                     }
@@ -340,18 +335,21 @@
         }
 
         // Function to update player stats based on the current Minutes and Pace
-        function updatePlayerStats(playerRow, teamSection) {
+        function updatePlayerStats(playerRow) {
             const minutes = parseFloat(playerRow.cells[1].textContent);
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
 
-            // Get the player's original Points, Assists, Rebounds, Threes
-            const originalProjections = JSON.parse(teamSection.dataset.originalProjections);
+            // Get the player's Points, Assists, Rebounds, Threes
+            const points = parseFloat(playerRow.cells[2].textContent);
+            const assists = parseFloat(playerRow.cells[3].textContent);
+            const rebounds = parseFloat(playerRow.cells[4].textContent);
+            const threes = parseFloat(playerRow.cells[5].textContent);
 
             // Update the Points, Assists, Rebounds, Threes based on the current Minutes and Pace
-            playerRow.cells[2].textContent = (originalProjections.points * minutes * pace).toFixed(2);
-            playerRow.cells[3].textContent = (originalProjections.assists * minutes * pace).toFixed(2);
-            playerRow.cells[4].textContent = (originalProjections.rebounds * minutes * pace).toFixed(2);
-            playerRow.cells[5].textContent = (originalProjections.threes * minutes * pace).toFixed(2);
+            playerRow.cells[2].textContent = (points * minutes * pace).toFixed(2);
+            playerRow.cells[3].textContent = (assists * minutes * pace).toFixed(2);
+            playerRow.cells[4].textContent = (rebounds * minutes * pace).toFixed(2);
+            playerRow.cells[5].textContent = (threes * minutes * pace).toFixed(2);
         }
 
         // Function to update player data based on the current pace
@@ -377,7 +375,7 @@
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
-                updatePlayerData(parseFloat(paceClicker.value), teamSection);
+                updatePlayerStats(teamSection);
             }
         }
 
