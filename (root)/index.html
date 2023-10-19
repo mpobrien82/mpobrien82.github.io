@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -106,11 +106,15 @@
         // Set the default pace to start at 1
         const defaultPace = 1;
 
-        // Define a map to store original projections
-        const originalProjections = new Map();
-
         // Function to handle file input change
         document.querySelector('#file-input').addEventListener('change', handleFileUpload);
+
+        // Define a function to calculate the player stats based on minutes and pace
+        function calculatePlayerStats(originalMinutes, originalProjection, currentMinutes, currentPace) {
+            const originalValue = parseFloat(originalProjection);
+            const minutesChange = originalMinutes - currentMinutes;
+            return (originalValue - minutesChange * originalValue) * currentPace;
+        }
 
         // Function to create a team section
         function createTeamSection(teamName) {
@@ -269,9 +273,6 @@
                         if (j >= 3 && j <= 6) {
                             column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
                             originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
-
-                            // Store the original projection values in the map
-                            originalProjections.set(column, parseFloat(originalValue));
                         }
 
                         cell.textContent = originalValue;
@@ -306,7 +307,7 @@
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
                                 updatePlayerStats(originalRow); // Update player stats
                             });
-                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
+                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, Threes columns
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
@@ -330,24 +331,6 @@
                 const pace = parseFloat(paceClicker.value);
                 updatePlayerData(pace, teamSection);
             });
-        }
-
-        // Function to update player stats based on the current Minutes and Pace
-        function updatePlayerStats(playerRow) {
-            const minutes = parseFloat(playerRow.cells[1].textContent);
-            const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
-
-            // Get the player's Points, Assists, Rebounds, Threes
-            const points = originalProjections.get('Points');
-            const assists = originalProjections.get('Assists');
-            const rebounds = originalProjections.get('Rebounds');
-            const threes = originalProjections.get('Threes');
-
-            // Update the Points, Assists, Rebounds, Threes based on the current Minutes and Pace
-            playerRow.cells[2].textContent = (points * minutes * pace).toFixed(2);
-            playerRow.cells[3].textContent = (assists * minutes * pace).toFixed(2);
-            playerRow.cells[4].textContent = (rebounds * minutes * pace).toFixed(2);
-            playerRow.cells[5].textContent = (threes * minutes * pace).toFixed(2);
         }
 
         // Function to update player data based on the current pace
@@ -388,3 +371,4 @@
     </script>
 </body>
 </html>
+
