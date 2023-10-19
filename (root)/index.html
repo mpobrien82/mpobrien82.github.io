@@ -144,27 +144,27 @@
         teamSection.appendChild(playerTable);
 
 // Inside the loop where you create input boxes (including Minutes)
-            for (let j = 1; j <= 6; j++) {
-                const cell = document.createElement('td');
+        for (let j = 1; j <= 6; j++) {
+            const cell = document.createElement('td');
 
-                if (j === 2) { // Check if it's the Minutes column
+            if (j === 2) { // Check if it's the Minutes column
                     // Create an input box for Minutes
-                    const inputBox = document.createElement('input');
-                    inputBox.type = 'number';
-                    inputBox.classList.add('input-box');
-                    cell.appendChild(inputBox);
+                const inputBox = document.createElement('input');
+                 inputBox.type = 'number';
+                 inputBox.classList.add('input-box');
+                cell.appendChild(inputBox);
 
-                    // Get the projected Minutes value as a number
-                    const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
-
-                    // Add an event listener to handle real-time update for Minutes
-                    inputBox.addEventListener('input', () => {
-                        const enteredMinutes = parseFloat(inputBox.value) || 0;
-                        const realTimeMinutes = projectedMinutes - enteredMinutes;
-                        originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-                        updatePlayerStats(originalRow); // Update player stats
-                    });
-                }
+                 // Get the projected Minutes value as a number
+                  const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
+                
+                  // Add an event listener to handle real-time update for Minutes
+                  inputBox.addEventListener('input', () => {
+                      const enteredMinutes = parseFloat(inputBox.value) || 0;
+                      const realTimeMinutes = projectedMinutes - enteredMinutes;
+                      originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
+                      updatePlayerStats(originalRow); // Update player stats
+             });
+        }
 
         // Create a div for the buttons
         const teamButtons = document.createElement('div');
