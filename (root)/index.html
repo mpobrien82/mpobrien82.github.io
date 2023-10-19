@@ -114,7 +114,6 @@
             // Create a new team section
             const teamSection = document.createElement('div');
             teamSection.classList.add('team-section');
-            teamSection.dataset.originalProjections = JSON.stringify(originalProjections);
 
             // Create a header for the team section
             const teamHeader = document.createElement('div');
@@ -250,14 +249,13 @@
 
                     if (teamName !== currentTeamName) {
                         // Create a new team section
-                        const originalProjections = {
+                        createTeamSection(teamName, {
                             minutes: parseFloat(values[2]),
                             points: parseFloat(values[3]),
                             assists: parseFloat(values[4]),
                             rebounds: parseFloat(values[5]),
                             threes: parseFloat(values[6])
-                        };
-                        teamSection = createTeamSection(teamName, originalProjections);
+                        });
                         currentTeamName = teamName;
                     }
 
@@ -370,7 +368,7 @@
             });
         }
 
-       // Function to handle button clicks
+        // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
@@ -378,7 +376,6 @@
                 updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
         }
-
 
         // Function to handle quarter button clicks
         function handleQuarterClick(clickedButton, quarterBoxes) {
@@ -391,3 +388,4 @@
     </script>
 </body>
 </html>
+
