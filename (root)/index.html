@@ -304,7 +304,7 @@
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList.add('input-box');
+                            inputBox.classList add('input-box');
                             cell.appendChild(inputBox);
 
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
@@ -339,10 +339,8 @@
 
         // Function to update player stats based on the current Minutes and Pace
         function updatePlayerStats(playerRow, playerProjections) {
-            const inputBoxes = playerRow.parentElement.nextElementSibling.getElementsByTagName('input');
-
             // Get the entered minutes value from the input box
-            const enteredMinutes = parseFloat(inputBoxes[0].value) || 0;
+            const enteredMinutes = parseFloat(playerRow.cells[1].textContent) || 0;
 
             // Get the pace from the input box in the team header
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
@@ -392,3 +390,4 @@
     </script>
 </body>
 </html>
+
