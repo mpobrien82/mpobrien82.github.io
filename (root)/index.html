@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -332,10 +332,10 @@
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
 
             // Get the player's Points, Assists, Rebounds, Threes
-            const points = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
-            const assists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
-            const rebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
-            const threes = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
+            const points = parseFloat(playerRow.cells[2].textContent);
+            const assists = parseFloat(playerRow.cells[3].textContent);
+            const rebounds = parseFloat(playerRow.cells[4].textContent);
+            const threes = parseFloat(playerRow.cells[5].textContent);
 
             // Update the Points, Assists, Rebounds, Threes based on the current Minutes and Pace
             playerRow.cells[2].textContent = (points * minutes * pace).toFixed(2);
@@ -365,7 +365,7 @@
         // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList add('active');
+                clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
                 updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
