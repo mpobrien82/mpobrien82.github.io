@@ -38,7 +38,7 @@
         }
         .team-header {
             display: flex;
-            justify-content: space between;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
@@ -200,7 +200,7 @@
 
             // Create the RW button
             const rwButton = document.createElement('div');
-            rwButton.classList.add('team-button');
+            rwButton.classList add('team-button');
             rwButton.textContent = 'RW';
             teamButtons.appendChild(rwButton);
 
@@ -287,7 +287,7 @@
                             // Create an input box for Minutes
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList.add('input-box');
+                            inputBox.classList.add('input-box'); // Add the 'input-box' class
                             cell.appendChild(inputBox);
 
                             // Get the projected Minutes value as a number
@@ -304,7 +304,7 @@
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList add('input-box');
+                            inputBox.classList.add('input-box'); // Add the 'input-box' class
                             cell.appendChild(inputBox);
 
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
@@ -339,8 +339,10 @@
 
         // Function to update player stats based on the current Minutes and Pace
         function updatePlayerStats(playerRow, playerProjections) {
+            const inputBoxes = playerRow.parentElement.nextElementSibling.getElementsByTagName('input');
+
             // Get the entered minutes value from the input box
-            const enteredMinutes = parseFloat(playerRow.cells[1].textContent) || 0;
+            const enteredMinutes = parseFloat(inputBoxes[0].value) || 0;
 
             // Get the pace from the input box in the team header
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
@@ -390,4 +392,3 @@
     </script>
 </body>
 </html>
-
