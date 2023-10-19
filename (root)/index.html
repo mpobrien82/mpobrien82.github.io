@@ -192,6 +192,26 @@
             paceClicker.value = defaultPace; // Set the default pace to 1
             teamHeader.appendChild(paceClicker);
 
+        // Inside the loop where you create input boxes (including Minutes)
+        if (j === 2) { // Check if it's the Minutes column
+            // Create an input box for Minutes
+            const inputBox = document.createElement('input');
+            inputBox.type = 'number';
+            inputBox.classList.add('input-box');
+            cell.appendChild(inputBox);
+        
+            // Get the projected Minutes value as a number
+            const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
+        
+            // Add an event listener to handle real-time update for Minutes
+            inputBox.addEventListener('input', () => {
+                const enteredMinutes = parseFloat(inputBox.value) || 0;
+                const realTimeMinutes = projectedMinutes - enteredMinutes;
+                originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
+                updatePlayerStats(originalRow); // Update player stats
+            });
+        }
+
             // Create the WW button
             const wwButton = document.createElement('div');
             wwButton.classList.add('team-button');
