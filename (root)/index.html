@@ -184,7 +184,7 @@
             teamHeader.appendChild(opponentScoreInput);
 
             // Create an input for the pace clicker
-            const paceClicker = document.createElement('input';
+            const paceClicker = document.createElement('input');
             paceClicker.type = 'number';
             paceClicker.classList.add('input-box');
             paceClicker.placeholder = 'Pace';
@@ -265,13 +265,13 @@
 
                         if (j >= 3 && j <= 6) {
                             column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
-                            originalValue = (parseFloat(originalValue)).toFixed(2);
+                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
                         }
 
                         cell.textContent = originalValue;
 
                         if (column) {
-                            cell.classList add ('player-data');
+                            cell.classList.add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
                         }
@@ -296,10 +296,11 @@
                             // Add an event listener to handle real-time update for Minutes
                             inputBox.addEventListener('input', () => {
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
-                                originalRow.cells[1].textContent = enteredMinutes.toFixed(2);
+                                const realTimeMinutes = projectedMinutes - enteredMinutes;
+                                originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
                                 updatePlayerStats(originalRow); // Update player stats
                             });
-                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
+                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, Threes columns
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
@@ -328,18 +329,19 @@
         // Function to update player stats based on the current Minutes and Pace
         function updatePlayerStats(playerRow) {
             const minutes = parseFloat(playerRow.cells[1].textContent);
+            const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
 
-            // Get the player's original Points, Assists, Rebounds, Threes
-            const originalPoints = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
-            const originalAssists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
-            const originalRebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
-            const originalThrees = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
+            // Get the player's Points, Assists, Rebounds, Threes
+            const points = parseFloat(playerRow.cells[2].textContent);
+            const assists = parseFloat(playerRow.cells[3].textContent);
+            const rebounds = parseFloat(playerRow.cells[4].textContent);
+            const threes = parseFloat(playerRow.cells[5].textContent);
 
-            // Update the Points, Assists, Rebounds, Threes based on the current Minutes
-            playerRow.cells[2].textContent = (originalPoints * minutes).toFixed(2);
-            playerRow.cells[3].textContent = (originalAssists * minutes).toFixed(2);
-            playerRow.cells[4].textContent = (originalRebounds * minutes).toFixed(2);
-            playerRow.cells[5].textContent = (originalThrees * minutes).toFixed(2);
+            // Update the Points, Assists, Rebounds, Threes based on the current Minutes and Pace
+            playerRow.cells[2].textContent = (points * minutes * pace).toFixed(2);
+            playerRow.cells[3].textContent = (assists * minutes * pace).toFixed(2);
+            playerRow.cells[4].textContent = (rebounds * minutes * pace).toFixed(2);
+            playerRow.cells[5].textContent = (threes * minutes * pace).toFixed(2);
         }
 
         // Function to update player data based on the current pace
