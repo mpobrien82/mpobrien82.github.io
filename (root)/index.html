@@ -235,7 +235,6 @@
         }
 
         // Function to process data from the uploaded CSV
-        // Function to process data from the uploaded CSV
         function processDataFromCSV(csvData) {
             // Parse and process the CSV data, then create team sections
             const lines = csvData.split('\n');
@@ -249,12 +248,12 @@
                     const teamName = values[0];
 
                     if (teamName !== currentTeamName) {
-                // Create a new team section
+                        // Create a new team section
                         teamSection = createTeamSection(teamName);
                         currentTeamName = teamName;
                     }
 
-            // Create a row for original player data
+                    // Create a row for original player data
                     const playerTable = teamSection.querySelector('#player-table');
                     const originalRow = playerTable.insertRow();
                     for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
@@ -282,7 +281,7 @@
                     const inputRow = playerTable.insertRow();
                     for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                         const cell = inputRow.insertCell();
-    
+
                         // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
                         if (j === 2) { // Check if it's the Minutes column
                             // Create an input box for Minutes
@@ -327,17 +326,18 @@
             });
         }
 
-              function updatePlayerStats(playerRow) {
+               // Function to update player stats based on the current Minutes and Pace
+        function updatePlayerStats(playerRow) {
             const minutes = parseFloat(playerRow.cells[1].textContent);
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
-
-            // Get the player's original Points, Assists, Rebounds, Threes projections
-            const originalPoints = parseFloat(playerRow.cells[2].querySelector('input').value);
-            const originalAssists = parseFloat(playerRow.cells[3].querySelector('input').value);
-            const originalRebounds = parseFloat(playerRow.cells[4].querySelector('input').value);
-            const originalThrees = parseFloat(playerRow.cells[5].querySelector('input').value);
-
-            // Update the Points, Assists, Rebounds, Threes based on the current Minutes and Pace
+        
+            // Get the player's original Points, Assists, Rebounds, Threes from the data-original-value attribute
+            const originalPoints = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
+            const originalAssists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
+            const originalRebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
+            const originalThrees = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
+        
+            // Update the Points, Assists, Rebounds, Threes based on the current Minutes and Pace using original projections
             playerRow.cells[2].textContent = (originalPoints * minutes * pace).toFixed(2);
             playerRow.cells[3].textContent = (originalAssists * minutes * pace).toFixed(2);
             playerRow.cells[4].textContent = (originalRebounds * minutes * pace).toFixed(2);
