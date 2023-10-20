@@ -306,10 +306,11 @@
                             inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
 
-                            // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
+                            // Add a single event listener to handle the change for the "minutes-input" boxes
+                        document.querySelectorAll('.minutes-input').forEach(inputBox => {
                             inputBox.addEventListener('input', () => {
-                                // Update player stats when other input boxes change
-                                updatePlayerStats(originalRow);
+                                const row = inputBox.parentElement.parentElement;
+                                updatePlayerStats(row);
                             });
                         }
                     }
