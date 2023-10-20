@@ -341,13 +341,11 @@
             const threesCell = playerRow.cells[5];
             const originalThrees = parseFloat(threesCell.getAttribute('data-original-value'));
         
-            const pace = parseFloat(playerRow.parentElement.querySelector('.input-box').value); // Get the pace from the input box
-            
             // Update points, assists, rebounds, and threes based on the new minutes
-            pointsCell.textContent = ((originalPoints * enteredMinutes) * pace).toFixed(2);
-            assistsCell.textContent = ((originalAssists * enteredMinutes) * pace).toFixed(2);
-            reboundsCell.textContent = ((originalRebounds * enteredMinutes) * pace).toFixed(2);
-            threesCell.textContent = ((originalThrees * enteredMinutes) * pace).toFixed(2);
+            pointsCell.textContent = (originalPoints * enteredMinutes).toFixed(2);
+            assistsCell.textContent = (originalAssists * enteredMinutes).toFixed(2);
+            reboundsCell.textContent = (originalRebounds * enteredMinutes).toFixed(2);
+            threesCell.textContent = (originalThrees * enteredMinutes).toFixed(2);
         }
 
         function updatePlayerData(pace, teamSection) {
