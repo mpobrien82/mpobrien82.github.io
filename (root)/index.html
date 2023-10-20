@@ -324,28 +324,21 @@
                 updatePlayerData(pace, teamSection);
             });
         }
-
+        
+                // Modify the existing updatePlayerStats function to handle updating Points, Assists, Rebounds, and Threes
         function updatePlayerStats(playerRow) {
             const minutesCell = playerRow.cells[1];
-            const enteredMinutes = parseFloat(minutesCell.textContent) || 0; // Get the new minutes from the cell
+            const enteredMinutes = parseFloat(minutesCell.textContent) || 0;
         
-            const pointsCell = playerRow.cells[2];
-            const originalPoints = parseFloat(pointsCell.getAttribute('data-original-value'));
+            // Stats to update: Points, Assists, Rebounds, Threes
+            const statsToTrack = ['Points', 'Assists', 'Rebounds', 'Threes'];
         
-            const assistsCell = playerRow.cells[3];
-            const originalAssists = parseFloat(assistsCell.getAttribute('data-original-value'));
-        
-            const reboundsCell = playerRow.cells[4];
-            const originalRebounds = parseFloat(reboundsCell.getAttribute('data-original-value'));
-        
-            const threesCell = playerRow.cells[5];
-            const originalThrees = parseFloat(threesCell.getAttribute('data-original-value'));
-        
-            // Update points, assists, rebounds, and threes based on the new minutes
-            pointsCell.textContent = (originalPoints * enteredMinutes).toFixed(2);
-            assistsCell.textContent = (originalAssists * enteredMinutes).toFixed(2);
-            reboundsCell.textContent = (originalRebounds * enteredMinutes).toFixed(2);
-            threesCell.textContent = (originalThrees * enteredMinutes).toFixed(2);
+            statsToTrack.forEach(stat => {
+                const statCell = playerRow.querySelector(`td[data-column="${stat}"`);
+                const originalStat = parseFloat(statCell.getAttribute('data-original-value'));
+                const updatedStat = originalStat * enteredMinutes;
+                statCell.textContent = updatedStat.toFixed(2);
+            });
         }
 
         function updatePlayerData(pace, teamSection) {
