@@ -258,9 +258,7 @@
                     // originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
                     // Updated line (calculating based on new Minutes):
                     originalValue = (parseFloat(originalValue) * parseFloat(values[2]) * parseFloat(values[1])).toFixed(2);
-                }
-            }
-        }
+                    }
 
                     // Create a row for original player data
                     const playerTable = teamSection.querySelector('#player-table');
@@ -335,22 +333,22 @@
             });
                 }
         
-                              function updatePlayerStats(playerRow) {
+        function updatePlayerStats(playerRow) {
             // Get the displayed minutes value (the number above the input box)
             const minutes = parseFloat(playerRow.cells[1].textContent);
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
         
             // Get the original player projections from the data-original-value attributes
-            const originalPoints = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
-            const originalAssists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
-            const originalRebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
-            const originalThrees = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
+            const originalPointsPerMinute = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
+            const originalAssistsPerMinute = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
+            const originalReboundsPerMinute = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
+            const originalThreesPerMinute = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
         
-            // Calculate the new stats based on the displayed Minutes and pace
-            const points = (originalPoints * minutes * pace).toFixed(2);
-            const assists = (originalAssists * minutes * pace).toFixed(2);
-            const rebounds = (originalRebounds * minutes * pace).toFixed(2);
-            const threes = (originalThrees * minutes * pace).toFixed(2);
+            // Calculate Points, Assists, Rebounds, Threes based on per-minute stats and the new Minutes
+            const points = (originalPointsPerMinute * minutes).toFixed(2);
+            const assists = (originalAssistsPerMinute * minutes).toFixed(2);
+            const rebounds = (originalReboundsPerMinute * minutes).toFixed(2);
+            const threes = (originalThreesPerMinute * minutes).toFixed(2);
         
             // Update the Points, Assists, Rebounds, and Threes with the new calculated values
             playerRow.cells[2].textContent = points;
@@ -358,6 +356,7 @@
             playerRow.cells[4].textContent = rebounds;
             playerRow.cells[5].textContent = threes;
         }
+
 
         // Function to update player data based on the current pace
         function updatePlayerData(pace, teamSection) {
