@@ -327,7 +327,7 @@
 
         function updatePlayerStats(playerRow) {
             const minutesCell = playerRow.cells[1];
-            const enteredMinutes = parseFloat(minutesCell.textContent) || 0; // Get the new minutes from the cell
+            const enteredMinutes = parseFloat(minutesCell.textContent) || 0; // Get the displayed minutes from the cell
         
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
         
@@ -343,12 +343,13 @@
             const threesCell = playerRow.cells[5];
             const originalThrees = parseFloat(threesCell.getAttribute('data-original-value'));
         
-            // Update points, assists, rebounds, and threes based on the new minutes and pace
+            // Update points, assists, rebounds, and threes based on the displayed minutes and pace
             pointsCell.textContent = (originalPoints * enteredMinutes * pace).toFixed(2);
             assistsCell.textContent = (originalAssists * enteredMinutes * pace).toFixed(2);
             reboundsCell.textContent = (originalRebounds * enteredMinutes * pace).toFixed(2);
             threesCell.textContent = (originalThrees * enteredMinutes * pace).toFixed(2);
         }
+
 
         // Function to update player data based on the current pace
         function updatePlayerData(pace, teamSection) {
