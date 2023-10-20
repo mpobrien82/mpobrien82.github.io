@@ -340,21 +340,32 @@
                 statCell.textContent = updatedStat.toFixed(2);
             });
         }
-
-        function updatePlayerData(pace, teamSection) {
-            // Get all player data elements within the specified team section
-            const playerDataElements = teamSection.querySelectorAll('.player-data');
         
-            // Iterate through each player data element and update the displayed values based on the pace
-            playerDataElements.forEach((element) => {
-                const currentDisplayedValue = parseFloat(element.textContent);
-                const column = element.getAttribute('data-column');
+           // Modify the existing updatePlayerStats function to handle the equations for updating Points, Assists, Rebounds, and Threes based on Minutes
+        function updatePlayerStats(playerRow) {
+            const minutesCell = playerRow.cells[1];
+            const enteredMinutes = parseFloat(minutesCell.textContent) || 0;
         
-                // Calculate and update the displayed value based on the pace
-                if (column === 'Minutes' || column === 'Points' || column === 'Assists' || column === 'Rebounds' || column === 'Threes') {
-                    const newValue = (currentDisplayedValue * pace).toFixed(2);
-                    element.textContent = newValue;
+            // Stats to update: Points, Assists, Rebounds, Threes
+            const statsToTrack = ['Points', 'Assists', 'Rebounds', 'Threes'];
+        
+            statsToTrack.forEach(stat => {
+                const statCell = playerRow.querySelector(`td[data-column="${stat}"`);
+                const originalStat = parseFloat(statCell.getAttribute('data-original-value'));
+        
+                // Modify the calculation based on the specific equations for each stat
+                let updatedStat;
+                if (stat === 'Points') {
+                    updatedStat = originalStat * enteredMinutes;
+                } else if (stat === 'Assists') {
+                    updatedStat = originalStat * enteredMinutes;
+                } else if (stat === 'Rebounds') {
+                    updatedStat = originalStat * enteredMinutes;
+                } else if (stat === 'Threes') {
+                    updatedStat = originalStat * enteredMinutes;
                 }
+        
+                statCell.textContent = updatedStat.toFixed(2);
             });
         }
 
