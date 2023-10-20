@@ -208,6 +208,7 @@
             wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
 
+
             // Add input event listener to handle pace changes
             handlePaceInputChange(paceClicker, teamSection);
 
@@ -374,13 +375,23 @@ function processDataFromCSV(csvData) {
         }
 
         // Function to handle button clicks
-        function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
-            if (!clickedButton.classList.contains('active')) {
-                clickedButton.classList.add('active');
-                otherButton.classList.remove('active');
-                updatePlayerData(parseFloat(paceClicker.value), teamSection);
+       // Function to handle button clicks
+        function handleButtonClick(clickedButton, teamSection) {
+            // Deselect all buttons in the same team header
+            const teamButtons = teamSection.querySelector('.team-buttons').querySelectorAll('.team-button');
+            teamButtons.forEach((button) => button.classList.remove('active'));
+        
+            // Select the clicked button
+            clickedButton.classList.add('active');
+            // Add your custom logic for "RW" and "WW" buttons here
+            // This code will run when either "RW" or "WW" is clicked
+            if (clickedButton.textContent === 'RW') {
+                // Handle "RW" button click
+            } else if (clickedButton.textContent === 'WW') {
+                // Handle "WW" button click
             }
         }
+
 
         // Function to handle quarter button clicks
         function handleQuarterClick(clickedButton, quarterBoxes) {
