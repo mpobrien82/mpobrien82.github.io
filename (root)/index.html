@@ -326,7 +326,7 @@
         }
 
         function updatePlayerStats(playerRow) {
-            const minutesCell = playerRow.cells[2];
+            const minutesCell = playerRow.cells[1];
             const enteredMinutes = parseFloat(minutesCell.textContent) || 0; // Get the new minutes from the cell
         
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
