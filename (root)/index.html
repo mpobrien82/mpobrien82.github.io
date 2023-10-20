@@ -296,7 +296,7 @@
                             // Add an event listener to handle real-time update for Minutes
                             inputBox.addEventListener('input', () => {
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
-                                const realTimeMinutes = enteredMinutes; // We want the new minutes value
+                                const realTimeMinutes = projectedMinutes - enteredMinutes;
                                 originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
                                 updatePlayerStats(originalRow); // Update player stats
                             });
@@ -304,7 +304,7 @@
                             // Create an input box for other stats
                             const inputBox = document.createElement('input');
                             inputBox.type = 'number';
-                            inputBox.classList add ('input-box'); // added space between class and add
+                            inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
 
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
@@ -326,23 +326,30 @@
             });
         }
 
-                // Function to update player stats based on the current Minutes and Pace
         function updatePlayerStats(playerRow) {
-            const minutes = parseFloat(playerRow.cells[1].textContent);
-            const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
-        
-            // Get the player's original Points, Assists, Rebounds, Threes from data-original-value attributes
-            const originalPoints = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
-            const originalAssists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
-            const originalRebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
-            const originalThrees = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
-        
-            // Update the Points, Assists, Rebounds, Threes based on the current Minutes and original data
-            playerRow.cells[2].textContent = (originalPoints * minutes * pace).toFixed(2); // Points
-            playerRow.cells[3].textContent = (originalAssists * minutes * pace).toFixed(2); // Assists
-            playerRow.cells[4].textContent = (originalRebounds * minutes * pace).toFixed(2); // Rebounds
-            playerRow.cells[5].textContent = (originalThrees * minutes * pace).toFixed(2); // Threes
-        }
+    const minutesCell = playerRow.cells[1];
+    const originalMinutes = parseFloat(minutesCell.getAttribute('data-original-value'));
+    const enteredMinutes = parseFloat(minutesCell.textContent) || 0;
+    
+    const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
+    
+    const pointsCell = playerRow.cells[2];
+    const originalPoints = parseFloat(pointsCell.getAttribute('data-original-value'));
+    
+    const assistsCell = playerRow.cells[3];
+    const originalAssists = parseFloat(assistsCell.getAttribute('data-original-value'));
+    
+    const reboundsCell = playerRow.cells[4];
+    const originalRebounds = parseFloat(reboundsCell.getAttribute('data-original-value'));
+    
+    const threesCell = playerRow.cells[5];
+    const originalThrees = parseFloat(threesCell.getAttribute('data-original-value'));
+    
+    pointsCell.textContent = (originalPoints * enteredMinutes * pace / originalMinutes).toFixed(2);
+    assistsCell.textContent = (originalAssists * enteredMinutes * pace / originalMinutes).toFixed(2);
+    reboundsCell.textContent = (originalRebounds * enteredMinutes * pace / originalMinutes).toFixed(2);
+    threesCell.textContent = (originalThrees * enteredMinutes * pace / originalMinutes).toFixed(2);
+}
 
         // Function to update player data based on the current pace
         function updatePlayerData(pace, teamSection) {
