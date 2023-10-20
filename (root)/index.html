@@ -318,32 +318,39 @@
             });
         }
 
-         function updatePlayerStats(playerRow) {
-            // Get the minutes cell which contains the displayed minutes
+        function updatePlayerStats(playerRow) {
             const minutesCell = playerRow.cells[1];
-            const displayedMinutes = parseFloat(minutesCell.textContent) || 0;
+            const originalMinutes = parseFloat(minutesCell.getAttribute('data-original-value'));
+            const enteredMinutes = parseFloat(minutesCell.textContent) || 0; // Get the displayed minutes
         
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
         
+            // Calculate the real-time minutes
+            const realTimeMinutes = originalMinutes - enteredMinutes;
+        
+            // Update Points, Assists, Rebounds, and Threes based on the real-time minutes
+            updatePointsAssistsReboundsThrees(playerRow, realTimeMinutes, pace);
+        }
+        
+        function updatePointsAssistsReboundsThrees(playerRow, realTimeMinutes, pace) {
+            // Retrieve the relevant cells
             const pointsCell = playerRow.cells[2];
-            const originalPoints = parseFloat(pointsCell.getAttribute('data-original-value'));
-        
             const assistsCell = playerRow.cells[3];
-            const originalAssists = parseFloat(assistsCell.getAttribute('data-original-value'));
-        
             const reboundsCell = playerRow.cells[4];
-            const originalRebounds = parseFloat(reboundsCell.getAttribute('data-original-value'));
-        
             const threesCell = playerRow.cells[5];
+        
+            // Retrieve the original values
+            const originalPoints = parseFloat(pointsCell.getAttribute('data-original-value'));
+            const originalAssists = parseFloat(assistsCell.getAttribute('data-original-value'));
+            const originalRebounds = parseFloat(reboundsCell.getAttribute('data-original-value'));
             const originalThrees = parseFloat(threesCell.getAttribute('data-original-value'));
         
-            // Update points, assists, rebounds, and threes based on the displayed minutes and pace
-            pointsCell.textContent = (originalPoints * displayedMinutes * pace).toFixed(2);
-            assistsCell.textContent = (originalAssists * displayedMinutes * pace).toFixed(2);
-            reboundsCell.textContent = (originalRebounds * displayedMinutes * pace).toFixed(2);
-            threesCell.textContent = (originalThrees * displayedMinutes * pace).toFixed(2);
+            // Update Points, Assists, Rebounds, and Threes based on the real-time minutes
+            pointsCell.textContent = (originalPoints * realTimeMinutes * pace).toFixed(2);
+            assistsCell.textContent = (originalAssists * realTimeMinutes * pace).toFixed(2);
+            reboundsCell.textContent = (originalRebounds * realTimeMinutes * pace).toFixed(2);
+            threesCell.textContent = (originalThrees * realTimeMinutes * pace).toFixed(2);
         }
-
 
         // Function to update player data based on the current pace
         function updatePlayerData(pace, teamSection) {
