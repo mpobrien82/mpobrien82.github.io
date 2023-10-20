@@ -334,8 +334,8 @@
             const updatedThrees = originalThrees + enteredValue;
             playerRow.cells[5].textContent = updatedThrees.toFixed(2);
         }
-
-            // Create a row for input boxes (including Minutes, Points, Assists, Rebounds, Threes)
+        
+              // Create a row for input boxes (including Minutes, Points, Assists, Rebounds, Threes)
         const inputRow = playerTable.insertRow();
         for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
             const cell = inputRow.insertCell();
@@ -361,7 +361,7 @@
                 // Create an input box for other stats
                 const inputBox = document.createElement('input');
                 inputBox.type = 'number';
-                inputBox.classList.add('input-box');
+                inputBox.classList add('input-box');
                 cell.appendChild(inputBox);
         
                 // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
