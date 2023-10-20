@@ -262,14 +262,13 @@
                         // Set the data-original-value and data-column attributes for player data elements
                         let originalValue = values[j];
                         let column = '';
-
+                        
                         if (j >= 3 && j <= 6) {
                             column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
-                            originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
                         }
-
+                        
                         cell.textContent = originalValue;
-
+                        
                         if (column) {
                             cell.classList.add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
