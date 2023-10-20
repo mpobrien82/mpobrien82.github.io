@@ -253,6 +253,15 @@
                         currentTeamName = teamName;
                     }
 
+                    // Inside the processDataFromCSV function
+                    // Original line (calculating per-minute values):
+                    // originalValue = (parseFloat(originalValue) * parseFloat(values[2])).toFixed(2);
+                    // Updated line (calculating based on new Minutes):
+                    originalValue = (parseFloat(originalValue) * parseFloat(values[2]) * parseFloat(values[1])).toFixed(2);
+                }
+            }
+        }
+
                     // Create a row for original player data
                     const playerTable = teamSection.querySelector('#player-table');
                     const originalRow = playerTable.insertRow();
