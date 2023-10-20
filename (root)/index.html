@@ -326,8 +326,7 @@
             });
                 }
         
-                           // Function to update player stats based on the current Minutes
-                 function updatePlayerStats(playerRow) {
+                              function updatePlayerStats(playerRow) {
             // Get the displayed minutes value (the number above the input box)
             const minutes = parseFloat(playerRow.cells[1].textContent);
             const pace = parseFloat(playerRow.parentElement.parentElement.querySelector('.input-box').value);
@@ -338,11 +337,17 @@
             const originalRebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
             const originalThrees = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
         
-            // Update the Points, Assists, Rebounds, Threes based on the original projections and the displayed Minutes
-            playerRow.cells[2].textContent = (originalPoints * minutes * pace).toFixed(2);
-            playerRow.cells[3].textContent = (originalAssists * minutes * pace).toFixed(2);
-            playerRow.cells[4].textContent = (originalRebounds * minutes * pace).toFixed(2);
-            playerRow.cells[5].textContent = (originalThrees * minutes * pace).toFixed(2);
+            // Calculate the new stats based on the displayed Minutes and pace
+            const points = (originalPoints * minutes * pace).toFixed(2);
+            const assists = (originalAssists * minutes * pace).toFixed(2);
+            const rebounds = (originalRebounds * minutes * pace).toFixed(2);
+            const threes = (originalThrees * minutes * pace).toFixed(2);
+        
+            // Update the Points, Assists, Rebounds, and Threes with the new calculated values
+            playerRow.cells[2].textContent = points;
+            playerRow.cells[3].textContent = assists;
+            playerRow.cells[4].textContent = rebounds;
+            playerRow.cells[5].textContent = threes;
         }
 
         // Function to update player data based on the current pace
