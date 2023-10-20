@@ -305,6 +305,8 @@
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
+                        }
+                    }
 
                             // Add a single event listener to handle the change for the "minutes-input" boxes
                         document.querySelectorAll('.minutes-input').forEach(inputBox => {
@@ -313,10 +315,6 @@
                                 updatePlayerStats(row);
                             });
                         }
-                    }
-                }
-            }
-        }
 
         // Function to handle pace input changes
         function handlePaceInputChange(paceClicker, teamSection) {
