@@ -235,87 +235,83 @@
         }
 
         // Function to process data from the uploaded CSV
-        function processDataFromCSV(csvData) {
-            // Parse and process the CSV data, then create team sections
-            const lines = csvData.split('\n');
-            let currentTeamName = null;
-            let teamSection = null;
+function processDataFromCSV(csvData) {
+    // Parse and process the CSV data, then create team sections
+    const lines = csvData.split('\n');
+    let currentTeamName = null;
+    let teamSection = null;
 
-            for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].trim().split(',');
+    for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].trim().split(',');
 
-                if (values.length >= 7) { // Ensure there are enough columns (removed RW/WW column)
-                    const teamName = values[0];
+        if (values.length >= 7) { // Ensure there are enough columns (removed RW/WW column)
+            const teamName = values[0];
 
-                    if (teamName !== currentTeamName) {
-                        // Create a new team section
-                        teamSection = createTeamSection(teamName);
-                        currentTeamName = teamName;
-                    }
+            if (teamName !== currentTeamName) {
+                // Create a new team section
+                teamSection = createTeamSection(teamName);
+                currentTeamName = teamName;
+            }
 
-                    // Create a row for original player data
-                    const playerTable = teamSection.querySelector('#player-table');
-                    const originalRow = playerTable.insertRow();
-                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
-                        const cell = originalRow.insertCell();
+            // Create a row for original player data
+            const playerTable = teamSection.querySelector('#player-table');
+            const originalRow = playerTable.insertRow();
 
-                        // Set the data-original-value and data-column attributes for player data elements
-                        let originalValue = values[j];
-                        let column = '';
-                        
-                        if (j >= 3 && j <= 6) {
-                            column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
-                        }
-                        
-                        cell.textContent = originalValue;
-                        
-                        if (column) {
-                            cell.classList.add('player-data');
-                            cell.setAttribute('data-original-value', originalValue);
-                            cell.setAttribute('data-column', column);
-                        }
-                    }
+            for (let j = 1; j < values.length; j++) {
+                const cell = originalRow.insertCell();
 
-                    // Create a row for input boxes (including Minutes)
-                    const inputRow = playerTable.insertRow();
-                    for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
-                        const cell = inputRow.insertCell();
+                // Set the data-original-value and data-column attributes for player data elements
+                let originalValue = values[j];
+                let column = '';
 
-                        // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
-                        if (j === 2) { // Check if it's the Minutes column
-                            // Create an input box for Minutes
-                            const inputBox = document.createElement('input');
-                            inputBox.type = 'number';
-                            inputBox.classList.add('input-box');
-                            cell.appendChild(inputBox);
+                if (j >= 3 && j <= 6) {
+                    column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 2];
+                }
 
-                            // Get the projected Minutes value as a number
-                            const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
+                cell.textContent = originalValue;
 
-                            // Add an event listener to handle real-time update for Minutes
-                            inputBox.addEventListener('input', () => {
-                                const enteredMinutes = parseFloat(inputBox.value) || 0;
-                                const realTimeMinutes = projectedMinutes - enteredMinutes;
-                                originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-                                updatePlayerStats(originalRow); // Update player stats
-                            });
-                        } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
-                            // Create an input box for other stats
-                            const inputBox = document.createElement('input');
-                            inputBox.type = 'number';
-                            inputBox.classList.add('input-box');
-                            cell.appendChild(inputBox);
-                        }
-                    }
+                if (column) {
+                    cell.classList.add('player-data');
+                    cell.setAttribute('data-original-value', originalValue);
+                    cell.setAttribute('data-column', column);
+                }
+            }
 
-                            // Add a single event listener to handle the change for the "minutes-input" boxes
-                        document.querySelectorAll('.minutes-input').forEach(inputBox => {
-                            inputBox.addEventListener('input', () => {
-                                const row = inputBox.parentElement.parentElement;
-                                updatePlayerStats(row);
-                            });
-                        }
+            // Create a row for input boxes (including Minutes)
+            const inputRow = playerTable.insertRow();
 
+            for (let j = 1; j < values.length; j++) {
+                const cell = inputRow.insertCell();
+
+                // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
+                if (j === 2) { // Check if it's the Minutes column
+                    // Create an input box for Minutes
+                    const inputBox = document.createElement('input');
+                    inputBox.type = 'number';
+                    inputBox.classList.add('input-box', 'minutes-input');
+                    cell.appendChild(inputBox);
+
+                    // Get the projected Minutes value as a number
+                    const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
+
+                    // Add an event listener to handle real-time update for Minutes
+                    inputBox.addEventListener('input', () => {
+                        const enteredMinutes = parseFloat(inputBox.value) || 0;
+                        const realTimeMinutes = projectedMinutes - enteredMinutes;
+                        originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
+                        updatePlayerStats(originalRow); // Update player stats
+                    });
+                } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
+                    // Create an input box for other stats
+                    const inputBox = document.createElement('input');
+                    inputBox.type = 'number';
+                    inputBox.classList.add('input-box');
+                    cell.appendChild(inputBox);
+                }
+            }
+        }
+    }
+}
         // Function to handle pace input changes
         function handlePaceInputChange(paceClicker, teamSection) {
             paceClicker.addEventListener('input', () => {
