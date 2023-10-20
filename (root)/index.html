@@ -345,10 +345,10 @@
             const threesCell = playerRow.cells[5];
             const originalThrees = parseFloat(threesCell.getAttribute('data-original-value'));
             
-            pointsCell.textContent = (originalPoints * enteredMinutes * pace / originalMinutes).toFixed(2);
-            assistsCell.textContent = (originalAssists * enteredMinutes * pace / originalMinutes).toFixed(2);
-            reboundsCell.textContent = (originalRebounds * enteredMinutes * pace / originalMinutes).toFixed(2);
-            threesCell.textContent = (originalThrees * enteredMinutes * pace / originalMinutes).toFixed(2);
+            pointsCell.textContent = (originalPoints * enteredMinutes * pace).toFixed(2);
+            assistsCell.textContent = (originalAssists * enteredMinutes * pace).toFixed(2);
+            reboundsCell.textContent = (originalRebounds * enteredMinutes * pace).toFixed(2);
+            threesCell.textContent = (originalThrees * enteredMinutes * pace).toFixed(2);
         }
 
         // Function to update player data based on the current pace
