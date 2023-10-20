@@ -252,7 +252,7 @@
                         teamSection = createTeamSection(teamName);
                         currentTeamName = teamName;
                     }
-        // Create a row for input boxes (including Minutes, Points, Assists, Rebounds, Threes)
+          // Create a row for input boxes (including Minutes, Points, Assists, Rebounds, Threes)
         const inputRow = playerTable.insertRow();
         for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
             const cell = inputRow.insertCell();
@@ -281,12 +281,58 @@
                 inputBox.classList.add('input-box');
                 cell.appendChild(inputBox);
         
-                // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
-                inputBox.addEventListener('input', () => {
-                    // Update player stats when other input boxes change
-                    updatePlayerStats(originalRow);
-                });
+                // Add separate event listeners to handle real-time updates for Points, Assists, Rebounds, and Threes
+                if (j === 3) { // Points
+                    inputBox.addEventListener('input', () => {
+                        // Update player stats for Points when the input box changes
+                        updatePoints(originalRow, inputBox);
+                    });
+                } else if (j === 4) { // Assists
+                    inputBox.addEventListener('input', () => {
+                        // Update player stats for Assists when the input box changes
+                        updateAssists(originalRow, inputBox);
+                    });
+                } else if (j === 5) { // Rebounds
+                    inputBox.addEventListener('input', () => {
+                        // Update player stats for Rebounds when the input box changes
+                        updateRebounds(originalRow, inputBox);
+                    });
+                } else if (j === 6) { // Threes
+                    inputBox.addEventListener('input', () => {
+                        // Update player stats for Threes when the input box changes
+                        updateThrees(originalRow, inputBox);
+                    });
+                }
             }
+        }
+        
+        // Separate functions to handle real-time updates for each stat type (Points, Assists, Rebounds, Threes)
+        function updatePoints(playerRow, inputBox) {
+            const originalPoints = parseFloat(playerRow.cells[2].getAttribute('data-original-value'));
+            const enteredValue = parseFloat(inputBox.value) || 0;
+            const updatedPoints = originalPoints + enteredValue;
+            playerRow.cells[2].textContent = updatedPoints.toFixed(2);
+        }
+        
+        function updateAssists(playerRow, inputBox) {
+            const originalAssists = parseFloat(playerRow.cells[3].getAttribute('data-original-value'));
+            const enteredValue = parseFloat(inputBox.value) || 0;
+            const updatedAssists = originalAssists + enteredValue;
+            playerRow.cells[3].textContent = updatedAssists.toFixed(2);
+        }
+        
+        function updateRebounds(playerRow, inputBox) {
+            const originalRebounds = parseFloat(playerRow.cells[4].getAttribute('data-original-value'));
+            const enteredValue = parseFloat(inputBox.value) || 0;
+            const updatedRebounds = originalRebounds + enteredValue;
+            playerRow.cells[4].textContent = updatedRebounds.toFixed(2);
+        }
+        
+        function updateThrees(playerRow, inputBox) {
+            const originalThrees = parseFloat(playerRow.cells[5].getAttribute('data-original-value'));
+            const enteredValue = parseFloat(inputBox.value) || 0;
+            const updatedThrees = originalThrees + enteredValue;
+            playerRow.cells[5].textContent = updatedThrees.toFixed(2);
         }
 
             // Create a row for input boxes (including Minutes, Points, Assists, Rebounds, Threes)
