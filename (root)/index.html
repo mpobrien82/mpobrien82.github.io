@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>NBA Live Model</title>
@@ -100,37 +101,16 @@
             <!-- Teams and player tables will be added here dynamically -->
         </div>
     </div>
+
     <script>
         // Set the default pace to start at 1
         const defaultPace = 1;
-
-        // Add a variable to track the current game time in minutes
-        let currentTime = 0;
 
         // Function to handle file input change
         document.querySelector('#file-input').addEventListener('change', handleFileUpload);
 
         // Function to create a team section
         function createTeamSection(teamName) {
-
-                    // Function to handle time input changes
-        function handleTimeInputChange(timeInput) {
-            timeInput.addEventListener('input', () => {
-                // Update the current game time when the time input changes
-                currentTime = parseFloat(timeInput.value) || 0;
-                updatePlayerStats(teamSection);
-            });
-        }
-                    // Create a time input box
-        const timeInput = document.createElement('input');
-        timeInput.type = 'text';
-        timeInput.classList.add('time-input');
-        timeInput.placeholder = 'Time';
-        teamHeader.appendChild(timeInput);
-        
-        // Add an event listener to handle time input changes
-        handleTimeInputChange(timeInput);
-
             // Create a new team section
             const teamSection = document.createElement('div');
             teamSection.classList.add('team-section');
