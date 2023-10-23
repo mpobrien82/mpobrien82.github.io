@@ -325,64 +325,64 @@ function processDataFromCSV(csvData) {
                 updatePlayerData(pace, teamSection);
             });
         }
-                      function updatePlayerStats(playerRow, teamSection) {
-    const minutesCell = playerRow.cells[1];
-    const enteredMinutes = parseFloat(minutesCell.textContent) || 0;
+         function updatePlayerStats(playerRow, teamSection) {
+             const minutesCell = playerRow.cells[1];
+             const enteredMinutes = parseFloat(minutesCell.textContent) || 0;
 
-    const pointsCell = playerRow.cells[2];
-    const originalPoints = parseFloat(pointsCell.getAttribute('data-original-value'));
-    const pointsInput = playerRow.nextElementSibling.cells[2].querySelector('.input-box');
-    const enteredPoints = parseFloat(pointsInput.value) || 0;
-
-    const selectedQuarter = teamSection.querySelector('.quarter-box.active').textContent;
-    const rwButton = teamSection.querySelector('.team-button.active');
-    const isRW = rwButton && rwButton.textContent === 'RW';
+            const pointsCell = playerRow.cells[2];
+            const originalPoints = parseFloat(pointsCell.getAttribute('data-original-value'));
+            const pointsInput = playerRow.nextElementSibling.cells[2].querySelector('.input-box');
+            const enteredPoints = parseFloat(pointsInput.value) || 0;
+        
+            const selectedQuarter = teamSection.querySelector('.quarter-box.active').textContent;
+            const rwButton = teamSection.querySelector('.team-button.active');
+            const isRW = rwButton && rwButton.textContent === 'RW';
 
     // Define multipliers for different quarters
-    const multipliers = {
-        '1Q': {
-            RW: -0.025,
-            WW: 0.025,
-        },
-        '2Q': {
-            RW: -0.05,
-            WW: 0.05,
-        },
-        '3Q': {
-            RW: -0.1,
-            WW: 0.1,
-        },
-        '4Q': {
-            RW: -0.1,
-            WW: 0.1,
-        },
-    };
+            const multipliers = {
+                '1Q': {
+                    RW: -0.025,
+                    WW: 0.025,
+                },
+                '2Q': {
+                    RW: -0.05,
+                    WW: 0.05,
+                },
+                '3Q': {
+                    RW: -0.1,
+                    WW: 0.1,
+                },
+                '4Q': {
+                    RW: -0.1,
+                    WW: 0.1,
+                },
+            };
 
     // Determine the multiplier based on the selected quarter and RW/WW
-    const multiplier = parseFloat(multipliers[selectedQuarter][isRW ? 'RW' : 'WW']);
+            const multiplier = parseFloat(multipliers[selectedQuarter][isRW ? 'RW' : 'WW']);
 
     // Update points based on the new minutes and multiplier
     pointsCell.textContent = ((originalPoints * (1 + multiplier) * enteredMinutes) + enteredPoints).toFixed(2);
 
     // Similar updates for other stats (Assists, Rebounds, Threes)
-    const assistsCell = playerRow.cells[3];
-    const originalAssists = parseFloat(assistsCell.getAttribute('data-original-value'));
-    const assistsInput = playerRow.nextElementSibling.cells[3].querySelector('.input-box');
-    const enteredAssists = parseFloat(assistsInput.value) || 0;
-    assistsCell.textContent = ((originalAssists * (1 + multiplier) * enteredMinutes) + enteredAssists).toFixed(2);
+            const assistsCell = playerRow.cells[3];
+            const originalAssists = parseFloat(assistsCell.getAttribute('data-original-value'));
+            const assistsInput = playerRow.nextElementSibling.cells[3].querySelector('.input-box');
+            const enteredAssists = parseFloat(assistsInput.value) || 0;
+            assistsCell.textContent = ((originalAssists * (1 + multiplier) * enteredMinutes) + enteredAssists).toFixed(2);
 
-    const reboundsCell = playerRow.cells[4];
-    const originalRebounds = parseFloat(reboundsCell.getAttribute('data-original-value'));
-    const reboundsInput = playerRow.nextElementSibling.cells[4].querySelector('.input-box');
-    const enteredRebounds = parseFloat(reboundsInput.value) || 0;
-    reboundsCell.textContent = ((originalRebounds * (1 + multiplier) * enteredMinutes) + enteredRebounds).toFixed(2);
-
-    const threesCell = playerRow.cells[5];
-    const originalThrees = parseFloat(threesCell.getAttribute('data-original-value'));
-    const threesInput = playerRow.nextElementSibling.cells[5].querySelector('.input-box');
-    const enteredThrees = parseFloat(threesInput.value) || 0;
-    threesCell.textContent = ((originalThrees * (1 + multiplier) * enteredMinutes) + enteredThrees).toFixed(2);
-}
+            const reboundsCell = playerRow.cells[4];
+            const originalRebounds = parseFloat(reboundsCell.getAttribute('data-original-value'));
+            const reboundsInput = playerRow.nextElementSibling.cells[4].querySelector('.input-box');
+            const enteredRebounds = parseFloat(reboundsInput.value) || 0;
+            reboundsCell.textContent = ((originalRebounds * (1 + multiplier) * enteredMinutes) + enteredRebounds).toFixed(2);
+        
+            const threesCell = playerRow.cells[5];
+            const originalThrees = parseFloat(threesCell.getAttribute('data-original-value'));
+            const threesInput = playerRow.nextElementSibling.cells[5].querySelector('.input-box');
+            const enteredThrees = parseFloat(threesInput.value) || 0;
+            threesCell.textContent = ((originalThrees * (1 + multiplier) * enteredMinutes) + enteredThrees).toFixed(2);
+        }
 
         // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
