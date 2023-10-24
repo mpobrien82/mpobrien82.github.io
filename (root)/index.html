@@ -429,8 +429,8 @@ function processDataFromCSV(csvData) {
             }
         }
 
-               // Function to handle quarter button clicks
-        function handleQuarterClick(clickedButton, quarterBoxes, isRW, isWW) {
+                  // Function to handle quarter button clicks
+        function handleQuarterClick(clickedButton, quarterBoxes) {
             // Deselect all quarter buttons in the same team header
             quarterBoxes.querySelectorAll('.quarter-box').forEach((button) => button.classList.remove('active'));
         
@@ -443,8 +443,9 @@ function processDataFromCSV(csvData) {
             const is3Q = clickedButton.textContent === "3Q";
             const is4Q = clickedButton.textContent === "4Q";
         
-            updatePlayerStats(playerRow, isRW, is1Q, is2Q, is3Q, is4Q);
+            updatePlayerStats(playerRow, is1Q, is2Q, is3Q, is4Q);
         }
+
     </script>
 </body>
 </html>
