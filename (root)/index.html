@@ -420,22 +420,16 @@ function processDataFromCSV(csvData) {
             });
         }
 
-                // Function to handle button clicks
-                function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
-                    if (!clickedButton.classList.contains('active')) {
-                        clickedButton.classList.add('active');
-                        otherButton.classList.remove('active');
-                        updatePlayerData(parseFloat(paceClicker.value), teamSection);
-                    }
-                }
-        
-                       // Simplified handleButtonClick function
-        function handleButtonClick(isRW, paceClicker, teamSection) {
-            updatePlayerStats(teamSection, isRW);
-            updatePlayerData(parseFloat(paceClicker.value), teamSection);
+        // Function to handle button clicks
+        function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
+            if (!clickedButton.classList.contains('active')) {
+                clickedButton.classList.add('active');
+                otherButton.classList.remove('active');
+                updatePlayerData(parseFloat(paceClicker.value), teamSection);
+            }
         }
-        
-        // Modify the handleQuarterClick function to pass isRW to updatePlayerStats
+
+                  // Function to handle quarter button clicks
         function handleQuarterClick(clickedButton, quarterBoxes) {
             // Deselect all quarter buttons in the same team header
             quarterBoxes.querySelectorAll('.quarter-box').forEach((button) => button.classList.remove('active'));
@@ -444,16 +438,10 @@ function processDataFromCSV(csvData) {
             clickedButton.classList.add('active');
         
             const playerRow = clickedButton.closest('.team-section').querySelector('#player-table tr:nth-child(1)');
-            const isRW = (clickedButton.closest('.team-section').querySelector('.team-button.active').textContent === 'RW');
             const is1Q = clickedButton.textContent === "1Q";
             const is2Q = clickedButton.textContent === "2Q";
             const is3Q = clickedButton.textContent === "3Q";
             const is4Q = clickedButton.textContent === "4Q";
         
-            updatePlayerStats(playerRow, isRW, is1Q, is2Q, is3Q, is4Q);
+            updatePlayerStats(playerRow, is1Q, is2Q, is3Q, is4Q);
         }
-
-    </script>
-</body>
-</html>
-
