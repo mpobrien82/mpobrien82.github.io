@@ -204,6 +204,9 @@
             rwButton.textContent = 'RW';
             teamButtons.appendChild(rwButton);
 
+             // Add click event listeners to the buttons
+            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
+            rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
 
             // Add input event listener to handle pace changes
             handlePaceInputChange(paceClicker, teamSection);
