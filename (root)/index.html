@@ -420,15 +420,14 @@ function processDataFromCSV(csvData) {
             });
         }
 
-        // Function to handle button clicks
-        function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
+               function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
+                console.log("Button Clicked:", clickedButton.textContent); // Add this line for debugging
                 updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
         }
-
                   // Function to handle quarter button clicks
         function handleQuarterClick(clickedButton, quarterBoxes) {
             // Deselect all quarter buttons in the same team header
