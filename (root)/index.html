@@ -361,13 +361,13 @@ function processDataFromCSV(csvData) {
             if (isRW) {
                 // Adjust based on RW button
                 if (is1Q) {
-                    adjustmentFactor = 0.025;
+                    adjustmentFactor = -0.025;
                 } else if (is2Q) {
-                    adjustmentFactor = 0.05;
+                    adjustmentFactor = -0.05;
                 } else if (is3Q) {
-                    adjustmentFactor = 0.10;
+                    adjustmentFactor = -0.10;
                 } else if (is4Q) {
-                    adjustmentFactor = 0.10;
+                    adjustmentFactor = -0.10;
                 }
             } else if (!isRW) {
                 // Adjust based on WW button
@@ -383,10 +383,10 @@ function processDataFromCSV(csvData) {
             }
         
             // Update points, assists, rebounds, and threes based on the new minutes and adjustment factor
-            pointsCell.textContent = ((originalPoints + enteredPoints) * (1 + adjustmentFactor) * enteredMinutes).toFixed(2);
-            assistsCell.textContent = ((originalAssists + enteredAssists) * (1 + adjustmentFactor) * enteredMinutes).toFixed(2);
-            reboundsCell.textContent = ((originalRebounds + enteredRebounds) * (1 + adjustmentFactor) * enteredMinutes).toFixed(2);
-            threesCell.textContent = ((originalThrees + enteredThrees) * (1 + adjustmentFactor) * enteredMinutes).toFixed(2);
+            pointsCell.textContent = ((originalPoints * (1+ adjustmentFactor)) * enteredMinutes) + enteredPoints.toFixed(2);
+            assistsCell.textContent = ((originalAssists * (1+ adjustmentFactor)) * enteredMinutes) + enteredAssists.toFixed(2);
+            reboundsCell.textContent = ((originalRebounds * enteredMinutes) + enteredRebounds.toFixed(2);
+            threesCell.textContent = ((originalThrees * (1+ adjustmentFactor)) * enteredMinutes) + enteredThrees.toFixed(2);
         }
 
         function updatePlayerData(pace, teamSection) {
