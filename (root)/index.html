@@ -215,6 +215,23 @@
             handleQuarterClick(quarterBoxes.querySelector('.quarter-box.active'), quarterBoxes, true, isRW = true);
         });
 
+            // Add event listeners to quarter buttons to handle quarter changes
+        const quarterButtons = document.querySelectorAll('.quarter-box');
+        quarterButtons.forEach((quarterButton) => {
+            quarterButton.addEventListener('click', () => {
+                const teamSection = quarterButton.closest('.team-section');
+                const isRW = teamSection.querySelector('.team-button.active').textContent === 'RW';
+                const is1Q = quarterButton.textContent === '1Q';
+                const is2Q = quarterButton.textContent === '2Q';
+                const is3Q = quarterButton.textContent === '3Q';
+                const is4Q = quarterButton.textContent === '4Q';
+                const playerRow = teamSection.querySelector('#player-table tr:nth-child(1)');
+                
+                updatePlayerStats(playerRow, isRW, is1Q, is2Q, is3Q, is4Q);
+            });
+        });
+            
+
             // Add input event listener to handle pace changes
             handlePaceInputChange(paceClicker, teamSection);
 
