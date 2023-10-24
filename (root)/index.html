@@ -332,62 +332,62 @@ function processDataFromCSV(csvData) {
                 updatePlayerData(pace, teamSection);
             });
         }
-       function updatePlayerStats(playerRow, isRW, is1Q, is2Q, is3Q, is4Q) {
-    const minutesCell = playerRow.cells[1];
-    const enteredMinutes = parseFloat(minutesCell.textContent) || 0; // Get the new minutes from the cell
-
-    const pointsCell = playerRow.cells[2];
-    const originalPoints = parseFloat(pointsCell.getAttribute('data-original-value'));
-    const pointsInput = playerRow.nextElementSibling.cells[2].querySelector('.input-box');
-    const enteredPoints = parseFloat(pointsInput.value) || 0;
-
-    const assistsCell = playerRow.cells[3];
-    const originalAssists = parseFloat(assistsCell.getAttribute('data-original-value'));
-    const assistsInput = playerRow.nextElementSibling.cells[3].querySelector('.input-box');
-    const enteredAssists = parseFloat(assistsInput.value) || 0;
-
-    const reboundsCell = playerRow.cells[4];
-    const originalRebounds = parseFloat(reboundsCell.getAttribute('data-original-value'));
-    const reboundsInput = playerRow.nextElementSibling.cells[4].querySelector('.input-box');
-    const enteredRebounds = parseFloat(reboundsInput.value) || 0;
-
-    const threesCell = playerRow.cells[5];
-    const originalThrees = parseFloat(threesCell.getAttribute('data-original-value'));
-    const threesInput = playerRow.nextElementSibling.cells[5].querySelector('.input-box');
-    const enteredThrees = parseFloat(threesInput.value) || 0;
-
-    let adjustmentFactor = 1.0; // Default adjustment factor
-
-    if (isRW) {
-        // Adjust based on RW button
-        if (is1Q) {
-            adjustmentFactor = 0.025;
-        } else if (is2Q) {
-            adjustmentFactor = 0.05;
-        } else if (is3Q) {
-            adjustmentFactor = 0.10;
-        } else if (is4Q) {
-            adjustmentFactor = 0.10;
+           function updatePlayerStats(playerRow, isRW, is1Q, is2Q, is3Q, is4Q) {
+            const minutesCell = playerRow.cells[1];
+            const enteredMinutes = parseFloat(minutesCell.textContent) || 0; // Get the new minutes from the cell
+        
+            const pointsCell = playerRow.cells[2];
+            const originalPoints = parseFloat(pointsCell.getAttribute('data-original-value'));
+            const pointsInput = playerRow.nextElementSibling.cells[2].querySelector('.input-box');
+            const enteredPoints = parseFloat(pointsInput.value) || 0;
+        
+            const assistsCell = playerRow.cells[3];
+            const originalAssists = parseFloat(assistsCell.getAttribute('data-original-value'));
+            const assistsInput = playerRow.nextElementSibling.cells[3].querySelector('.input-box');
+            const enteredAssists = parseFloat(assistsInput.value) || 0;
+        
+            const reboundsCell = playerRow.cells[4];
+            const originalRebounds = parseFloat(reboundsCell.getAttribute('data-original-value'));
+            const reboundsInput = playerRow.nextElementSibling.cells[4].querySelector('.input-box');
+            const enteredRebounds = parseFloat(reboundsInput.value) || 0;
+        
+            const threesCell = playerRow.cells[5];
+            const originalThrees = parseFloat(threesCell.getAttribute('data-original-value'));
+            const threesInput = playerRow.nextElementSibling.cells[5].querySelector('.input-box');
+            const enteredThrees = parseFloat(threesInput.value) || 0;
+        
+            let adjustmentFactor = 1.0; // Default adjustment factor
+        
+            if (isRW) {
+                // Adjust based on RW button
+                if (is1Q) {
+                    adjustmentFactor = 0.025;
+                } else if (is2Q) {
+                    adjustmentFactor = 0.05;
+                } else if (is3Q) {
+                    adjustmentFactor = 0.10;
+                } else if (is4Q) {
+                    adjustmentFactor = 0.10;
+                }
+            } else if (!isRW) {
+                // Adjust based on WW button
+                if (is1Q) {
+                    adjustmentFactor = 0.025;
+                } else if (is2Q) {
+                    adjustmentFactor = 0.05;
+                } else if (is3Q) {
+                    adjustmentFactor = 0.10;
+                } else if (is4Q) {
+                    adjustmentFactor = 0.10;
+                }
+            }
+        
+            // Update points, assists, rebounds, and threes based on the new minutes and adjustment factor
+            pointsCell.textContent = ((originalPoints + enteredPoints) * (1 + adjustmentFactor) * enteredMinutes).toFixed(2);
+            assistsCell.textContent = ((originalAssists + enteredAssists) * (1 + adjustmentFactor) * enteredMinutes).toFixed(2);
+            reboundsCell.textContent = ((originalRebounds + enteredRebounds) * (1 + adjustmentFactor) * enteredMinutes).toFixed(2);
+            threesCell.textContent = ((originalThrees + enteredThrees) * (1 + adjustmentFactor) * enteredMinutes).toFixed(2);
         }
-    } else if (!isRW) {
-        // Adjust based on WW button
-        if (is1Q) {
-            adjustmentFactor = 0.025;
-        } else if (is2Q) {
-            adjustmentFactor = 0.05;
-        } else if (is3Q) {
-            adjustmentFactor = 0.10;
-        } else if (is4Q) {
-            adjustmentFactor = 0.10;
-        }
-    }
-
-    // Update points, assists, rebounds, and threes based on the new minutes and adjustment factor
-    pointsCell.textContent = (((originalPoints * adjustmentFactor) * enteredMinutes) + enteredPoints).toFixed(2);
-    assistsCell.textContent = ((originalAssists * enteredMinutes) + enteredAssists).toFixed(2);
-    reboundsCell.textContent = ((originalRebounds * enteredMinutes) + enteredRebounds).toFixed(2);
-    threesCell.textContent = ((originalThrees * enteredMinutes) + enteredThrees).toFixed(2);
-}
 
         function updatePlayerData(pace, teamSection) {
             // Get all player data elements within the specified team section
