@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
 <head>
     <title>NBA Live Model</title>
@@ -204,30 +204,6 @@
             rwButton.textContent = 'RW';
             teamButtons.appendChild(rwButton);
 
-                            // Add click event listeners to the RW and WW buttons
-        wwButton.addEventListener('click', () => {
-            handleButtonClick(wwButton, rwButton, paceClicker, teamSection, false);
-        });
-        
-        rwButton.addEventListener('click', () => {
-            handleButtonClick(rwButton, wwButton, paceClicker, teamSection, true);
-        });
-        
-        // Add event listeners to quarter buttons to handle quarter changes
-        const quarterButtons = document.querySelectorAll('.quarter-box');
-        quarterButtons.forEach((quarterButton) => {
-            quarterButton.addEventListener('click', () => {
-                const teamSection = quarterButton.closest('.team-section');
-                const isRW = teamSection.querySelector('.team-button.active').textContent === 'RW';
-                const is1Q = quarterButton.textContent === '1Q';
-                const is2Q = quarterButton.textContent === '2Q';
-                const is3Q = quarterButton.textContent === '3Q';
-                const is4Q = quarterButton.textContent === '4Q';
-                const playerRow = teamSection.querySelector('#player-table tr:nth-child(1)');
-                
-                updatePlayerStats(playerRow, isRW, is1Q, is2Q, is3Q, is4Q);
-            });
-        });
 
             // Add input event listener to handle pace changes
             handlePaceInputChange(paceClicker, teamSection);
@@ -346,7 +322,7 @@ function processDataFromCSV(csvData) {
                 updatePlayerData(pace, teamSection);
             });
         }
-           function updatePlayerStats(playerRow, isRW, is1Q, is2Q, is3Q, is4Q) {
+        function updatePlayerStats(playerRow, isRW) {
             const minutesCell = playerRow.cells[1];
             const enteredMinutes = parseFloat(minutesCell.textContent) || 0; // Get the new minutes from the cell
         
@@ -369,39 +345,31 @@ function processDataFromCSV(csvData) {
             const originalThrees = parseFloat(threesCell.getAttribute('data-original-value'));
             const threesInput = playerRow.nextElementSibling.cells[5].querySelector('.input-box');
             const enteredThrees = parseFloat(threesInput.value) || 0;
+
+            // Calculate the modifier based on RW (worse) or WW (better)
+            const modifier = isRW ? 0.9 : 1.1;
         
-            let adjustmentFactor = 0; // Default adjustment factor
-        
-            if (isRW) {
-                // Adjust based on RW button
-                if (is1Q) {
-                    adjustmentFactor = -0.025;
-                } else if (is2Q) {
-                    adjustmentFactor = -0.05;
-                } else if (is3Q) {
-                    adjustmentFactor = -0.10;
-                } else if (is4Q) {
-                    adjustmentFactor = -0.10;
-                }
-            } else if (!isRW) {
-                // Adjust based on WW button
-                if (is1Q) {
-                    adjustmentFactor = 0.025;
-                } else if (is2Q) {
-                    adjustmentFactor = 0.05;
-                } else if (is3Q) {
-                    adjustmentFactor = 0.10;
-                } else if (is4Q) {
-                    adjustmentFactor = 0.10;
-                }
-            }
-        
-            // Update points, assists, rebounds, and threes based on the new minutes and adjustment factor
-            pointsCell.textContent = (((originalPoints * (1 + adjustmentFactor)) * enteredMinutes) + enteredPoints).toFixed(2);
-            assistsCell.textContent = (((originalAssists * (1 + adjustmentFactor)) * enteredMinutes) + enteredAssists).toFixed(2);
+            // Update points, assists, rebounds, and threes based on the new minutes
+            pointsCell.textContent = (((originalPoints * enteredMinutes * modifier)) + enteredPoints).toFixed(2);
+            assistsCell.textContent = (((originalAssists * enteredMinutes * modifier)) + enteredAssists).toFixed(2);
             reboundsCell.textContent = ((originalRebounds * enteredMinutes) + enteredRebounds).toFixed(2);
-            threesCell.textContent = (((originalThrees * (1 + adjustmentFactor)) * enteredMinutes) + enteredThrees).toFixed(2);
+            threesCell.textContent = (((originalThrees * enteredMinutes) * modifier) + enteredThrees).toFixed(2);
+
         }
+
+         // Event listeners for RW and WW buttons
+        document.querySelectorAll('.team-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const teamSection = button.parentElement.parentElement.parentElement;
+                const rwButton = teamSection.querySelector('.team-button:nth-child(2)');
+                const wwButton = teamSection.querySelector('.team-button:nth-child(3)');
+                const paceClicker = teamSection.querySelector('.input-box');
+                const isRW = button.textContent === 'RW';
+
+                handleButtonClick(button, isRW ? wwButton : rwButton, paceClicker, teamSection);
+                updatePlayerStats(teamSection, isRW);
+            });
+        });
 
         function updatePlayerData(pace, teamSection) {
             // Get all player data elements within the specified team section
@@ -420,31 +388,23 @@ function processDataFromCSV(csvData) {
             });
         }
 
-               function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
+        // Function to handle button clicks
+        function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
-                console.log("Button Clicked:", clickedButton.textContent); // Add this line for debugging
                 updatePlayerData(parseFloat(paceClicker.value), teamSection);
             }
         }
-                  // Function to handle quarter button clicks
+
+        // Function to handle quarter button clicks
         function handleQuarterClick(clickedButton, quarterBoxes) {
             // Deselect all quarter buttons in the same team header
             quarterBoxes.querySelectorAll('.quarter-box').forEach((button) => button.classList.remove('active'));
-        
+
             // Select the clicked button
             clickedButton.classList.add('active');
-        
-            const playerRow = clickedButton.closest('.team-section').querySelector('#player-table tr:nth-child(1)');
-            const is1Q = clickedButton.textContent === "1Q";
-            const is2Q = clickedButton.textContent === "2Q";
-            const is3Q = clickedButton.textContent === "3Q";
-            const is4Q = clickedButton.textContent === "4Q";
-        
-            updatePlayerStats(playerRow, is1Q, is2Q, is3Q, is4Q);
         }
-        
     </script>
 </body>
 </html>
