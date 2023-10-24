@@ -383,10 +383,10 @@ function processDataFromCSV(csvData) {
             }
         
             // Update points, assists, rebounds, and threes based on the new minutes and adjustment factor
-            pointsCell.textContent = ((originalPoints * (1+ adjustmentFactor)) * enteredMinutes) + enteredPoints.toFixed(2);
-            assistsCell.textContent = ((originalAssists * (1+ adjustmentFactor)) * enteredMinutes) + enteredAssists.toFixed(2);
-            reboundsCell.textContent = ((originalRebounds * enteredMinutes) + enteredRebounds.toFixed(2);
-            threesCell.textContent = ((originalThrees * (1+ adjustmentFactor)) * enteredMinutes) + enteredThrees.toFixed(2);
+            pointsCell.textContent = (((originalPoints * (1+ adjustmentFactor)) * enteredMinutes) + enteredPoints).toFixed(2);
+            assistsCell.textContent = (((originalAssists * (1+ adjustmentFactor)) * enteredMinutes) + enteredAssists).toFixed(2);
+            reboundsCell.textContent = ((originalRebounds * enteredMinutes) + enteredRebounds).toFixed(2);
+            threesCell.textContent = (((originalThrees * (1+ adjustmentFactor)) * enteredMinutes) + enteredThrees).toFixed(2);
         }
 
         function updatePlayerData(pace, teamSection) {
