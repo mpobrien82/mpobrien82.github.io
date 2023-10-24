@@ -208,6 +208,24 @@
             wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, teamSection));
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, teamSection));
 
+                     // Add an event listener to handle the "RW" button click
+            rwButton.addEventListener('click', () => {
+                if (!rwButton.classList.contains('active')) {
+                    rwButton.classList.add('active');
+                    wwButton.classList.remove('active');
+                    updatePlayerStats(originalRow, true); // Pass true to indicate "RW" button clicked
+                }
+            });
+            
+            // Add an event listener to handle the "WW" button click
+            wwButton.addEventListener('click', () => {
+                if (!wwButton.classList.contains('active')) {
+                    wwButton.classList.add('active');
+                    rwButton.classList.remove('active');
+                    updatePlayerStats(originalRow, false); // Pass false to indicate "WW" button clicked
+                }
+            });
+
             // Add input event listener to handle pace changes
             handlePaceInputChange(paceClicker, teamSection);
 
@@ -291,24 +309,6 @@ function processDataFromCSV(csvData) {
 
                     // Get the projected Minutes value as a number
                     const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
-
-                                     // Add an event listener to handle the "RW" button click
-                    rwButton.addEventListener('click', () => {
-                        if (!rwButton.classList.contains('active')) {
-                            rwButton.classList.add('active');
-                            wwButton.classList.remove('active');
-                            updatePlayerStats(originalRow, true); // Pass true to indicate "RW" button clicked
-                        }
-                    });
-                    
-                    // Add an event listener to handle the "WW" button click
-                    wwButton.addEventListener('click', () => {
-                        if (!wwButton.classList.contains('active')) {
-                            wwButton.classList.add('active');
-                            rwButton.classList.remove('active');
-                            updatePlayerStats(originalRow, false); // Pass false to indicate "WW" button clicked
-                        }
-                    });
 
                     // Add an event listener to handle real-time update for Minutes
                     inputBox.addEventListener('input', () => {
