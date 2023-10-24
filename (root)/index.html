@@ -204,18 +204,16 @@
             rwButton.textContent = 'RW';
             teamButtons.appendChild(rwButton);
 
-                    // Add click event listeners to the RW and WW buttons
+                            // Add click event listeners to the RW and WW buttons
         wwButton.addEventListener('click', () => {
-            handleButtonClick(wwButton, rwButton, paceClicker, teamSection);
-            handleQuarterClick(quarterBoxes.querySelector('.quarter-box.active'), quarterBoxes, false, isRW = false);
+            handleButtonClick(wwButton, rwButton, paceClicker, teamSection, false);
         });
         
         rwButton.addEventListener('click', () => {
-            handleButtonClick(rwButton, wwButton, paceClicker, teamSection);
-            handleQuarterClick(quarterBoxes.querySelector('.quarter-box.active'), quarterBoxes, true, isRW = true);
+            handleButtonClick(rwButton, wwButton, paceClicker, teamSection, true);
         });
-
-            // Add event listeners to quarter buttons to handle quarter changes
+        
+        // Add event listeners to quarter buttons to handle quarter changes
         const quarterButtons = document.querySelectorAll('.quarter-box');
         quarterButtons.forEach((quarterButton) => {
             quarterButton.addEventListener('click', () => {
@@ -230,7 +228,6 @@
                 updatePlayerStats(playerRow, isRW, is1Q, is2Q, is3Q, is4Q);
             });
         });
-            
 
             // Add input event listener to handle pace changes
             handlePaceInputChange(paceClicker, teamSection);
