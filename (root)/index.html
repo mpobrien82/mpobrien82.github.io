@@ -325,10 +325,10 @@ function processDataFromCSV(csvData) {
                 updatePlayerData(pace, teamSection);
             });
         }
-        function roundToNearestHalf(value) {
-          return Math.round(value * 2) / 2;
-        }
-        
+       function roundToNearestHalf(value) {
+  return Math.round(value * 2) / 2;
+}
+
         function updatePlayerStats(playerRow) {
           const minutesCell = playerRow.cells[1];
           const enteredMinutes = parseFloat(minutesCell.textContent) || 0;
@@ -353,11 +353,22 @@ function processDataFromCSV(csvData) {
           const threesInput = playerRow.nextElementSibling.cells[5].querySelector('.input-box');
           const enteredThrees = parseFloat(threesInput.value) || 0;
         
-          // Update points, assists, rebounds, and threes based on the new minutes, rounding to the nearest 0.5
-          pointsCell.textContent = roundToNearestHalf((originalPoints * enteredMinutes) + enteredPoints).toFixed(1);
-          assistsCell.textContent = roundToNearestHalf((originalAssists * enteredMinutes) + enteredAssists).toFixed(1);
-          reboundsCell.textContent = roundToNearestHalf((originalRebounds * enteredMinutes) + enteredRebounds).toFixed(1);
-          threesCell.textContent = roundToNearestHalf((originalThrees * enteredMinutes) + enteredThrees).toFixed(1);
+          // Update points, assists, rebounds, and threes based on the new minutes, rounding to the nearest 0.5 and ensuring it ends with .5
+          let roundedPoints = roundToNearestHalf((originalPoints * enteredMinutes) + enteredPoints);
+          let roundedAssists = roundToNearestHalf((originalAssists * enteredMinutes) + enteredAssists);
+          let roundedRebounds = roundToNearestHalf((originalRebounds * enteredMinutes) + enteredRebounds);
+          let roundedThrees = roundToNearestHalf((originalThrees * enteredMinutes) + enteredThrees);
+        
+          // Ensure the rounded values always end with .5
+          roundedPoints = Math.floor(roundedPoints) + (roundedPoints % 1 === 0.25 ? 0.5 : 0);
+          roundedAssists = Math.floor(roundedAssists) + (roundedAssists % 1 === 0.25 ? 0.5 : 0);
+          roundedRebounds = Math.floor(roundedRebounds) + (roundedRebounds % 1 === 0.25 ? 0.5 : 0);
+          roundedThrees = Math.floor(roundedThrees) + (roundedThrees % 1 === 0.25 ? 0.5 : 0);
+        
+          pointsCell.textContent = roundedPoints.toFixed(1);
+          assistsCell.textContent = roundedAssists.toFixed(1);
+          reboundsCell.textContent = roundedRebounds.toFixed(1);
+          threesCell.textContent = roundedThrees.toFixed(1);
         }
 
        function updatePlayerData(pace, teamSection, isRWActive, isWWActive) {
