@@ -281,23 +281,22 @@ function processDataFromCSV(csvData) {
             for (let j = 1; j < values.length; j++) { // Start from index 1 to exclude Team
                 const cell = inputRow.insertCell();
 
-                // ...
+                // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
                 if (j === 2) { // Check if it's the Minutes column
-                    // Create an input box for Minutes with the default value set to 0
+                    // Create an input box for Minutes
                     const inputBox = document.createElement('input');
                     inputBox.type = 'number';
                     inputBox.classList.add('input-box');
-                    inputBox.value = 0; // Set the default value to 0
                     cell.appendChild(inputBox);
-                
+
                     // Get the projected Minutes value as a number
                     const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
-                
+
                     // Add an event listener to handle real-time update for Minutes
                     inputBox.addEventListener('input', () => {
                         const enteredMinutes = parseFloat(inputBox.value) || 0;
-                        const real-timeMinutes = projectedMinutes - enteredMinutes;
-                        originalRow.cells[1].textContent = real-timeMinutes.toFixed(2);
+                        const realTimeMinutes = projectedMinutes - enteredMinutes;
+                        originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
                         updatePlayerStats(originalRow); // Update player stats
                     });
                 } else if (j >= 3 && j <= 6) { // Check if it's Points, Assists, Rebounds, or Threes columns
