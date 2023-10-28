@@ -325,35 +325,39 @@ function processDataFromCSV(csvData) {
                 updatePlayerData(pace, teamSection);
             });
         }
+        function roundToNearestHalf(value) {
+          return Math.round(value * 2) / 2;
+        }
+        
         function updatePlayerStats(playerRow) {
-            const minutesCell = playerRow.cells[1];
-            const enteredMinutes = parseFloat(minutesCell.textContent) || 0; // Get the new minutes from the cell
+          const minutesCell = playerRow.cells[1];
+          const enteredMinutes = parseFloat(minutesCell.textContent) || 0;
         
-            const pointsCell = playerRow.cells[2];
-            const originalPoints = parseFloat(pointsCell.getAttribute('data-original-value'));
-            const pointsInput = playerRow.nextElementSibling.cells[2].querySelector('.input-box');
-            const enteredPoints = parseFloat(pointsInput.value) || 0;
+          const pointsCell = playerRow.cells[2];
+          const originalPoints = parseFloat(pointsCell.getAttribute('data-original-value'));
+          const pointsInput = playerRow.nextElementSibling.cells[2].querySelector('.input-box');
+          const enteredPoints = parseFloat(pointsInput.value) || 0;
         
-            const assistsCell = playerRow.cells[3];
-            const originalAssists = parseFloat(assistsCell.getAttribute('data-original-value'));
-            const assistsInput = playerRow.nextElementSibling.cells[3].querySelector('.input-box');
-            const enteredAssists = parseFloat(assistsInput.value) || 0;
+          const assistsCell = playerRow.cells[3];
+          const originalAssists = parseFloat(assistsCell.getAttribute('data-original-value'));
+          const assistsInput = playerRow.nextElementSibling.cells[3].querySelector('.input-box');
+          const enteredAssists = parseFloat(assistsInput.value) || 0;
         
-            const reboundsCell = playerRow.cells[4];
-            const originalRebounds = parseFloat(reboundsCell.getAttribute('data-original-value'));
-            const reboundsInput = playerRow.nextElementSibling.cells[4].querySelector('.input-box');
-            const enteredRebounds = parseFloat(reboundsInput.value) || 0;
+          const reboundsCell = playerRow.cells[4];
+          const originalRebounds = parseFloat(reboundsCell.getAttribute('data-original-value'));
+          const reboundsInput = playerRow.nextElementSibling.cells[4].querySelector('.input-box');
+          const enteredRebounds = parseFloat(reboundsInput.value) || 0;
         
-            const threesCell = playerRow.cells[5];
-            const originalThrees = parseFloat(threesCell.getAttribute('data-original-value'));
-            const threesInput = playerRow.nextElementSibling.cells[5].querySelector('.input-box');
-            const enteredThrees = parseFloat(threesInput.value) || 0;
+          const threesCell = playerRow.cells[5];
+          const originalThrees = parseFloat(threesCell.getAttribute('data-original-value'));
+          const threesInput = playerRow.nextElementSibling.cells[5].querySelector('.input-box');
+          const enteredThrees = parseFloat(threesInput.value) || 0;
         
-            // Update points, assists, rebounds, and threes based on the new minutes
-            pointsCell.textContent = ((originalPoints * enteredMinutes) + enteredPoints).toFixed(2);
-            assistsCell.textContent = ((originalAssists * enteredMinutes) + enteredAssists).toFixed(2);
-            reboundsCell.textContent = ((originalRebounds * enteredMinutes) + enteredRebounds).toFixed(2);
-            threesCell.textContent = ((originalThrees * enteredMinutes) + enteredThrees).toFixed(2);
+          // Update points, assists, rebounds, and threes based on the new minutes, rounding to the nearest 0.5
+          pointsCell.textContent = roundToNearestHalf((originalPoints * enteredMinutes) + enteredPoints).toFixed(1);
+          assistsCell.textContent = roundToNearestHalf((originalAssists * enteredMinutes) + enteredAssists).toFixed(1);
+          reboundsCell.textContent = roundToNearestHalf((originalRebounds * enteredMinutes) + enteredRebounds).toFixed(1);
+          threesCell.textContent = roundToNearestHalf((originalThrees * enteredMinutes) + enteredThrees).toFixed(1);
         }
 
        function updatePlayerData(pace, teamSection, isRWActive, isWWActive) {
