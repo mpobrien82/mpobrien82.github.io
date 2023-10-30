@@ -123,46 +123,6 @@
             `;
             teamSection.appendChild(playerTable);
 
-            // Create a div for the buttons
-            const teamButtons = document.createElement('div');
-            teamButtons.classList.add('team-buttons');
-            teamHeader.appendChild(teamButtons);
-
-            // Create the quarter boxes
-            const quarterBoxes = document.createElement('div');
-            quarterBoxes.classList.add('team-buttons');
-            teamHeader.appendChild(quarterBoxes);
-
-            // Create the quarter buttons
-            for (let i = 1; i <= 4; i++) {
-                const quarterBox = document.createElement('div');
-                quarterBox.classList.add('quarter-box');
-                quarterBox.textContent = `${i}Q`;
-                quarterBox.addEventListener('click', () => handleQuarterClick(quarterBox, quarterBoxes));
-                quarterBoxes.appendChild(quarterBox);
-            }
-
-            // Create a time input box
-            const timeInput = document.createElement('input');
-            timeInput.type = 'text';
-            timeInput.classList.add('time-input');
-            timeInput.placeholder = 'Time';
-            teamHeader.appendChild(timeInput);
-
-            // Create a score input box for the team
-            const teamScoreInput = document.createElement('input');
-            teamScoreInput.type = 'number';
-            teamScoreInput.classList.add('score-input');
-            teamScoreInput.placeholder = `${teamName} Score`;
-            teamHeader.appendChild(teamScoreInput);
-
-            // Create a score input box for the opponent
-            const opponentScoreInput = document.createElement('input');
-            opponentScoreInput.type = 'number';
-            opponentScoreInput.classList.add('score-input');
-            opponentScoreInput.placeholder = 'Opponent Score';
-            teamHeader.appendChild(opponentScoreInput);
-
             // Create an input for the pace clicker
             const paceClicker = document.createElement('input');
             paceClicker.type = 'number';
