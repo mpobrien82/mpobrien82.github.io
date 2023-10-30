@@ -301,36 +301,35 @@
             threesCell.textContent = ((originalThrees * enteredMinutes) + enteredThrees).toFixed(2);
         }
 
-                function updatePlayerData(pace, teamSection, isRWActive, isWWActive) {
+        function updatePlayerData(pace, teamSection, isRWActive, isWWActive) {
             // Get all player data elements within the specified team section
             const playerDataElements = teamSection.querySelectorAll('.player-data');
-        
+
             // Iterate through each player data element and update the displayed values based on the pace and active buttons
             playerDataElements.forEach((element) => {
-                const currentDisplayedValue = parseFloat(element.getAttribute('data-original-value')); // Get the original value
+                const currentDisplayedValue = parseFloat(element.textContent);
                 const column = element.getAttribute('data-column');
-        
-                // Calculate and update the displayed value by multiplying the original value by the pace
+
+                // Calculate and update the displayed value based on the pace
                 let newValue = currentDisplayedValue * pace;
-        
+
                 // If "RW" is active, make the player data 10% worse
                 if (isRWActive) {
                     if (column === 'Points' || column === 'Assists' || column === 'Threes') {
                         newValue = newValue * 0.9;
                     }
                 }
-        
+
                 // If "WW" is active, make the player data 10% better
                 if (isWWActive) {
                     if (column === 'Points' || column === 'Assists' || column === 'Threes') {
                         newValue = newValue * 1.1;
                     }
                 }
-        
+
                 element.textContent = newValue.toFixed(2);
             });
         }
-
 
         // Function to handle button clicks
         function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
@@ -346,4 +345,3 @@
     </script>
 </body>
 </html>
-
