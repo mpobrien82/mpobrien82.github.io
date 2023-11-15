@@ -83,11 +83,12 @@
     </div>
 
     <script>
-        // Set the default pace to start at 1
+               // Set the default pace to start at 1
         const defaultPace = 1;
-
-                // Function to handle file input change
-                document.querySelector('#file-input').addEventListener('change', handleFileUpload);
+        
+        // Function to handle file input change
+        document.querySelector('#file-input').addEventListener('change', handleFileUpload);
+        
         // Function to create a game section
         function createGameSection(gameName) {
             // Create a new game section
@@ -162,16 +163,21 @@
             return gameSection;
         }
 
-        // Function to handle file input change
+               // Function to handle file input change
         function handleFileUpload(event) {
             const file = event.target.files[0];
-
+        
             if (file) {
                 // Handle the uploaded file, e.g., read and process the CSV data
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     const csvData = e.target.result;
-
+                    processDataFromCSV(csvData);
+                };
+        
+                reader.readAsText(file);
+            }
+        }
                            // Function to process data from the uploaded CSV
         function processDataFromCSV(csvData) {
             // Parse and process the CSV data, then create game sections for each unique game
