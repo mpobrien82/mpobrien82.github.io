@@ -86,10 +86,9 @@
         // Set the default pace to start at 1
         const defaultPace = 1;
 
-        // Function to handle file input change
-        document.querySelector('#file-input').addEventListener('change', handleFileUpload);
-
-                // Function to create a game section
+                // Function to handle file input change
+                document.querySelector('#file-input').addEventListener('change', handleFileUpload);
+        // Function to create a game section
         function createGameSection(gameName) {
             // Create a new game section
             const gameSection = document.createElement('div');
@@ -106,9 +105,10 @@
             gameNameElement.textContent = gameName;
             gameHeader.appendChild(gameNameElement);
         
-            // Create a table for the game
+            // Create a table for the game with a unique ID
+            const playerTableId = `player-table-${gameName.replace(/\s+/g, '-').toLowerCase()}`;
             const playerTable = document.createElement('table');
-            playerTable.id = 'player-table';
+            playerTable.id = playerTableId;
             playerTable.innerHTML = `
                 <thead>
                     <tr>
@@ -156,9 +156,9 @@
             // Add input event listener to handle pace changes
             handlePaceInputChange(paceClicker, gameSection);
         
-            // Add the game section to the container
+                    // Add the game section to the container
             document.querySelector('#game-container').appendChild(gameSection);
-        
+            
             return gameSection;
         }
 
