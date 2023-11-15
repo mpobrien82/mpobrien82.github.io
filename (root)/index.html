@@ -172,102 +172,97 @@
                 reader.onload = function(e) {
                     const csvData = e.target.result;
 
-                    // Process the CSV data (parse and create team sections)
-                    processDataFromCSV(csvData);
-                };
-                reader.readAsText(file);
-            }
-        }
-
-                        // Function to process data from the uploaded CSV
-function processDataFromCSV(csvData) {
-    // Parse and process the CSV data, then create game sections for each unique game
-    const lines = csvData.split('\n');
-    let gameSections = {};
-
-    for (let i = 1; i < lines.length; i++) {
-        const values = lines[i].trim().split(',');
-
-        if (values.length >= 8) { // Ensure there are enough columns
-            const opponentName = values[1].trim(); // Extract opponent name
-
-            // Skip the row if opponent name is "#N/A"
-            if (opponentName === '#N/A') {
-                continue;
-            }
-
-            const gameName = values[0].trim() + " vs " + opponentName; // Concatenate team names for game name
-
-            // Create a new game section if it doesn't exist
-            if (!gameSections[gameName]) {
-                gameSections[gameName] = createGameSection(gameName);
-            }
-
-            const gameSection = gameSections[gameName];
-
-            // Create a row for original player data
-            const playerTable = gameSection.querySelector('#player-table');
-            const originalRow = playerTable.insertRow();
-            for (let j = 2; j < values.length; j++) { // Start from index 2 to exclude Team and Opponent
-                const cell = originalRow.insertCell();
-
-                // Set the data-original-value and data-column attributes for player data elements
-                let originalValue = values[j];
-                let column = '';
-
-                if (j >= 4 && j <= 7) {
-                    column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
-                }
-
-                cell.textContent = originalValue;
-
-                if (column) {
-                    cell.classList.add('player-data');
-                    cell.setAttribute('data-original-value', originalValue);
-                    cell.setAttribute('data-column', column);
-                }
-            }
-
-            // Create a row for input boxes (including Minutes)
-            const inputRow = playerTable.insertRow();
-            for (let j = 2; j < values.length; j++) { // Start from index 2 to exclude Team and Opponent
-                const cell = inputRow.insertCell();
-
-                // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
-                if (j === 3) { // Check if it's the Minutes column
-                    // Create an input box for Minutes
-                    const inputBox = document.createElement('input');
-                    inputBox.type = 'number';
-                    inputBox.classList.add('input-box');
-                    cell.appendChild(inputBox);
-
-                    // Get the projected Minutes value as a number
-                    const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
-
-                    // Add an event listener to handle real-time update for Minutes
-                    inputBox.addEventListener('input', () => {
-                        const enteredMinutes = parseFloat(inputBox.value) || 0;
-                        const realTimeMinutes = projectedMinutes - enteredMinutes;
-                        originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-                        updatePlayerStats(originalRow); // Update player stats
-                    });
-                } else if (j >= 4 && j <= 7) { // Check if it's Points, Assists, Rebounds, or Threes columns
-                    // Create an input box for other stats
-                    const inputBox = document.createElement('input');
-                    inputBox.type = 'number';
-                    inputBox.classList.add('input-box');
-                    cell.appendChild(inputBox);
-
-                    // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
-                    inputBox.addEventListener('input', () => {
-                        // Update player stats when other input boxes change
-                        updatePlayerStats(originalRow);
-                    });
+                           // Function to process data from the uploaded CSV
+        function processDataFromCSV(csvData) {
+            // Parse and process the CSV data, then create game sections for each unique game
+            const lines = csvData.split('\n');
+            let games = {};
+        
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].trim().split(',');
+        
+                if (values.length >= 8) { // Ensure there are enough columns
+                    const opponentName = values[1].trim(); // Extract opponent name
+        
+                    // Skip the row if opponent name is "#N/A"
+                    if (opponentName === '#N/A') {
+                        continue;
+                    }
+        
+                    const team1 = values[0].trim();
+                    const team2 = opponentName;
+                    const gameId = [team1, team2].sort().join('_'); // Unique identifier for each game
+        
+                    // Create a new game if it doesn't exist
+                    if (!games[gameId]) {
+                        games[gameId] = createGameSection(`${team1} vs ${team2}`);
+                    }
+        
+                    const gameSection = games[gameId];
+        
+                    // Create a row for original player data
+                    const playerTable = gameSection.querySelector('#player-table');
+                    const originalRow = playerTable.insertRow();
+                    for (let j = 2; j < values.length; j++) { // Start from index 2 to exclude Team and Opponent
+                        const cell = originalRow.insertCell();
+        
+                        // Set the data-original-value and data-column attributes for player data elements
+                        let originalValue = values[j];
+                        let column = '';
+        
+                        if (j >= 4 && j <= 7) {
+                            column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
+                        }
+        
+                        cell.textContent = originalValue;
+        
+                        if (column) {
+                            cell.classList.add('player-data');
+                            cell.setAttribute('data-original-value', originalValue);
+                            cell.setAttribute('data-column', column);
+                        }
+                    }
+        
+                    // Create a row for input boxes (including Minutes)
+                    const inputRow = playerTable.insertRow();
+                    for (let j = 2; j < values.length; j++) { // Start from index 2 to exclude Team and Opponent
+                        const cell = inputRow.insertCell();
+        
+                        // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
+                        if (j === 3) { // Check if it's the Minutes column
+                            // Create an input box for Minutes
+                            const inputBox = document.createElement('input');
+                            inputBox.type = 'number';
+                            inputBox.classList.add('input-box');
+                            cell.appendChild(inputBox);
+        
+                            // Get the projected Minutes value as a number
+                            const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
+        
+                            // Add an event listener to handle real-time update for Minutes
+                            inputBox.addEventListener('input', () => {
+                                const enteredMinutes = parseFloat(inputBox.value) || 0;
+                                const realTimeMinutes = projectedMinutes - enteredMinutes;
+                                originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
+                                updatePlayerStats(originalRow); // Update player stats
+                            });
+                        } else if (j >= 4 && j <= 7) { // Check if it's Points, Assists, Rebounds, or Threes columns
+                            // Create an input box for other stats
+                            const inputBox = document.createElement('input');
+                            inputBox.type = 'number';
+                            inputBox.classList.add('input-box');
+                            cell.appendChild(inputBox);
+        
+                            // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
+                            inputBox.addEventListener('input', () => {
+                                // Update player stats when other input boxes change
+                                updatePlayerStats(originalRow);
+                            });
+                        }
+                    }
                 }
             }
         }
-    }
-}
 
         // Function to handle pace input changes
         function handlePaceInputChange(paceClicker, teamSection) {
