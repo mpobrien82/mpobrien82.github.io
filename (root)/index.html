@@ -179,7 +179,7 @@
             }
         }
 
-               // Function to process data from the uploaded CSV
+                       // Function to process data from the uploaded CSV
         function processDataFromCSV(csvData) {
             // Parse and process the CSV data, then create game sections
             const lines = csvData.split('\n');
@@ -190,7 +190,14 @@
                 const values = lines[i].trim().split(',');
         
                 if (values.length >= 8) { // Ensure there are enough columns
-                    const gameName = values[0] + " vs " + values[1]; // Concatenate team names for game name
+                    const opponentName = values[1].trim(); // Extract opponent name
+        
+                    // Skip the row if opponent name is "#N/A"
+                    if (opponentName === '#N/A') {
+                        continue;
+                    }
+        
+                    const gameName = values[0] + " vs " + opponentName; // Concatenate team names for game name
         
                     if (gameName !== currentGameName) {
                         // Create a new game section
