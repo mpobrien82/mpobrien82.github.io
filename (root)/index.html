@@ -88,40 +88,41 @@
 
         // Function to handle file input change
         document.querySelector('#file-input').addEventListener('change', handleFileUpload);
-
-        // Function to create a game section
-        function createGameSection(gameName) {
-            // Create a new game section
-            const gameSection = document.createElement('div');
-            gameSection.classList.add('team-section');
-
-            // Create a header for the game section
-            const gameHeader = document.createElement('div');
-            gameHeader.classList.add('team-header');
-            gameSection.appendChild(gameHeader);
-
-            // Add the game name to the header
-            const gameNameElement = document.createElement('div');
-            gameNameElement.classList.add('team-name');
-            gameNameElement.textContent = gameName;
-            gameHeader.appendChild(gameNameElement);
-
-            // Create a table for the game
-            const playerTable = document.createElement('table');
-            playerTable.classList.add('player-table'); // Add a class for easier styling
-            playerTable.innerHTML = `
-                <thead>
-                    <tr>
-                        <th>Players</th>
-                        <th>Minutes</th>
-                        <th>Points</th>
-                        <th>Assists</th>
-                        <th>Rebounds</th>
-                        <th>Threes</th>
-                    </tr>
-                </thead>
-            `;
-            gameSection.appendChild(playerTable);
+        
+         // Function to create a game section
+                function createGameSection(gameName) {
+                    // Create a new game section
+                    const gameSection = document.createElement('div');
+                    gameSection.classList.add('team-section');
+                
+                    // Create a header for the game section
+                    const gameHeader = document.createElement('div');
+                    gameHeader.classList.add('team-header');
+                    gameSection.appendChild(gameHeader);
+                
+                    // Add the game name to the header
+                    const gameNameElement = document.createElement('div');
+                    gameNameElement.classList.add('team-name');
+                    gameNameElement.textContent = gameName;
+                    gameHeader.appendChild(gameNameElement);
+                
+                    // Create a single table for both teams in the game
+                    const playerTable = document.createElement('table');
+                    playerTable.id = 'player-table';
+                    playerTable.innerHTML = `
+                        <thead>
+                            <tr>
+                                <th>Players</th>
+                                <th>Minutes</th>
+                                <th>Points</th>
+                                <th>Assists</th>
+                                <th>Rebounds</th>
+                                <th>Threes</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    `;
+                    gameSection.appendChild(playerTable);
 
             // Create a div for the buttons
             const gameButtons = document.createElement('div');
@@ -179,37 +180,56 @@
             }
         }
 
-        // Function to process data from the uploaded CSV
-        function processDataFromCSV(csvData) {
-            // Parse and process the CSV data, then create game sections
-            const lines = csvData.split('\n');
-            let currentGameName = null;
-            let playerTable = null;
-
-            for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].trim().split(',');
-
-                if (values.length >= 8) { // Ensure there are enough columns
-                    const opponentName = values[1].trim(); // Extract opponent name
-
-                    // Skip the row if opponent name is "#N/A"
-                    if (opponentName === '#N/A') {
-                        continue;
+                // Function to process data from the uploaded CSV
+                function processDataFromCSV(csvData) {
+                    // Parse and process the CSV data, then create game sections
+                    const lines = csvData.split('\n');
+                    let currentGameName = null;
+                    let gameSection = null;
+                    let playerTableBody = null;
+                
+                    for (let i = 1; i < lines.length; i++) {
+                        const values = lines[i].trim().split(',');
+                
+                        if (values.length >= 8) { // Ensure there are enough columns
+                            const opponentName = values[1].trim(); // Extract opponent name
+                
+                            // Skip the row if opponent name is "#N/A"
+                            if (opponentName === '#N/A') {
+                                continue;
+                            }
+                
+                            const gameName = values[0] + " vs " + opponentName; // Concatenate team names for game name
+                
+                            if (gameName !== currentGameName) {
+                                // Create a new game section
+                                gameSection = createGameSection(gameName);
+                                playerTableBody = gameSection.querySelector('#player-table tbody');
+                                currentGameName = gameName;
+                            }
+                
+                            // Create a row for player data
+                            const playerRow = playerTableBody.insertRow();
+                            for (let j = 2; j < values.length; j++) {
+                                const cell = playerRow.insertCell();
+                                const originalValue = values[j];
+                                let column = '';
+                
+                                if (j >= 4 && j <= 7) {
+                                    column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
+                                }
+                
+                                cell.textContent = originalValue;
+                
+                                if (column) {
+                                    cell.classList.add('player-data');
+                                    cell.setAttribute('data-original-value', originalValue);
+                                    cell.setAttribute('data-column', column);
+                                }
+                            }
+                        }
                     }
-
-                    const gameName = values[0] + " vs " + opponentName; // Concatenate team names for game name
-
-                    if (gameName !== currentGameName) {
-                        // Create a new game section
-                        playerTable = createGameSection(gameName);
-                        currentGameName = gameName;
-                    }
-
-                    const playerRow = playerTable.insertRow();
-                    // ... (rest of your existing code for populating player data)
                 }
-            }
-        }
 
         // Function to handle pace input changes
         function handlePaceInputChange(paceClicker, playerTable) {
