@@ -89,26 +89,26 @@
         // Function to handle file input change
         document.querySelector('#file-input').addEventListener('change', handleFileUpload);
 
-        // Function to create a game section
-        function createGameSection(gameName) {
+                function createGameSection(gameName) {
             // Create a new game section
             const gameSection = document.createElement('div');
             gameSection.classList.add('team-section');
-
+        
             // Create a header for the game section
             const gameHeader = document.createElement('div');
             gameHeader.classList.add('team-header');
             gameSection.appendChild(gameHeader);
-
+        
             // Add the game name to the header
             const gameNameElement = document.createElement('div');
             gameNameElement.classList.add('team-name');
             gameNameElement.textContent = gameName;
             gameHeader.appendChild(gameNameElement);
-
-            // Create a table for the game
+        
+            // Create a table for the game with a unique ID
+            const playerTableId = 'player-table-' + gameName.replace(/\s/g, '-').toLowerCase();
             const playerTable = document.createElement('table');
-            playerTable.classList.add('player-table'); // Add a class to distinguish it from other tables
+            playerTable.id = playerTableId;
             playerTable.innerHTML = `
                 <thead>
                     <tr>
@@ -122,12 +122,12 @@
                 </thead>
             `;
             gameSection.appendChild(playerTable);
-
+        
             // Create a div for the buttons
             const gameButtons = document.createElement('div');
             gameButtons.classList.add('team-buttons');
             gameHeader.appendChild(gameButtons);
-
+        
             // Create an input for the pace clicker
             const paceClicker = document.createElement('input');
             paceClicker.type = 'number';
@@ -136,29 +136,29 @@
             paceClicker.step = 0.01; // Set the step value to 0.01
             paceClicker.value = defaultPace; // Set the default pace to 1
             gameHeader.appendChild(paceClicker);
-
+        
             // Create the WW button
             const wwButton = document.createElement('div');
             wwButton.classList.add('team-button');
             wwButton.textContent = 'WW';
             gameButtons.appendChild(wwButton);
-
+        
             // Create the RW button
             const rwButton = document.createElement('div');
             rwButton.classList.add('team-button');
             rwButton.textContent = 'RW';
             gameButtons.appendChild(rwButton);
-
+        
             // Add click event listeners to the buttons
             wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, playerTable));
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, playerTable));
-
+        
             // Add input event listener to handle pace changes
             handlePaceInputChange(paceClicker, playerTable);
-
+        
             // Add the game section to the container
             document.querySelector('#game-container').appendChild(gameSection);
-
+        
             return playerTable;
         }
 
