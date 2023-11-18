@@ -56,11 +56,11 @@
         .team-button.active {
             background-color: #FFD700; /* Highlight color for active button */
         }
-        .player-table {
+        #player-table {
             border-collapse: collapse;
             width: 100%;
         }
-        .player-table th, .player-table td {
+        #player-table th, #player-table td {
             padding: 8px;
             text-align: center;
             border: none;
@@ -89,7 +89,8 @@
         // Function to handle file input change
         document.querySelector('#file-input').addEventListener('change', handleFileUpload);
 
-                function createGameSection(gameName) {
+                // Function to create a game section
+        function createGameSection(gameName) {
             // Create a new game section
             const gameSection = document.createElement('div');
             gameSection.classList.add('team-section');
@@ -105,10 +106,9 @@
             gameNameElement.textContent = gameName;
             gameHeader.appendChild(gameNameElement);
         
-            // Create a table for the game with a unique ID
-            const playerTableId = 'player-table-' + gameName.replace(/\s/g, '-').toLowerCase();
+            // Create a table for the game
             const playerTable = document.createElement('table');
-            playerTable.id = playerTableId;
+            playerTable.id = 'player-table';
             playerTable.innerHTML = `
                 <thead>
                     <tr>
@@ -150,16 +150,16 @@
             gameButtons.appendChild(rwButton);
         
             // Add click event listeners to the buttons
-            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, playerTable));
-            rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, playerTable));
+            wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, gameSection));
+            rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, gameSection));
         
             // Add input event listener to handle pace changes
-            handlePaceInputChange(paceClicker, playerTable);
+            handlePaceInputChange(paceClicker, gameSection);
         
             // Add the game section to the container
             document.querySelector('#game-container').appendChild(gameSection);
         
-            return playerTable;
+            return gameSection;
         }
 
         // Function to handle file input change
@@ -179,57 +179,60 @@
             }
         }
 
-        // Function to process data from the uploaded CSV
+                       // Function to process data from the uploaded CSV
         function processDataFromCSV(csvData) {
             // Parse and process the CSV data, then create game sections
             const lines = csvData.split('\n');
-            let currentGameTable = null;
-
+            let currentGameName = null;
+            let gameSection = null;
+        
             for (let i = 1; i < lines.length; i++) {
                 const values = lines[i].trim().split(',');
-
+        
                 if (values.length >= 8) { // Ensure there are enough columns
                     const opponentName = values[1].trim(); // Extract opponent name
-
+        
                     // Skip the row if opponent name is "#N/A"
                     if (opponentName === '#N/A') {
                         continue;
                     }
-
+        
                     const gameName = values[0] + " vs " + opponentName; // Concatenate team names for game name
-
-                    if (currentGameTable === null) {
+        
+                    if (gameName !== currentGameName) {
                         // Create a new game section
-                        currentGameTable = createGameSection(gameName);
+                        gameSection = createGameSection(gameName);
+                        currentGameName = gameName;
                     }
-
+        
                     // Create a row for original player data
-                    const originalRow = currentGameTable.insertRow();
+                    const playerTable = gameSection.querySelector('#player-table');
+                    const originalRow = playerTable.insertRow();
                     for (let j = 2; j < values.length; j++) { // Start from index 2 to exclude Team and Opponent
                         const cell = originalRow.insertCell();
-
+        
                         // Set the data-original-value and data-column attributes for player data elements
                         let originalValue = values[j];
                         let column = '';
-
+        
                         if (j >= 4 && j <= 7) {
                             column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
                         }
-
+        
                         cell.textContent = originalValue;
-
+        
                         if (column) {
                             cell.classList.add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
                         }
                     }
-
+        
                     // Create a row for input boxes (including Minutes)
-                    const inputRow = currentGameTable.insertRow();
+                    const inputRow = playerTable.insertRow();
                     for (let j = 2; j < values.length; j++) { // Start from index 2 to exclude Team and Opponent
                         const cell = inputRow.insertCell();
-
+        
                         // Check if the current column represents a player's stat (Minutes, Points, Assists, Rebounds, Threes)
                         if (j === 3) { // Check if it's the Minutes column
                             // Create an input box for Minutes
@@ -237,10 +240,10 @@
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
-
+        
                             // Get the projected Minutes value as a number
                             const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
-
+        
                             // Add an event listener to handle real-time update for Minutes
                             inputBox.addEventListener('input', () => {
                                 const enteredMinutes = parseFloat(inputBox.value) || 0;
@@ -254,7 +257,7 @@
                             inputBox.type = 'number';
                             inputBox.classList.add('input-box');
                             cell.appendChild(inputBox);
-
+        
                             // Add an event listener to handle real-time update for other stats (e.g., Points, Assists, Rebounds, Threes)
                             inputBox.addEventListener('input', () => {
                                 // Update player stats when other input boxes change
@@ -267,10 +270,10 @@
         }
 
         // Function to handle pace input changes
-        function handlePaceInputChange(paceClicker, playerTable) {
+        function handlePaceInputChange(paceClicker, teamSection) {
             paceClicker.addEventListener('input', () => {
                 const pace = parseFloat(paceClicker.value);
-                updatePlayerData(pace, playerTable);
+                updatePlayerData(pace, teamSection);
             });
         }
 
@@ -305,9 +308,9 @@
             threesCell.textContent = ((originalThrees * enteredMinutes) + enteredThrees).toFixed(2);
         }
 
-        function updatePlayerData(pace, playerTable) {
+        function updatePlayerData(pace, teamSection, isRWActive, isWWActive) {
             // Get all player data elements within the specified team section
-            const playerDataElements = playerTable.querySelectorAll('.player-data');
+            const playerDataElements = teamSection.querySelectorAll('.player-data');
 
             // Iterate through each player data element and update the displayed values based on the pace and active buttons
             playerDataElements.forEach((element) => {
@@ -318,14 +321,14 @@
                 let newValue = currentDisplayedValue * pace;
 
                 // If "RW" is active, make the player data 10% worse
-                if (playerTable.classList.contains('RW-active')) {
+                if (isRWActive) {
                     if (column === 'Points' || column === 'Assists' || column === 'Threes') {
                         newValue = newValue * 0.9;
                     }
                 }
 
                 // If "WW" is active, make the player data 10% better
-                if (playerTable.classList.contains('WW-active')) {
+                if (isWWActive) {
                     if (column === 'Points' || column === 'Assists' || column === 'Threes') {
                         newValue = newValue * 1.1;
                     }
@@ -336,16 +339,14 @@
         }
 
         // Function to handle button clicks
-        function handleButtonClick(clickedButton, otherButton, paceClicker, playerTable) {
+        function handleButtonClick(clickedButton, otherButton, paceClicker, teamSection) {
             const isRWActive = clickedButton.textContent === 'RW';
             const isWWActive = clickedButton.textContent === 'WW';
 
             if (!clickedButton.classList.contains('active')) {
                 clickedButton.classList.add('active');
                 otherButton.classList.remove('active');
-                playerTable.classList.toggle('RW-active', isRWActive);
-                playerTable.classList.toggle('WW-active', isWWActive);
-                updatePlayerData(parseFloat(paceClicker.value), playerTable);
+                updatePlayerData(parseFloat(paceClicker.value), teamSection, isRWActive, isWWActive);
             }
         }
     </script>
