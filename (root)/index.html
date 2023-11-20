@@ -106,9 +106,9 @@
             gameNameElement.textContent = gameName;
             gameHeader.appendChild(gameNameElement);
         
-            // Create a table for the game
+            // Create a table for the game with a unique ID
             const playerTable = document.createElement('table');
-            playerTable.id = 'player-table';
+            playerTable.id = 'player-table-' + gameName.replace(/\s/g, ''); // Unique ID based on game name
             playerTable.innerHTML = `
                 <thead>
                     <tr>
