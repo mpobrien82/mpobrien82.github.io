@@ -179,86 +179,87 @@
             }
         }
 
-                       // Function to process data from the uploaded CSV
-        function processDataFromCSV(csvData) {
-            // Parse and process the CSV data, then create game sections
-            const lines = csvData.split('\n');
-            let gameSections = {};
+                     function processDataFromCSV(csvData) {
+    // Parse and process the CSV data, then create game sections
+    const lines = csvData.split('\n');
+    let gameSections = {};
 
-            for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].trim().split(',');
+    for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].trim().split(',');
 
-                if (values.length >= 8) { // Ensure there are enough columns
-                    const opponentName = values[1].trim(); // Extract opponent name
+        if (values.length >= 8) { // Ensure there are enough columns
+            const opponentName = values[1].trim(); // Extract opponent name
 
-                    // Skip the row if opponent name is "#N/A"
-                    if (opponentName === '#N/A') {
-                        continue;
-                    }
+            // Skip the row if opponent name is "#N/A"
+            if (opponentName === '#N/A') {
+                continue;
+            }
 
-                    const gameName = values[0] + " vs " + opponentName; // Concatenate team names for game name
+            const gameName = values[0] + " vs " + opponentName; // Concatenate team names for game name
 
-                    if (!gameSections[gameName]) {
-                        // Create a new game section if it doesn't exist
-                        gameSections[gameName] = createGameSection(gameName);
-                    }
+            if (!gameSections[gameName]) {
+                // Create a new game section if it doesn't exist
+                gameSections[gameName] = createGameSection(gameName);
+            }
 
-                    // Create a row for original player data
-                    const playerTable = gameSections[gameName].querySelector('#player-table');
-                    const originalRow = playerTable.insertRow();
-                    for (let j = 2; j < values.length; j++) {
-                        const cell = originalRow.insertCell();
-                        let originalValue = values[j];
-                        let column = '';
+            // Create a row for original player data
+            const playerTable = gameSections[gameName].querySelector('#player-table');
+            const originalRow = playerTable.insertRow();
+            for (let j = 2; j < values.length; j++) {
+                const cell = originalRow.insertCell();
+                let originalValue = values[j];
+                let column = '';
 
-                        if (j >= 4 && j <= 7) {
-                            column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
-                        }
+                if (j === 2) { // Minutes
+                    column = 'Minutes';
+                } else if (j >= 4 && j <= 7) {
+                    column = ['Points', 'Assists', 'Rebounds', 'Threes'][j - 4];
+                }
 
-                        cell.textContent = originalValue;
+                cell.textContent = originalValue;
 
-                        if (column) {
-                            cell.classList.add('player-data');
-                            cell.setAttribute('data-original-value', originalValue);
-                            cell.setAttribute('data-column', column);
-                        }
-                    }
+                if (column) {
+                    cell.classList.add('player-data');
+                    cell.setAttribute('data-original-value', originalValue);
+                    cell.setAttribute('data-column', column);
+                }
+            }
 
-                    // Create a row for input boxes (including Minutes)
-                    const inputRow = playerTable.insertRow();
-                    for (let j = 2; j < values.length; j++) {
-                        const cell = inputRow.insertCell();
+            // Create a row for input boxes (including Minutes)
+            const inputRow = playerTable.insertRow();
+            for (let j = 2; j < values.length; j++) {
+                const cell = inputRow.insertCell();
 
-                        if (j === 3) {
-                            // Create an input box for Minutes
-                            const inputBox = document.createElement('input');
-                            inputBox.type = 'number';
-                            inputBox.classList.add('input-box');
-                            cell.appendChild(inputBox);
+                if (j === 2) {
+                    // Create an input box for Minutes
+                    const inputBox = document.createElement('input');
+                    inputBox.type = 'number';
+                    inputBox.classList.add('input-box');
+                    cell.appendChild(inputBox);
 
-                            const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
+                    const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
 
-                            inputBox.addEventListener('input', () => {
-                                const enteredMinutes = parseFloat(inputBox.value) || 0;
-                                const realTimeMinutes = projectedMinutes - enteredMinutes;
-                                originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-                                updatePlayerStats(originalRow);
-                            });
-                        } else if (j >= 4 && j <= 7) {
-                            // Create an input box for other stats
-                            const inputBox = document.createElement('input');
-                            inputBox.type = 'number';
-                            inputBox.classList.add('input-box');
-                            cell.appendChild(inputBox);
+                    inputBox.addEventListener('input', () => {
+                        const enteredMinutes = parseFloat(inputBox.value) || 0;
+                        const realTimeMinutes = projectedMinutes - enteredMinutes;
+                        originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
+                        updatePlayerStats(originalRow);
+                    });
+                } else if (j >= 4 && j <= 7) {
+                    // Create an input box for other stats
+                    const inputBox = document.createElement('input');
+                    inputBox.type = 'number';
+                    inputBox.classList.add('input-box');
+                    cell.appendChild(inputBox);
 
-                            inputBox.addEventListener('input', () => {
-                                updatePlayerStats(originalRow);
-                            });
-                        }
-                    }
+                    inputBox.addEventListener('input', () => {
+                        updatePlayerStats(originalRow);
+                    });
                 }
             }
         }
+    }
+}
 
         // Function to handle pace input changes
         function handlePaceInputChange(paceClicker, teamSection) {
