@@ -87,26 +87,29 @@
         const defaultPace = 1;
 
         // Function to handle file input change
-      document.querySelector('#file-input').addEventListener('change', handleFileUpload);
+        document.querySelector('#file-input').addEventListener('change', handleFileUpload);
 
+                // Function to create a game section
+        // Function to create a game section
         function createGameSection(gameName) {
+            // Create a new game section
             const gameSection = document.createElement('div');
             gameSection.classList.add('team-section');
-
+        
+            // Create a header for the game section
             const gameHeader = document.createElement('div');
             gameHeader.classList.add('team-header');
             gameSection.appendChild(gameHeader);
-
+        
+            // Add the game name to the header
             const gameNameElement = document.createElement('div');
             gameNameElement.classList.add('team-name');
             gameNameElement.textContent = gameName;
             gameHeader.appendChild(gameNameElement);
-
-            // Create a unique ID for the player table using the gameName
-            const playerTableId = `player-table-${gameName.replace(/\s/g, '-')}`;
-            
+        
+            // Create a table for the game
             const playerTable = document.createElement('table');
-            playerTable.id = playerTableId;
+            playerTable.id = 'player-table';
             playerTable.innerHTML = `
                 <thead>
                     <tr>
@@ -120,11 +123,13 @@
                 </thead>
             `;
             gameSection.appendChild(playerTable);
-
+        
+            // Create a div for the buttons
             const gameButtons = document.createElement('div');
             gameButtons.classList.add('team-buttons');
             gameHeader.appendChild(gameButtons);
-
+        
+            // Create an input for the pace clicker
             const paceClicker = document.createElement('input');
             paceClicker.type = 'number';
             paceClicker.classList.add('input-box');
@@ -132,117 +137,87 @@
             paceClicker.step = 0.01;
             paceClicker.value = defaultPace;
             gameHeader.appendChild(paceClicker);
-
+        
+            // Create the WW button
             const wwButton = document.createElement('div');
             wwButton.classList.add('team-button');
             wwButton.textContent = 'WW';
             gameButtons.appendChild(wwButton);
-
+        
+            // Create the RW button
             const rwButton = document.createElement('div');
             rwButton.classList.add('team-button');
             rwButton.textContent = 'RW';
             gameButtons.appendChild(rwButton);
-
+        
+            // Add click event listeners to the buttons
             wwButton.addEventListener('click', () => handleButtonClick(wwButton, rwButton, paceClicker, gameSection));
             rwButton.addEventListener('click', () => handleButtonClick(rwButton, wwButton, paceClicker, gameSection));
-
+        
+            // Add input event listener to handle pace changes
             handlePaceInputChange(paceClicker, gameSection);
-
+        
+            // Add the game section to the container
             document.querySelector('#game-container').appendChild(gameSection);
-
-            return gameSection;
+        
+            return playerTable;
         }
 
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const csvData = e.target.result;
-
-                    processDataFromCSV(csvData);
-                };
-                reader.readAsText(file);
-            }
-        }
-
+        // Function to process data from the uploaded CSV
         function processDataFromCSV(csvData) {
+            // Parse and process the CSV data, then create game sections
             const lines = csvData.split('\n');
-            let currentGameSection = null;
-
+            let currentGameName = null;
+            let playerTable = null;
+        
             for (let i = 1; i < lines.length; i++) {
                 const values = lines[i].trim().split(',');
-
-                if (values.length >= 8) {
-                    const opponentName = values[1].trim();
-
+        
+                if (values.length >= 8) { // Ensure there are enough columns
+                    const opponentName = values[1].trim(); // Extract opponent name
+        
+                    // Skip the row if opponent name is "#N/A"
                     if (opponentName === '#N/A') {
                         continue;
                     }
-
-                    const gameName = values[0] + " vs " + opponentName;
-
-                    if (!currentGameSection || currentGameSection.getAttribute('data-game-name') !== gameName) {
-                        currentGameSection = createGameSection(gameName);
-                        currentGameSection.setAttribute('data-game-name', gameName);
+        
+                    const gameName = values[0] + " vs " + opponentName; // Concatenate team names for game name
+        
+                    if (gameName !== currentGameName) {
+                        // Create a new game section and get the player table
+                        playerTable = createGameSection(gameName);
+                        currentGameName = gameName;
                     }
-
-                    const playerTable = currentGameSection.querySelector('#player-table');
-                    const originalRow = playerTable.insertRow();
-
+        
+                    // Create a row for each player
+                    const playerRow = playerTable.insertRow();
+        
+                    // Loop through all columns and create cells
                     for (let j = 2; j < values.length; j++) {
-                        const cell = originalRow.insertCell();
+                        const cell = playerRow.insertCell();
+        
+                        // Set the data-original-value and data-column attributes for player data elements
                         let originalValue = values[j];
                         let column = '';
-
-                        if (j >= 4 && j <= 7) {
-                            column = ['Minutes', 'Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
+        
+                        if (j === 2) {
+                            column = 'Minutes';
+                        } else if (j >= 4 && j <= 7) {
+                            column = ['Points', 'Assists', 'Rebounds', 'Threes'][j - 3];
                         }
-
+        
                         cell.textContent = originalValue;
-
+        
                         if (column) {
                             cell.classList.add('player-data');
                             cell.setAttribute('data-original-value', originalValue);
                             cell.setAttribute('data-column', column);
                         }
                     }
-
-                    const inputRow = playerTable.insertRow();
-
-                    for (let j = 2; j < values.length; j++) {
-                        const cell = inputRow.insertCell();
-
-                        if (j === 3) {
-                            const inputBox = document.createElement('input');
-                            inputBox.type = 'number';
-                            inputBox.classList.add('input-box');
-                            cell.appendChild(inputBox);
-
-                            const projectedMinutes = parseFloat(originalRow.cells[1].textContent);
-
-                            inputBox.addEventListener('input', () => {
-                                const enteredMinutes = parseFloat(inputBox.value) || 0;
-                                const realTimeMinutes = projectedMinutes - enteredMinutes;
-                                originalRow.cells[1].textContent = realTimeMinutes.toFixed(2);
-                                updatePlayerStats(originalRow);
-                            });
-                        } else if (j >= 4 && j <= 7) {
-                            const inputBox = document.createElement('input');
-                            inputBox.type = 'number';
-                            inputBox.classList.add('input-box');
-                            cell.appendChild(inputBox);
-
-                            inputBox.addEventListener('input', () => {
-                                updatePlayerStats(originalRow);
-                            });
-                        }
-                    }
                 }
             }
         }
-
+        // Function to handle pace input changes
         function handlePaceInputChange(paceClicker, teamSection) {
             paceClicker.addEventListener('input', () => {
                 const pace = parseFloat(paceClicker.value);
